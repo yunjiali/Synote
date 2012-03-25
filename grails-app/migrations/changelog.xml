@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<!-- Add description and long_val to configuration table. long_val is the longger version of the val, in case the val is not long enough -->
+	<changeSet id="v5_configuration_modify" author="Yunjia Li">
+		<!-- check if the configuration table has description and long_val coloumn -->
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="configuration" columnName="description" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="configuration">
+			<column name="description" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<modifyColumn tableName="configuration">
+			<column name="val" type="text" />
+		</modifyColumn>
+	</changeSet>
+	<!-- Add description and date_created, last updated for user group -->
+	<changeSet id="v5_user_group_add_columns" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="user_group" columnName="description" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="user_group">
+			<column name="description" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<addColumn tableName="user_group">
+			<column name="date_created" type="datetime" defaultValueDate="2010-01-01T00:00:00" >
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="user_group">
+			<column name="last_updated" type="datetime" defaultValueDate="2010-01-01T00:00:00" >
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<!-- insert configurations related to entermedia-->
+	<changeSet id="v5_configuration_insert_entermedia" author="Yunjia Li">
+		<preConditions>
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(0) from configuration
+				where name="org.synote.resource.fileUpload.enabled";
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.resource.fileUpload.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.username","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.password","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.catelog","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.host","http://localhost:8081",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.restapi","/media/services/rest/",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.catalogid","/media/catalogs/synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.sourcepath","users/synote/",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.uploadFile","upload.xml",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.login","login.xml",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.fileDownload","downloads/originals",now(),now());
+		</sql>
+	</changeSet>
+	<!-- insert configurations related to capcha, admin contact, title, etc-->
+	<changeSet id="v5_configuration_insert" author="Yunjia Li">
+		<preConditions>
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(0) from configuration
+				where name="org.synote.user.forgetPassword.enabled";
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.user.forgetPassword.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.twitter.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.viascribe.xmlUpload.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.user.register.captcha.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, description, date_created,
+			last_updated)
+			Values(0,"org.synote.metadata.contact.page.content","mw@ecs.soton.ac.uk","The content of contact page if you want to customise the contact page provided by Synote.",now(),now());
+			INSERT INTO configuration (version, name, val, description, date_created,
+			last_updated)
+			Values(0,"org.synote.metadata.contact.page.url","/user/contact","The content of contact page if you want to use external page.",now(),now());
+			INSERT INTO configuration (version, name, val, description, date_created,
+			last_updated)
+			Values(0,"org.synote.metadata.contact.email","admin@synote.org","The email address of the contact",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,
+			last_updated)
+			Values(0,"org.synote.metadata.legal.termsAndConditions","Default terms and Conditions", "The terms and conditions page corresponding to the legal link on the front page.",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,
+			last_updated)
+			Values(0,"org.synote.search.crawl.snapshot.waitTime","20000", "The waiting time for javascript execution when creating the html snapshot for google crawler.",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,
+			last_updated)
+			Values(0,"org.synote.linkeddata.settings.baseURI","http://linkeddata.synote.org/", "includes the protocal or server names for linkeddata URIs",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,
+			last_updated)
+			Values(0,"org.synote.linkeddata.settings.serverContext","synote/", "the context path of the application",now(),now());
+		</sql>
+	</changeSet>
+	<!--add data_created and date_updated to permission class-->
+	<changeSet id="v5_permission_modify" author="Yunjia Li">
+		<!-- check if the configuration table has description and long_val coloumn -->
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="permission" columnName="date_created" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="permission">
+			<column name="date_created" type="datetime" defaultValueDate="2010-01-01T00:00:00">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="permission" >
+			<column name="last_updated" type="datetime" defaultValueDate="2010-01-01T00:00:00" >
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<!--add views table-->
+	<changeSet id="v5_views_table_add" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<not>
+					<tableExists tableName="views"/>
+				</not>
+			</and>
+		</preConditions>
+		<sql>
+			create table views (
+			`id` bigint(20) primary key auto_increment,
+			`version` bigint(20) not null,
+			`user_id` bigint(20) default null,
+			`resource_id` bigint(20) not null,
+			`date_created` datetime not null,
+			`last_updated` datetime not null,
+			foreign key (`user_id`) references `user` (`id`) on delete set null,
+			foreign key (`resource_id`) references `resource` (`id`) on delete cascade
+			) engine=innodb default charset=utf8;
+		</sql>
+	</changeSet>
+	<!-- Add more columns to vw vw_multimedia_user_permissionvalue_modify-->
+	<changeSet id="v5_vw_multimedia_user_permissionvalue_update" author="Yunjia Li">
+		<preConditions>
+			<columnExists tableName="permission" columnName="date_created" />
+			<viewExists viewName="vw_multimedia_user_permissionvalue" />
+		</preConditions>
+		<dropView viewName="vw_multimedia_user_permissionvalue"/>
+		<createView viewName="vw_multimedia_user_permissionvalue">
+			select r.id as id, r.version as version, u.user_name as owner_name, u.id as owner_id, r.title as title, pv.name as public_perm_name, pv.val as public_perm_val, pv.id as public_perm_id, r.date_created as date_created, r.last_updated as last_updated from resource as r, user as u, permission_value as pv
+			where r.class="org.synote.resource.compound.MultimediaResource" and r.owner_id = u.id and r.perm_id=pv.id
+		</createView>
+	</changeSet>
+	<!-- Add date_created and last_updated, perm_date_created and perm_last_updated to vw_multimedia_user_group_member_permission-->
+	<changeSet id="v5_vw_multimedia_user_group_member_permission_update" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<columnExists tableName="permission" columnName="date_created" />
+				<viewExists viewName="vw_multimedia_user_group_member_permission" />
+			</and>
+		</preConditions>
+		<dropView viewName="vw_multimedia_user_group_member_permission"/>
+		<createView viewName="vw_multimedia_user_group_member_permission">
+			SELECT DISTINCT p.resource_id as resource_id,r.title as title, u.id as user_id,u.user_name as user_name,g.id as group_id, g.name as group_name,pv.id as user_perm_id, pv.name as user_perm_name, pv.val as user_perm_val,r.date_created as date_created, r.last_updated as last_updated, p.date_created as perm_date_created, p.last_updated as perm_last_updated
+			FROM user u, user_group_member m, user_group g, resource r, permission p, permission_value pv 
+			WHERE r.class="org.synote.resource.compound.MultimediaResource" AND p.class="org.synote.permission.ResourcePermission" AND 
+				u.id = m.user_id AND m.group_id = g.id AND g.id = p.group_id AND p.resource_id = r.id AND r.owner_id != u.id AND pv.id = p.perm_id;
+		</createView>
+	</changeSet>
+	<!-- Add WebVTTItem and WEbVTTResource classes to resource table -->
+	<changeSet id="v5_resource_add_columns" author="Yunjia Li">
+		<!-- check if the configuration table has description and long_val coloumn -->
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="resource" columnName="cue_index" />
+				</not>
+			</and>
+		</preConditions>
+		<!-- For WebVTTItem class -->
+		<addColumn tableName="resource">
+			<column name="cue_index" type="int(11)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<addColumn tableName="resource" >
+			<column name="cue_settings" type="text" >
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<addColumn tableName="resource" >
+			<column name="file_header" type="text" >
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+</databaseChangeLog>
+

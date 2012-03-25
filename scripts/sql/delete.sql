@@ -1,0 +1,10 @@
+delete from profile_entry;
+delete from user_profile;
+delete from permission;
+delete from synpoint;
+delete from annotation;
+delete from presentation_slide;
+delete from resource;
+delete from user_group_member;
+delete from user_group;
+delete from user;

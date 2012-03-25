@@ -1,0 +1,65 @@
+1) install java
+
+$ yum install java-1.6.0-sun.x86_64
+
+$ java -version
+java version "1.6.0_06"
+Java(TM) SE Runtime Environment (build 1.6.0_06-b02)
+Java HotSpot(TM) 64-Bit Server VM (build 10.0-b22, mixed mode)
+
+$ yum install java-1.6.0-sun-devel.x86_64
+
+$ javac -version
+javac 1.6.0_06
+
+2) configure MySQL
+
+$ /sbin/chkconfig mysqld on
+$ /etc/init.d/mysqld start
+$ mysqladmin -u root password "NEW-PASSWORD"
+$ mysql -u root -p
+
+mysql> create database synote;
+mysql> grant all on synote.* to 'synote'@'localhost' identified by 'synote';
+mysql> exit
+
+$ mysql -u synote -p
+
+3) create project directory
+
+$ mkdir /usr/projects/macfob
+
+4) configure tomcats
+		Server		HTTP		HTTPS		AJP
+httpd				80		443/8443
+tomcat5		8005		8080		8443		8045
+
+synote-prod	8006		8081		8443		8046
+synote-test
+synote-devel	8008		8083		8443		8048
+
+webel-prod	8011		8086		8443		8050
+webel-test
+webel-devel	8013		8088		8443		8052
+
+- ADD BETTER DESCRIPTION HERE
+
+add this settings on top of tomcat/bin/catalina.sh script: export CATALINA_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+
+5) configure Apache HTTP Server
+
+$ /sbin/chkconfig httpd on
+$ /etc/init.d/httpd start
+
+test URL: http://synote-server
+
+$ mkdir /etc/httpd/conf.host
+
+
+add: "Import conf.host/macfob.conf" on last line
+ in file: /etc/httpd/conf/httpd.conf
+add: /etc/httpd/conf.host/macfog.conf
+
+$ /etc/init.d/httpd restart
+
+test URL: http://synote.org

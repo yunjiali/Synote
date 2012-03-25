@@ -1,0 +1,59 @@
+/* Setup */
+td.label {
+	text-align: right;
+}
+
+span.recordingTitle {
+	font-weight: bold;
+}
+
+/* Preview */
+body {
+	background: white;
+}
+
+.firstWord {
+	font-size: larger;
+}
+
+.slide {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.slide .title {
+	margin-bottom: 5px;
+	font-size: larger;
+}
+
+.slide img {
+	border: solid black 1px;
+}
+
+.synmark {
+	margin-top: 1em;
+	margin-bottom: 1em;
+	border: solid black 1px;
+	padding: 3px
+}
+
+.synmark .title {
+	margin-bottom: 5px;
+	font-size: larger;
+}
+
+.synmark .note {
+	margin-bottom: 5px;
+}
+
+.synmark .tags {
+	font-weight: bold;
+}
+
+.synmark .owner {
+	font-style: italic;
+}
+
+.synmark .next { /* empty */
+	
+}

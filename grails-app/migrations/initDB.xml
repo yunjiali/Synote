@@ -1,0 +1,58 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+	<!-- create table user_role_people, a many to many table for "user_role" 
+		and "user" -->
+	<changeSet id="v4_user_role_people_create" author="Yunjia Li">
+		<createTable tableName="user_role_people">
+			<column name="user_role_id" type="bigint(20)">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_user_role_people_user_role" references="user_role(id)"
+					deleteCascade="true" />
+			</column>
+			<column name="user_id" type="bigint(20)">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_user_role_people_user" references="user(id)"
+					deleteCascade="true" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<!-- insert init data into user_role -->
+	<changeSet id="v4_user_role_insert" author="Yunjia Li">
+		<!-- check if the user_role table is empty -->
+		<preConditions>
+			<and>
+				<tableExists tableName="user_role" />
+				<sqlCheck expectedResult="0">SELECT COUNT(1) FROM user_role
+				</sqlCheck>
+			</and>
+		</preConditions>
+		<!--Insert role ROLE_NORMAL -->
+		<insert tableName="user_role">
+			<column name="id" value="0" />
+			<column name="version" value="0" />
+			<column name="authority" value="ROLE_NORMAL" />
+			<column name="description" value="Registered users" />
+		</insert>
+		<!--Insert role ROLE_ADMIN -->
+		<insert tableName="user_role">
+			<column name="id" value="1" />
+			<column name="version" value="0" />
+			<column name="authority" value="ROLE_ADMIN" />
+			<column name="description" value="Administrator" />
+		</insert>
+		<!--Insert role ROLE_GUEST -->
+		<insert tableName="user_role">
+			<column name="id" value="2" />
+			<column name="version" value="0" />
+			<column name="authority" value="ROLE_GUEST" />
+			<column name="description" value="Unregistered users" />
+		</insert>
+	</changeSet>
+
+	<!-- add data into user_role_people, copy relevant data to user_role_people -->
+	<!--<changeSet id="v4_user_role_people_insert" author="Yunjia Li"> </changeSet> -->
+</databaseChangeLog>

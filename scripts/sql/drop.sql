@@ -1,0 +1,10 @@
+drop table profile_entry;
+drop table user_profile;
+drop table permission;
+drop table synpoint;
+drop table annotation;
+drop table presentation_slide;
+drop table resource;
+drop table user_group_member;
+drop table user_group;
+drop table user;

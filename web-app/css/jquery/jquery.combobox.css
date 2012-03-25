@@ -1,0 +1,15 @@
+.combowrap
+{
+	 -moz-border-radius:3px;
+     -webkit-border-radius: 3px;
+            border-radius:3px;
+            -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
+            -moz-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
+	
+}
+
+.combowrap input
+{
+	padding:0.5em;
+}

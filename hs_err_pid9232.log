@@ -1,0 +1,184 @@
+#
+# An unexpected error has been detected by HotSpot Virtual Machine:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00000000080cb7d4, pid=9232, tid=6700
+#
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (1.5.0_22-b03 mixed mode)
+# Problematic frame:
+# V  [jvm.dll+0xcb7d4]
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000005a4f060):  VMThread [id=6700]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x00000022101efa88
+
+Registers:
+EAX=0x00000022101efa88, EBX=0x0000000011354768, ECX=0x000000000000070f, EDX=0x000000000000070f
+ESP=0x0000000005c9f850, EBP=0x000000000000013a, ESI=0x0000000011353e20, EDI=0x0000000000000122
+EIP=0x00000000080cb7d4, EFLAGS=0x0000000000010206
+
+Top of Stack: (sp=0x0000000005c9f850)
+0x0000000005c9f850:   0000000000000000 00000000082cb6ef
+0x0000000005c9f860:   0000000011354760 0000000000000121
+0x0000000005c9f870:   00000000004ab050 0000000005c9f9a8
+0x0000000005c9f880:   00000000004c4ae0 00000000082bb39f
+0x0000000005c9f890:   0000000000000000 0000000000000000
+0x0000000005c9f8a0:   0000000000000000 00000000084dc518
+0x0000000005c9f8b0:   00000000004ab050 0000000008317f88
+0x0000000005c9f8c0:   0000000000000000 00000000084dc518
+0x0000000005c9f8d0:   00000000004c4ae0 0000000005c9f9a8
+0x0000000005c9f8e0:   000000000022a2f0 00000000001f37dd
+0x0000000005c9f8f0:   0000000100000000 0000000000000001
+0x0000000005c9f900:   0000000000000000 0000000008317adf
+0x0000000005c9f910:   0000055d00000000 00000000004be850
+0x0000000005c9f920:   000000000022a2f0 0000000000006382
+0x0000000005c9f930:   00000000004ab050 0000000008318365
+0x0000000005c9f940:   00000000004b9f70 00000000004c4c50 
+
+Instructions: (pc=0x00000000080cb7d4)
+0x00000000080cb7c4:   3c 66 74 04 3c 08 75 19 48 8b 03 48 85 c0 74 11
+0x00000000080cb7d4:   48 8b 00 24 03 3c 03 74 08 48 8b cb e8 2b ff 1e 
+
+
+Stack: [0x0000000005ba0000,0x0000000005ca0000),  sp=0x0000000005c9f850,  free space=1022k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0xcb7d4]
+
+[error occurred during error reporting, step 120, id 0xc0000005]
+
+VM_Operation (0x0000000000120e20): parallel gc failed allocation, mode: safepoint, requested by thread 0x000000000022e290
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00000000065c45d0 JavaThread "http-8080-1" daemon [_thread_blocked, id=9824]
+  0x00000000065c4320 JavaThread "Thread-18" daemon [_thread_blocked, id=6888]
+  0x00000000090f9030 JavaThread "http-8080-Acceptor-0" daemon [_thread_in_native, id=2820]
+  0x00000000090f8d80 JavaThread "ContainerBackgroundProcessor[StandardEngine[Tomcat]]" daemon [_thread_blocked, id=4596]
+  0x00000000090f8820 JavaThread "Store userCache Spool Thread" daemon [_thread_blocked, id=5008]
+  0x00000000090f8ad0 JavaThread "net.sf.ehcache.CacheManager@4b2c7378" daemon [_thread_blocked, id=9780]
+  0x00000000090f8570 JavaThread "Compass Scheduled Executor Thread" daemon [_thread_blocked, id=3320]
+  0x00000000090f82c0 JavaThread "Compass Scheduled Executor Thread" daemon [_thread_blocked, id=3116]
+  0x00000000090f7d60 JavaThread "Timer-0" daemon [_thread_blocked, id=4720]
+  0x00000000090f7ab0 JavaThread "quartzScheduler_QuartzSchedulerThread" [_thread_blocked, id=3740]
+  0x00000000090f7800 JavaThread "quartzScheduler_Worker-10" [_thread_blocked, id=9060]
+  0x00000000090f7550 JavaThread "quartzScheduler_Worker-9" [_thread_blocked, id=2444]
+  0x0000000006788ef0 JavaThread "quartzScheduler_Worker-8" [_thread_blocked, id=4428]
+  0x0000000006788c40 JavaThread "quartzScheduler_Worker-7" [_thread_blocked, id=308]
+  0x0000000006788990 JavaThread "quartzScheduler_Worker-6" [_thread_blocked, id=9492]
+  0x00000000067886e0 JavaThread "quartzScheduler_Worker-5" [_thread_blocked, id=6848]
+  0x0000000006788430 JavaThread "quartzScheduler_Worker-4" [_thread_blocked, id=7824]
+  0x0000000006788180 JavaThread "quartzScheduler_Worker-3" [_thread_blocked, id=2084]
+  0x0000000006787ed0 JavaThread "quartzScheduler_Worker-2" [_thread_blocked, id=8504]
+  0x0000000006787c20 JavaThread "quartzScheduler_Worker-1" [_thread_blocked, id=3172]
+  0x0000000006787970 JavaThread "Store org.hibernate.cache.StandardQueryCache Spool Thread" daemon [_thread_blocked, id=8684]
+  0x00000000067863f0 JavaThread "Store org.hibernate.cache.UpdateTimestampsCache Spool Thread" daemon [_thread_blocked, id=5412]
+  0x00000000067876c0 JavaThread "net.sf.ehcache.CacheManager@67e7b36d" daemon [_thread_blocked, id=6324]
+  0x0000000006786c00 JavaThread "MySQL Statement Cancellation Timer" daemon [_thread_blocked, id=1352]
+  0x0000000005a78b70 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=3396]
+  0x0000000005a784e0 JavaThread "CompilerThread1" daemon [_thread_blocked, id=6480]
+  0x0000000005a71cc0 JavaThread "CompilerThread0" daemon [_thread_blocked, id=2492]
+  0x0000000005a73a80 JavaThread "AdapterThread" daemon [_thread_blocked, id=8552]
+  0x0000000005a4f180 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=6456]
+  0x0000000005a528e0 JavaThread "Finalizer" daemon [_thread_blocked, id=9920]
+  0x0000000005a52630 JavaThread "Reference Handler" daemon [_thread_blocked, id=7220]
+  0x000000000022e290 JavaThread "main" [_thread_blocked, id=8528]
+
+Other Threads:
+=>0x0000000005a4f060 VMThread [id=6700]
+  0x00000000004ad6c0 WatcherThread [id=8640]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x000000000022d360/0x00000000000000e4] Threads_lock - owner thread: 0x0000000005a4f060
+[0x000000000022cd90/0x0000000000000120] Heap_lock - owner thread: 0x000000000022e290
+
+Heap
+ PSYoungGen      total 19072K, used 208K [0x0000000035570000, 0x00000000368c0000, 0x0000000040010000)
+  eden space 18368K, 0% used [0x0000000035570000,0x0000000035570000,0x0000000036760000)
+  from space 704K, 29% used [0x0000000036810000,0x0000000036844018,0x00000000368c0000)
+  to   space 704K, 0% used [0x0000000036760000,0x0000000036760000,0x0000000036810000)
+ PSOldGen        total 349568K, used 349174K [0x0000000020010000, 0x0000000035570000, 0x0000000035570000)
+  object space 349568K, 99% used [0x0000000020010000,0x000000003550dbd0,0x0000000035570000)
+ PSPermGen       total 155456K, used 77342K [0x0000000010010000, 0x00000000197e0000, 0x0000000020010000)
+  object space 155456K, 49% used [0x0000000010010000,0x0000000014b97918,0x00000000197e0000)
+
+Dynamic libraries:
+0x0000000000400000 - 0x0000000000412000 	C:\Program Files\Java\jdk1.5.0_22\bin\java.exe
+0x0000000077230000 - 0x00000000773db000 	C:\Windows\SYSTEM32\ntdll.dll
+0x0000000077110000 - 0x000000007722f000 	C:\Windows\system32\kernel32.dll
+0x000007fefd2e0000 - 0x000007fefd34b000 	C:\Windows\system32\KERNELBASE.dll
+0x000007fefe0c0000 - 0x000007fefe19b000 	C:\Windows\system32\ADVAPI32.dll
+0x000007fefe400000 - 0x000007fefe49f000 	C:\Windows\system32\msvcrt.dll
+0x000007feff3b0000 - 0x000007feff3cf000 	C:\Windows\SYSTEM32\sechost.dll
+0x000007feff230000 - 0x000007feff35e000 	C:\Windows\system32\RPCRT4.dll
+0x0000000008000000 - 0x0000000008562000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\server\jvm.dll
+0x0000000077010000 - 0x000000007710a000 	C:\Windows\system32\USER32.dll
+0x000007fefd590000 - 0x000007fefd5f7000 	C:\Windows\system32\GDI32.dll
+0x000007fefd6f0000 - 0x000007fefd6fe000 	C:\Windows\system32\LPK.dll
+0x000007feff3d0000 - 0x000007feff49a000 	C:\Windows\system32\USP10.dll
+0x000007fefb190000 - 0x000007fefb1cb000 	C:\Windows\system32\WINMM.dll
+0x000007fefd560000 - 0x000007fefd58e000 	C:\Windows\system32\IMM32.DLL
+0x000007fefd910000 - 0x000007fefda19000 	C:\Windows\system32\MSCTF.dll
+0x000000006fa00000 - 0x000000006fa2e000 	C:\PROGRA~2\Sophos\SOPHOS~1\SOEF1C~1.DLL
+0x00000000773f0000 - 0x00000000773f7000 	C:\Windows\system32\PSAPI.DLL
+0x0000000010000000 - 0x000000001000b000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\hpi.dll
+0x0000000000240000 - 0x0000000000251000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\verify.dll
+0x0000000000260000 - 0x000000000028d000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\java.dll
+0x00000000003a0000 - 0x00000000003b6000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\zip.dll
+0x00000000003c0000 - 0x00000000003db000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\net.dll
+0x000007fefdc90000 - 0x000007fefdcdd000 	C:\Windows\system32\WS2_32.dll
+0x000007fefd6e0000 - 0x000007fefd6e8000 	C:\Windows\system32\NSI.dll
+0x000007fefc9c0000 - 0x000007fefca14000 	C:\Windows\system32\mswsock.dll
+0x000007fefc9b0000 - 0x000007fefc9b7000 	C:\Windows\System32\wship6.dll
+0x000007fefb9a0000 - 0x000007fefb9b5000 	C:\Windows\system32\NLAapi.dll
+0x000007fefc840000 - 0x000007fefc89b000 	C:\Windows\system32\DNSAPI.dll
+0x000007fef68a0000 - 0x000007fef68ab000 	C:\Windows\System32\winrnr.dll
+0x000007fef5860000 - 0x000007fef5875000 	C:\Windows\system32\napinsp.dll
+0x000007fef5840000 - 0x000007fef5859000 	C:\Windows\system32\pnrpnsp.dll
+0x000007fef5830000 - 0x000007fef5840000 	C:\Windows\system32\wshbth.dll
+0x000007fefc3d0000 - 0x000007fefc3d7000 	C:\Windows\System32\wshtcpip.dll
+0x000007fefa690000 - 0x000007fefa6b7000 	C:\Windows\system32\IPHLPAPI.DLL
+0x000007fefa680000 - 0x000007fefa68b000 	C:\Windows\system32\WINNSI.DLL
+0x000007fef7ca0000 - 0x000007fef7ca8000 	C:\Windows\system32\rasadhlp.dll
+0x000007fef9ae0000 - 0x000007fef9b33000 	C:\Windows\System32\fwpuclnt.dll
+0x000007fefd030000 - 0x000007fefd087000 	C:\Windows\system32\apphelp.dll
+0x000007fefca20000 - 0x000007fefca37000 	C:\Windows\system32\CRYPTSP.dll
+0x000007fefc720000 - 0x000007fefc767000 	C:\Windows\system32\rsaenh.dll
+0x000007fefc4e0000 - 0x000007fefc4fe000 	C:\Windows\system32\USERENV.dll
+0x000007fefd190000 - 0x000007fefd19f000 	C:\Windows\system32\profapi.dll
+0x000007fefd020000 - 0x000007fefd02f000 	C:\Windows\system32\CRYPTBASE.dll
+0x00000000070a0000 - 0x00000000070aa000 	C:\Program Files\Java\jdk1.5.0_22\jre\bin\management.dll
+
+VM Arguments:
+jvm_args: -Xms512M -Xmx512M -XX:MaxPermSize=256m -Dprogram.name= -Dgrails.home=C:\Software\development\grails-1.2.1 -Dgrails.version=1.2.1 -Dbase.dir=. -Dtools.jar=C:\Program Files\Java\jdk1.5.0_22\lib\tools.jar -Dgroovy.starter.conf=C:\Software\development\grails-1.2.1\conf\groovy-starter.conf
+java_command: org.codehaus.groovy.grails.cli.support.GrailsStarter --main org.codehaus.groovy.grails.cli.GrailsScriptRunner --conf C:\Software\development\grails-1.2.1\conf\groovy-starter.conf --classpath ;.;C:\Program Files (x86)\QuickTime\QTSystem\QTJava.zip  run-app
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.5.0_22
+CLASSPATH=.;C:\Program Files (x86)\QuickTime\QTSystem\QTJava.zip
+PATH=C:\Software\development\Ruby\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Java\jdk1.5.0_22\bin;C:\Program Files\Java\jdk1.5.0_22\jre\bin;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files (x86)\Subversion\bin;C:\Program Files\TortoiseSVN\bin;c:\Program Files (x86)\Microsoft SQL Server\90\Tools\binn\;C:\Software\development\grails-1.2.1\bin;C:\Software\development\gwt-windows-1.5.3\gwt-windows-1.5.3;C:\Software\development\apache-maven-2.2.1-bin\apache-maven-2.2.1\bin;C:\Software\development\apache-ant-1.7.1-bin\apache-ant-1.7.1\bin;C:\Program Files (x86)\MySQL\MySQL Server 5.0\bin;C:\Software\Groovy\Groovy-1.7.1\bin;C:\Program Files (x86)\Common Files\Thunder Network\KanKan\Codecs
+USERNAME=Rabbit
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 23 Stepping 6, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7600 
+
+CPU:total 2 em64t ht
+
+Memory: 4k page, physical 4184108k(1010596k free), swap 8366316k(3855532k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (1.5.0_22-b03) for windows-amd64, built on Oct  9 2009 00:35:21 by "java_re" with unknown MS VC++:1400
+
+time: Sun Aug 22 23:56:43 2010
+elapsed time: 29824 seconds
+

@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+	<!-- create table user_role -->
+	<changeSet id="v4_user_role_create" author="Yunjia Li"
+		runOnChange="true">
+		<preConditions>
+			<not>
+				<tableExists tableName="user_role" />
+			</not>
+		</preConditions>
+		<sql>
+			CREATE TABLE `user_role` (
+			`id` bigint(20) NOT NULL auto_increment,
+			`version` bigint(20) NOT NULL,
+			`authority` varchar(255) NOT NULL,
+			`description` varchar(255) NOT NULL,
+			PRIMARY KEY (`id`),
+			UNIQUE KEY `authority` (`authority`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</changeSet>
+
+	<!-- insert init data into user_role -->
+	<changeSet id="v4_user_role_insert" author="Yunjia Li">
+		<!-- check if the user_role table is empty -->
+		<preConditions>
+			<and>
+				<tableExists tableName="user_role" />
+				<sqlCheck expectedResult="0">SELECT COUNT(1) FROM user_role
+				</sqlCheck>
+			</and>
+		</preConditions>
+		<!--Insert role ROLE_NORMAL -->
+		<insert tableName="user_role">
+			<column name="id" value="1" />
+			<column name="version" value="0" />
+			<column name="authority" value="ROLE_NORMAL" />
+			<column name="description" value="Registered users" />
+		</insert>
+		<!--Insert role ROLE_ADMIN -->
+		<insert tableName="user_role">
+			<column name="id" value="2" />
+			<column name="version" value="0" />
+			<column name="authority" value="ROLE_ADMIN" />
+			<column name="description" value="Administrator" />
+		</insert>
+		<!--Insert role ROLE_GUEST -->
+		<insert tableName="user_role">
+			<column name="id" value="3" />
+			<column name="version" value="0" />
+			<column name="authority" value="ROLE_GUEST" />
+			<column name="description" value="Unregistered users" />
+		</insert>
+	</changeSet>
+
+	<!-- create table user_role_people, a many to many table for "user_role" 
+		and "user" -->
+	<changeSet id="v4_user_role_people_create" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<tableExists tableName="user_role_people" />
+			</not>
+		</preConditions>
+		<createTable tableName="user_role_people">
+			<column name="user_role_id" type="bigint(20)">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_user_role_people_user_role" references="user_role(id)"
+					deleteCascade="true" />
+			</column>
+			<column name="user_id" type="bigint(20)">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_user_role_people_user" references="user(id)"
+					deleteCascade="true" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<!--Transfer user_id into user_role_people table -->
+	<changeSet id="v4_user_role_people_insert" author="Yunjia Li">
+		<!-- check if the user_role_people table is empty -->
+		<preConditions>
+			<and>
+				<tableExists tableName="user_role_people" />
+				<sqlCheck expectedResult="0">SELECT COUNT(0) FROM
+					user_role_people </sqlCheck>
+			</and>
+		</preConditions>
+		<sql>
+			INSERT INTO user_role_people (user_role_id, user_id)
+			SELECT
+			1,user.id FROM user
+		</sql>
+	</changeSet>
+
+	<!--Change user "admin"'s role to ROLE_ADMIN -->
+	<changeSet id="v4_user_role_people_admin" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_user_role_people_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			UPDATE user_role_people,user SET user_role_people.user_role_id=2
+			WHERE user_role_people.user_id=user.id AND user.user_name="admin"
+		</sql>
+	</changeSet>
+
+	<!--Change user "SynoteGuest"'s role to ROLE_GUEST -->
+	<changeSet id="v4_user_role_people_synote_guest" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_user_role_people_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			UPDATE user_role_people,USER SET user_role_people.user_role_id=3
+			WHERE user_role_people.user_id=user.id AND
+			user.user_name="SynoteGuest"
+		</sql>
+	</changeSet>
+
+	<!-- change table user Add: Date dataCreated Date lastUpdated Date lastLogin 
+		Copy: id to user_role_people(user_id) role to user_role people(user_role_id) 
+		Delete: UserRole role -->
+	<changeSet id="v4_user_update" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<columnExists tableName="user" columnName="date_created" />
+			</not>
+		</preConditions>
+		<addColumn tableName="user">
+			<column name="date_created" type="datetime" defaultValueDate="2010-01-01T00:00:00">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="user">
+			<column name="last_updated" type="datetime" defaultValueDate="2010-01-01T00:00:00">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="user">
+			<column name="last_login" type="datetime" defaultValueDate="2010-01-01T00:00:00">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="user">
+			<column name="enabled" type="bit(1)" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<dropColumn tableName="user" columnName="role" />
+	</changeSet>
+
+	<!-- create table permission_value -->
+	<changeSet id="v4_permission_value_create" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<tableExists tableName="permission_value" />
+			</not>
+		</preConditions>
+		<sql>
+			create table permission_value (
+			id bigint(20) primary key auto_increment,
+			version bigint(20) not null,
+			name varchar(255) not null unique,
+			val int(11) not null unique
+			) engine=innodb default charset=utf8;
+		</sql>
+	</changeSet>
+
+	<!-- insert four initialized value for permission_value table -->
+	<changeSet id="v4_permission_value_insert" author="Yunjia Li">
+		<!-- check if the user_role_people table is empty -->
+		<preConditions>
+			<and>
+				<changeSetExecuted id="v4_permission_value_create"
+					author="Yunjia Li" changeLogFile="changelog.xml" />
+				<sqlCheck expectedResult="0">SELECT COUNT(0) FROM
+					permission_value </sqlCheck>
+			</and>
+		</preConditions>
+		<sql>
+			INSERT INTO permission_value (version, name, val)
+			Values(0,"PRIVATE",0);
+			INSERT INTO permission_value (version, name,
+			val) Values(0,"READ",100);
+			INSERT INTO permission_value (version,
+			name, val) Values(0,"ANNOTATE",200);
+			INSERT INTO permission_value
+			(version, name, val) Values(0,"WRITE",300);
+		</sql>
+	</changeSet>
+
+	<!-- add foreign key to permission table -->
+	<changeSet id="v4_permission_update_permission_value" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_permission_value_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<!-- there's no AnnotationPermission yet, so we don't need to update that 
+			class -->
+		<sql>
+			update permission set perm=perm+2;
+			update permission set
+			class="org.synote.permission.ResourcePermission" where
+			class="ResourcePermission";
+		</sql>
+	</changeSet>
+	<changeSet id="v4_permission_update_renameColumn" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_permission_value_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<renameColumn tableName="permission" oldColumnName="perm"
+			newColumnName="perm_id" columnDataType="int(11)" />
+	</changeSet>
+	<changeSet id="v4_permission_update_modifyColumn" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_permission_value_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<modifyColumn tableName="permission">
+			<column name="perm_id" type="bigint(20)" />
+		</modifyColumn>
+	</changeSet>
+	<changeSet id="v4_permission_update_addNotNull" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_permission_value_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<addNotNullConstraint tableName="permission"
+			columnName="perm_id" defaultNullValue="0" columnDataType="bigint(20)" />
+	</changeSet>
+	<changeSet id="v4_permission_update_addForeignKey" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_permission_value_insert"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<addForeignKeyConstraint constraintName="fk_permission_permission_value"
+			baseTableName="permission" baseColumnNames="perm_id"
+			referencedTableName="permission_value" referencedColumnNames="id"
+			onDelete="RESTRICT" />
+	</changeSet>
+
+	<!-- create table language -->
+	<changeSet id="v4_language_create" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<tableExists tableName="language" />
+			</not>
+		</preConditions>
+		<sql>
+			CREATE TABLE language (
+			id bigint(20) NOT NULL auto_increment,
+			version bigint(20) NOT NULL,
+			locale_name varchar(255) NOT NULL UNIQUE,
+			language varchar(255) NOT NULL UNIQUE,
+			PRIMARY KEY (id)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</changeSet>
+
+	<!-- Add default languages -->
+	<changeSet id="v4_language_insert" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<changeSetExecuted id="v4_language_create" author="Yunjia Li"
+					changeLogFile="changelog.xml" />
+				<sqlCheck expectedResult="0">SELECT COUNT(0) FROM language
+				</sqlCheck>
+			</and>
+		</preConditions>
+		<sql>
+			INSERT INTO language (version, locale_name, language)
+			Values(0,"UK","en_GB");
+			INSERT INTO language (version, locale_name,
+			language) Values(0,"US","en_US");
+			INSERT INTO language (version,
+			locale_name, language) Values(0,"SIMPLIFIED_CHINESE","zh_CN");
+			INSERT
+			INTO language (version, locale_name, language)
+			Values(0,"FRANCE","fr_FR");
+			INSERT INTO language (version,
+			locale_name, language) Values(0,"GERMAN","de_DE");
+			INSERT INTO
+			language (version, locale_name, language)
+			Values(0,"ITALIAN","it_IT");
+			INSERT INTO language (version,
+			locale_name, language) Values(0,"SPANISH","es_ES");
+		</sql>
+	</changeSet>
+
+	<!-- update table resource -->
+	<changeSet id="v4_resource_drop_foreignKeys" author="Yunjia Li">
+		<preConditions>
+			<columnExists tableName="resource" columnName="parent_synmark_id" />
+		</preConditions>
+		<dropForeignKeyConstraint constraintName="resource_ibfk_2"
+			baseTableName="resource" />
+		<dropForeignKeyConstraint constraintName="resource_ibfk_3"
+			baseTableName="resource" />
+	</changeSet>
+	<changeSet id="v4_resource_update_class_value" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_drop_foreignKeys"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			update resource set
+			class="org.synote.resource.compound.MultimediaResource" where
+			class="MultimediaResource";
+			update resource set
+			class="org.synote.resource.compound.SynmarkResource" where
+			class="SynmarkResource";
+			update resource set
+			class="org.synote.resource.compound.PresentationResource" where
+			class="PresentationResource";
+			update resource set
+			class="org.synote.resource.compound.TranscriptResource" where
+			class="TranscriptResource";
+			update resource set
+			class="org.synote.resource.single.text.SynmarkTag" where
+			class="SynmarkTag";
+			update resource set
+			class="org.synote.resource.single.text.SynmarkTextNote" where
+			class="SynmarkTextNote";
+		</sql>
+	</changeSet>
+	<changeSet id="v4_resource_add_columns" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="resource" columnName="date_created" />
+				</not>
+				<not>
+					<columnExists tableName="resource" columnName="last_updated" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="resource">
+			<column name="date_created" type="datetime" defaultValueDate="2010-01-01T00:00:00">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="resource">
+			<column name="last_updated" type="datetime" defaultValueDate="2010-01-01T00:00:00">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="v4_resource_update_renameColumn" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_drop_foreignKeys"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<renameColumn tableName="resource" oldColumnName="perm"
+			newColumnName="perm_id" columnDataType="int(11)" />
+		<renameColumn tableName="resource" oldColumnName="parent_synmark_id"
+			newColumnName="parent_resource_id" columnDataType="bigint(20)" />
+		<renameColumn tableName="resource" oldColumnName="synmark_note_id"
+			newColumnName="child_note_id" columnDataType="bigint(20)" />
+	</changeSet>
+	<changeSet id="v4_resource_update_permission_value" author="Yunjia Li">
+		<!-- In the old version of Synote, only MultimediaResource has a permission. 
+			If the permission is PRIVATE, the field of perm will be NULL. So we need 
+			to set PRIVATE MultimediaResource to value 1 which represents the PRIVATE 
+			value in new Synote. -->
+		<preConditions>
+			<changeSetExecuted id="v4_resource_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			update resource set perm_id=perm_id+2;
+			update resource set
+			perm_id=1 where
+			class="org.synote.resource.compound.MultimediaResource" and perm_id
+			is NULL;
+		</sql>
+	</changeSet>
+	<changeSet id="v4_resource_update_modifyColumn" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<modifyColumn tableName="resource">
+			<column name="perm_id" type="bigint(20)" />
+		</modifyColumn>
+	</changeSet>
+	<changeSet id="v4_resource_update_addColumn" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<addColumn tableName="resource">
+			<column name="child_multimedia_url_id" type="bigint(20)" />
+		</addColumn>
+		<addColumn tableName="resource">
+			<column name="language_id" type="bigint(20)" />
+		</addColumn>
+		<addColumn tableName="resource">
+			<column name="slide_index" type="int(11)" />
+		</addColumn>
+		<addColumn tableName="resource">
+			<column name="child_transcript_text_id" type="bigint(20)" />
+		</addColumn>
+	</changeSet>
+	<changeSet id="v4_resource_update_addForeignKeys" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<addForeignKeyConstraint constraintName="fk_resource_language"
+			baseTableName="resource" baseColumnNames="language_id"
+			referencedTableName="language" referencedColumnNames="id"
+			onDelete="RESTRICT" />
+		<addForeignKeyConstraint constraintName="fk_resource_child_url"
+			baseTableName="resource" baseColumnNames="child_multimedia_url_id"
+			referencedTableName="resource" referencedColumnNames="id" 
+			onDelete="SET NULL" />
+		<addForeignKeyConstraint constraintName="fk_resource_parent_resource"
+			baseTableName="resource" baseColumnNames="parent_resource_id"
+			referencedTableName="resource" referencedColumnNames="id" 
+			onDelete="CASCADE" />
+		<addForeignKeyConstraint constraintName="fk_resource_child_note"
+			baseTableName="resource" baseColumnNames="child_note_id"
+			referencedTableName="resource" referencedColumnNames="id" 
+			onDelete="SET NULL" />
+		<addForeignKeyConstraint constraintName="fk_resource_transcript_text"
+			baseTableName="resource" baseColumnNames="child_transcript_text_id"
+			referencedTableName="resource" referencedColumnNames="id" 
+			onDelete="SET NULL" />
+	</changeSet>
+
+	<!-- Copy all sides data from table presentation_slide to table resource -->
+	<changeSet id="v4_presentation_slide_copy_and_delete" author="Yunjia Li">
+		<preConditions>
+			<tableExists tableName="presentation_slide" />
+		</preConditions>
+		<sql>
+			insert into resource(version,class,owner_id,
+			url,parent_resource_id, slide_index)
+			select distinct s.version,
+			"org.synote.resource.single.binary.PresentationSlide", r.owner_id,
+			s.url, s.presentation_id, s.slide_index
+			from presentation_slide as s,
+			resource as r
+			where s.presentation_id = r.id;  
+		</sql>
+		<dropTable tableName="presentation_slide" />
+	</changeSet>
+
+	<!-- Create new TranscriptTextResource and copy the content form old TranscriptResource 
+		to TranscriptTextResource -->
+	<changeSet id="v4_resource_create_transcript_text" author="Yunjia Li">
+		<preConditions>
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(0) from resource where
+				class="org.synote.resource.single.text.TranscriptTextResource";
+			</sqlCheck>
+			<changeSetExecuted id="v4_resource_update_addForeignKeys"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			INSERT INTO resource(VERSION,class,owner_id,parent_resource_id,
+			content)
+			SELECT DISTINCT 0,
+			"org.synote.resource.single.text.TranscriptTextResource", r.owner_id,
+			r.id,r.content
+			FROM resource AS r
+			WHERE
+			r.class="org.synote.resource.compound.TranscriptResource"; 
+		</sql>
+	</changeSet>
+
+	<!-- Update TranscriptResource class, set it's content to null and allocate 
+		it's child TranscriptTextResource -->
+	<changeSet id="v4_resource_update_transcript_resource"
+		author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_create_transcript_text"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			UPDATE resource AS r1
+			INNER JOIN resource AS r2 ON r1.id =
+			r2.parent_resource_id
+			SET r1.content = NULL,
+			r1.child_transcript_text_id = r2.id
+			WHERE
+			r1.class="org.synote.resource.compound.TranscriptResource"
+			AND r2.class = "org.synote.resource.single.text.TranscriptTextResource";
+		</sql>
+	</changeSet>
+
+	<!-- copy old MultimediaResource's url to new MultimediaUrl class -->
+	<changeSet id="v4_resource_copy_multimedia_url" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<sqlCheck expectedResult="0">
+					SELECT COUNT(0) from resource
+					where class="org.synote.resource.single.binary.MultimediaUrl";
+				</sqlCheck>
+				<changeSetExecuted id="v4_resource_update_renameColumn"
+					author="Yunjia Li" changeLogFile="changelog.xml" />
+			</and>
+		</preConditions>
+		<sql>
+			INSERT INTO resource (VERSION, class,
+			owner_id,url,parent_resource_id)
+			SELECT
+			0,"org.synote.resource.single.binary.MultimediaUrl", owner_id, url,
+			id from resource
+			WHERE
+			class="org.synote.resource.compound.MultimediaResource";
+		</sql>
+	</changeSet>
+
+	<!-- Set url null for old MultimediaResourcce -->
+	<changeSet id="v4_resource_update_multimedia_resource"
+		author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_resource_copy_multimedia_url"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			UPDATE resource AS r1
+			INNER JOIN resource AS r2 ON r1.id =
+			r2.parent_resource_id
+			SET r1.url=NULL,
+			r1.child_multimedia_url_id=r2.id
+			WHERE
+			r1.class="org.synote.resource.compound.MultimediaResource" AND
+			r2.class = "org.synote.resource.single.binary.MultimediaUrl"; 
+		</sql>
+	</changeSet>
+
+	<!-- Change column perm in table annotation to perm_id -->
+	<changeSet id="v4_annotation_update_renameColumn" author="Yunjia Li">
+		<preConditions>
+			<columnExists tableName="annotation" columnName="perm" />
+		</preConditions>
+		<renameColumn tableName="annotation" oldColumnName="perm"
+			newColumnName="perm_id" columnDataType="int(11)" />
+	</changeSet>
+	<changeSet id="v4_annotation_update_permission_value" author="Yunjia Li">
+		<!-- In old synote, the perm of annotation is always null, but this null 
+			means "not set". It doesn't mean it's PRIVATE. So actually, this sql doesn't 
+			do anything. -->
+		<preConditions>
+			<changeSetExecuted id="v4_annotation_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<sql>
+			update annotation set perm_id=perm_id+2;
+			update annotation set
+			class="org.synote.annotation.ResourceAnnotation" where
+			class="ResourceAnnotation";
+		</sql>
+	</changeSet>
+	<changeSet id="v4_annotation_update_modifyColumn" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_annotation_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<modifyColumn tableName="annotation">
+			<column name="perm_id" type="bigint(20)" />
+		</modifyColumn>
+	</changeSet>
+	<changeSet id="v4_annotation_update_addForeignKey" author="Yunjia Li">
+		<preConditions>
+			<changeSetExecuted id="v4_annotation_update_renameColumn"
+				author="Yunjia Li" changeLogFile="changelog.xml" />
+		</preConditions>
+		<addForeignKeyConstraint constraintName="fk_annotation_permission_value"
+			baseTableName="annotation" baseColumnNames="perm_id"
+			referencedTableName="permission_value" referencedColumnNames="id"
+			onDelete="RESTRICT" />
+	</changeSet>
+
+	<!-- create table ibmtrans_job -->
+	<changeSet id="v4_ibmtrans_job_create" author="Yunjia Li">
+		<!--  
+		<preConditions>
+			<not>
+				<tableExists tableName="ibmtrans_job" />
+			</not>
+		</preConditions>
+		-->
+		<sql>
+			drop table if exists ibmtrans_job;
+			create table `ibmtrans_job` (
+			`id` bigint(20) primary key auto_increment,
+			`version` bigint(20) not null,
+			`date_created` datetime not null,
+			`last_updated` datetime not null,
+			`edit_url` varchar(255) not null,
+			`job_id` varchar(255) not null,
+			`owner_id` bigint(20) not null,
+			`resource_id` bigint(20) not null,
+			`saved` bit(1) not null,
+			`status` int(11) not null,
+			`title` varchar(255) not null,
+			`transcript` longtext default null,
+			`url` varchar(255) not null,
+			`vsxml_transcript` longtext default null,
+			`xml_transcript` longtext default null,
+			foreign key (`owner_id`) references `user` (`id`) on delete cascade,
+			foreign key (`resource_id`) references `resource` (`id`) on delete cascade
+			) engine=innodb default charset=utf8;
+			
+		</sql>
+	</changeSet>
+
+	<!-- create table Configuration -->
+	<changeSet id="v4_configuration_create" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<tableExists tableName="configuration" />
+			</not>
+		</preConditions>
+		<sql>
+			CREATE TABLE `configuration` (
+			`id` bigint(20) NOT NULL auto_increment,
+			`version` bigint(20) NOT NULL,
+			`name` varchar(255) NOT NULL,
+			`val` varchar(255) NOT NULL,
+			`date_created` datetime not null,
+			`last_updated` datetime not null,
+			PRIMARY KEY (`id`),
+			UNIQUE KEY `name` (`name`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</changeSet>
+	
+	<!-- create table UserAPIKey -->
+	<changeSet id="v4_user_api_key_create" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<tableExists tableName="user_api_key" />
+			</not>
+		</preConditions>
+		<sql>
+			CREATE TABLE `user_api_key` (
+			`id` bigint(20) NOT NULL auto_increment,
+			`version` bigint(20) NOT NULL,
+			`user_id` bigint(20) NOT NULL,
+			`user_key` varchar(255) NOT NULL,
+			`expired` boolean NOT NULL default 0,
+			`date_created` datetime not null,
+			`last_updated` datetime not null,
+			foreign key (`user_id`) references `user` (`id`) on delete cascade,
+			PRIMARY KEY (`id`),
+			UNIQUE KEY `user_key` (`user_key`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</changeSet>
+
+	<!-- insert initial values for some configuration items -->
+	<changeSet id="v4_configuration_insert" author="Yunjia Li">
+		<preConditions>
+			<and>
+				<changeSetExecuted id="v4_configuration_create"
+					author="Yunjia Li" changeLogFile="changelog.xml" />
+				<sqlCheck expectedResult="0">SELECT COUNT(0) FROM configuration
+				</sqlCheck>
+			</and>
+		</preConditions>
+		<sql>
+			<!-- config for default user registered enabled -->
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.user.register.enable","true",now(),now());
+			
+			<!-- test admin username and password
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.test.admin.userName","admin",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.test.admin.password","a",now(),now());
+			-->
+			<!-- IBMTransJob settings -->
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.protocol","http://",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.name","lslvm-yl2.ecs.soton.ac.uk",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.port ","8080",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.appPath","/SLWeb/",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.login","api/login?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.logout","api/logout?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.addJob","api/addJob?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.getJobs","api/getJobs?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.getJob","api/getJob?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.getTranscript","api/getTranscript?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.api.removeJob","api/removeJob?",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.sourceDir","webJobs/mw@ecs.soton.ac.uk",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.username","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.password","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.stopAddingJob.dayOfWeek ","TUESDAY",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.stopAddingJob.time","00:00:00",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.downtime.dayOfWeek","TUESDAY",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.downtime.startTime","02:30:00",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.downtime.endTime","04:00:00",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.downtime.checkInterval","300000",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.user.maxJob","3",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.ibmhts.server.downtime.auto","false",now(),now());
+			
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.resource.fileUpload.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.enabled","false",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.username","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.password","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.catelog","synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.host","http://localhost:8081",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.restapi","/media/services/rest",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.catalogid","/media/catalogs/synote",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.sourcepath","users/synote/",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.uploadFile","upload.xml",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.login","login.xml",now(),now());
+			INSERT INTO configuration (version, name, val, date_created,
+			last_updated)
+			Values(0,"org.synote.integration.entermedia.fileDownload","downloads/original",now(),now());
+		</sql>
+	</changeSet>
+
+	<!-- create table search_record -->
+	<changeSet id="v4_search_record_create" author="Yunjia Li">
+		<preConditions>
+			<not>
+				<tableExists tableName="search_record" />
+			</not>
+		</preConditions>
+		<sql>
+			create table `search_record` (
+			`id` bigint(20) primary key auto_increment,
+			`version` bigint(20) not null,
+			`class` varchar(255) not null,
+			`date_created` datetime not null,
+			`last_updated` datetime not null,
+			`session_id` varchar(255) not null,
+			`user_id` bigint(20),
+			`resource_id` bigint(20),
+			`content` text,
+			`resource_class` varchar(255),
+			`query_id` bigint(20),
+			`page_num` int(11),
+			`query_string` text,
+			`advanced` bit(1) default false,
+			`mine_only` bit(1) default false,
+			`selected` bit(1) default false,
+			`hits` int(11) default 0,
+			`result_num` int(11) default 0,
+			`recording_num` int(11) default 0,
+			`allowed_num` int(11) default 0,
+			`offset` int(11) default 0,
+			`max` int(11) default 0,
+			foreign key (`query_id`) references `search_record` (`id`) on delete cascade
+			) engine=innodb default charset=utf8;
+			
+		</sql>
+	</changeSet>
+	
+	<!-- It's weired that the if the parent_resource_id in resource is not empty, the delete of the parent resource will result in
+		 hibernate optimisic lock error. Besides, the creating of new parent resource will not result in the fill of this column! This
+		 problem is not in grails 1.0.3, because I use the same code. Give value explicitly to this column cannot solve this problem
+		 neither. So I have to set it empty.-->
+	<changeSet id="v4_resource_update_empty_parent_resource_id" author="Yunjia Li">
+		<sql>
+			UPDATE resource SET parent_resource_id = NULL 
+			WHERE class="org.synote.resource.single.binary.MultimediaUrl" OR class="org.synote.resource.single.text.TranscriptTextResource" OR class="org.synote.resource.single.text.SynmarkTextNote";
+		</sql>
+	</changeSet>
+	
+	<!-- create MultimediaResource list view -->
+	<changeSet id="v4_vw_multimedia_user_permissionvalue_create"
+		author="Yunjia Li">
+		<preConditions>
+			<not>
+				<viewExists viewName="vw_multimedia_user_permissionvalue" />
+			</not>
+		</preConditions>
+		<createView viewName="vw_multimedia_user_permissionvalue">
+			select r.id as id, r.version as version, u.user_name as owner_name, u.id as owner_id, r.title as title, pv.name as public_perm_name, pv.val as public_perm_val, pv.id as public_perm_id from resource as r, user as u, permission_value as pv
+			where r.class="org.synote.resource.compound.MultimediaResource" and r.owner_id = u.id and r.perm_id=pv.id
+		</createView>
+	</changeSet>
+
+	<!-- create MultimediaResource user group membership permission value view -->
+	<changeSet id="v4_vw_multimedia_user_group_member_permission_create"
+		author="Yunjia Li">
+		<preConditions>
+			<not>
+				<viewExists viewName="vw_multimedia_user_group_member_permission" />
+			</not>
+		</preConditions>
+		<createView viewName="vw_multimedia_user_group_member_permission">
+			SELECT DISTINCT p.resource_id as resource_id,r.title as title, u.id as user_id,u.user_name as user_name,g.id as group_id, g.name as group_name,pv.id as user_perm_id, pv.name as user_perm_name, pv.val as user_perm_val
+			FROM USER u, user_group_member m, user_group g, resource r, permission p, permission_value pv 
+			WHERE r.class="org.synote.resource.compound.MultimediaResource" AND p.class="org.synote.permission.ResourcePermission" AND 
+				u.id = m.user_id AND m.group_id = g.id AND g.id = p.group_id AND p.resource_id = r.id AND r.owner_id != u.id AND pv.id = p.perm_id;
+		</createView>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,198 @@
+// locations to search for config files that get merged into the main config
+// config files can either be Java properties files or ConfigSlurper scripts
+
+// grails.config.locations = [ "classpath:${appName}-config.properties",
+//                             "classpath:${appName}-config.groovy",
+//                             "file:${userHome}/.grails/${appName}-config.properties",
+//                             "file:${userHome}/.grails/${appName}-config.groovy"]
+
+// if(System.properties["${appName}.config.location"]) {
+//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+// }
+grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
+grails.mime.use.accept.header = true
+grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
+                      xml: ['text/xml', 'application/xml'],
+                      text: 'text/plain',
+                      js: 'text/javascript',
+                      rss: 'application/rss+xml',
+                      atom: 'application/atom+xml',
+                      css: 'text/css',
+                      csv: 'text/csv',
+					  vtt: 'text/vtt',
+                      all: '*/*',
+                      json: ['application/json','text/json'],
+					  rdf: ['application/rdf+xml','rdf/xml'],
+                      form: 'application/x-www-form-urlencoded',
+                      multipartForm: 'multipart/form-data'
+                    ]
+// The default codec used to encode data with ${}
+grails.views.default.codec="none" // none, html, base64
+grails.views.gsp.encoding="UTF-8"
+grails.converters.encoding="UTF-8"
+// enable Sitemesh preprocessing of GSP pages
+grails.views.gsp.sitemesh.preprocess = false
+// scaffolding templates configuration
+grails.scaffolding.templates.domainSuffix = 'Instance'
+
+// Set to false to use the new Grails 1.2 JSONBuilder in the render method
+grails.json.legacy.builder=false
+// enabled native2ascii conversion of i18n properties files
+grails.enable.native2ascii = true
+// whether to install the java.util.logging bridge for sl4j. Disable fo AppEngine!
+grails.logging.jul.usebridge = true
+// packages to include in Spring bean scanning
+grails.spring.bean.packages = []
+
+// set per-environment serverURL stem for creating absolute links
+environments {
+    production {
+        grails.serverURL = "http://synote.soton.ac.uk"
+    }
+    development {
+        grails.serverURL = "http://localhost:8080/${appName}"
+    }
+    test {
+        grails.serverURL = "http://localhost:8080/${appName}"
+		//Used for tests that need existing user
+		synote.test.account.userName = "test"
+		synote.test.account.password = "a"
+		synote.test.account.role = "ROLE_NORMAL"
+		synote.test.account.userId = "7"
+		//Used for creating new account
+		synote.test.create.user.userName = "test12349012934test" //In case the user name has been taken
+		synote.test.create.user.password = "a" //In case we add password constrain in the future
+		
+		synote.test.admin.userName="admin"
+		synote.test.admin.password="a"
+		synote.test.admin.role="ROLE_ADMIN"
+		synote.test.admin.userId = "1"
+    }
+
+}
+
+//Envriorment variables for IBM transcription server
+//These configuration properties should at last can be set in Web interface
+/*
+synote.IBMTransServer.url = "http://lslvm-yl2.ecs.soton.ac.uk:8080/SLWeb/"
+synote.IBMTransServer.protocol = "http://"
+synote.IBMTransServer.name = "quartz.org"//"lslvm-yl2.ecs.soton.ac.uk"
+synote.IBMTransServer.port = "8080"
+synote.IBMTransServer.appPath="/SLWeb/"
+synote.IBMTransServer.api.login="api/login?"
+synote.IBMTransServer.api.logout ="api/logout?"
+synote.IBMTransServer.api.addJob ="api/addJob?"
+synote.IBMTransServer.api.getJobs ="api/getJobs?"
+synote.IBMTransServer.api.getJob ="api/getJob?"
+synote.IBMTransServer.api.getTranscript ="api/getTranscript?"
+synote.IBMTransServer.api.removeJob ="api/removeJob?"
+//synote.IBMTransServer.sourceDir ="C:\\Program Files\\Apache Software Foundation\\Tomcat 6.0\\webapps\\SLWeb\\webJobs\\yl2@ecs.soton.ac.uk\\"
+synote.IBMTransServer.sourceDir ="webJobs/mw@ecs.soton.ac.uk/"
+//use System.getProperty("base.dir") instead of the following one
+//synote.IBMTransServer.destDir ="C:\\Users\\rabbit\\Projects\\macfob\\svn\\projects\\synote\\web-app\\content\\IBMTranscripts"
+synote.IBMTransServer.username ="synote"
+synote.IBMTransServer.password ="synote"
+synote.IBMTransServer.enabled = false
+*/
+
+// log4j configuration
+log4j = {
+    // Example of changing the log pattern for the default console
+    // appender:
+    //
+	development{
+		
+		appenders {
+			console name:'stdout',layout:pattern(conversionPattern:'%p %c{5} %m%n')
+		}
+		error   'org.codehaus.groovy.grails.web.pages', //  GSP
+				'org.codehaus.groovy.grails.web.sitemesh', //  layouts
+				'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+				'org.codehaus.groovy.grails.web.mapping', // URL mapping
+				'org.codehaus.groovy.grails.commons', // core / classloading
+				'org.codehaus.groovy.grails.plugins', // plugins
+				'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
+				'org.springframework',
+				'org.hibernate',
+				'net.sf.ehcache.hibernate',
+				'org.synote.permission.PermService'
+				//,'org.codehaus.groovy.grails.web.servlet',  //  controllers
+		warn   'org.mortbay.log' 
+		//info 	'org.synote.integration.ibmhts'
+		debug   'grails.app.service.org.synote.user.SecurityService',
+				'grails.app.service.org.synote.integration.entermedia.EnterMediaService',
+				//'org.synote.user.SynoteLdapAuthenticator',
+			   //'groovy.grails.plugins.springsecurity.GrailsDaoImpl',
+		       //'org.synote.user.SynoteLdapAuthenticationProcessingFilter',
+			   //'org.synote.user.AutoCreateLdapUserDetailsMapper',
+			   'org.synote.user.SynoteAuthenticationProvider',
+			   'org.synote.user.SynoteAPITokenFilter',
+			   'org.synote.user.SynoteAPILoginFilter',
+			   'org.synote.search.GoogleCrawlFilter',
+		       'grails.app.service.org.synote.player.server.PlayerService',
+		       'grails.app.service.org.synote.search.resource.ResourceSearchService',
+		       'grails.app.service.org.synote.integration.ibmhts.IBMTransJobService',
+			   'grails.app.service.org.synote.search.sitemap.SitemapService',
+			   'grails.app.service.org.synote.linkeddata.DataDumpService',
+			   'grails.app.controller.org.synote.resource.compound.MultimediaController',
+			   'grails.app.controller.org.synote.linkeddata.LinkedDataController',
+			   'grails.app.controller.org.synote.user.admin.AdminController',
+			   'grails.app.controller.org.synote.api.ApiController',
+		       'grails.app.task'
+	}
+	
+	production{
+		def catalinaBase = System.properties.getProperty('catalina.base')
+		if (!catalinaBase) catalinaBase = '.'   // just in case
+		def logDirectory = "${catalinaBase}/logs"
+		
+	    appenders {
+			//appender new org.apache.log4j.DailyRollingFileAppender(name:'synote_info', file:'logs/synote_info.log', threshold: org.apache.log4j.Level.INFO,datePattern:"'.'yyyy-MM-dd", layout:pattern(conversionPattern:'[%d{yyyy-MM-dd hh:mm:ss.SSS}] %p %c{5} %m%n'))
+			appender new org.apache.log4j.DailyRollingFileAppender(name:'synote_log', file:"${logDirectory}/synote.log".toString(), threshold: org.apache.log4j.Level.INFO,datePattern:"'.'yyyy-MM-dd", layout:pattern(conversionPattern:'[%d{yyyy-MM-dd hh:mm:ss.SSS}] %p %c{5} %m%n'))
+			file name:'synote_stacktrace', file:"${logDirectory}/synote_stacktrace.log", append:false
+			'null' name:'stacktrace'			
+	    }
+
+	    error  synote_log:'org.codehaus.groovy.grails.web.servlet'  //  controllers
+		error  synote_log:'org.codehaus.groovy.grails.web.pages' //  GSP
+		error  synote_log:'org.codehaus.groovy.grails.web.sitemesh' //  layouts
+		error  synote_log:'org.codehaus.groovy.grails.web.mapping.filter' // URL mapping
+		error  synote_log:'org.codehaus.groovy.grails.web.mapping' // URL mapping
+		error  synote_log:'org.codehaus.groovy.grails.commons' // core / classloading
+		error  synote_log: 'org.codehaus.groovy.grails.plugins' // plugins
+		error  synote_log:'org.codehaus.groovy.grails.orm.hibernate' // hibernate integration
+		error  synote_log:'org.springframework'
+		error  synote_log:'org.hibernate'
+	    error  synote_log:'net.sf.ehcache.hibernate'
+		error  synote_log:'grails.app.task'
+		error  synote_stacktrace:'StackTrace'
+	    warn   synote_log:'org.mortbay.log'
+		info   synote_log:'grails.app'
+		/*root {
+			warn 'synote_log',stdout
+			//debug 'synote_debug',stdout
+			additivity=true
+		}*/
+	}
+	
+	test {
+		error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
+				'org.codehaus.groovy.grails.web.pages', //  GSP
+				'org.codehaus.groovy.grails.web.sitemesh', //  layouts
+				'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+				'org.codehaus.groovy.grails.web.mapping', // URL mapping
+				'org.codehaus.groovy.grails.commons', // core / classloading
+				'org.codehaus.groovy.grails.plugins', // plugins
+				'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
+				'org.springframework',
+				'org.hibernate',
+				'net.sf.ehcache.hibernate'
+		
+		warn   'org.mortbay.log'
+	}
+}
+
+
+     
+
+//log4j.logger.org.springframework.security='off,stdout'
