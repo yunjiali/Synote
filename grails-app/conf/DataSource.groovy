@@ -1,7 +1,7 @@
 dataSource {
 	pooled = true
 	driverClassName = "com.mysql.jdbc.Driver"
-	dialect = org.hibernate.dialect.MySQLInnoDBDialect
+	dialect = "org.hibernate.dialect.MySQLInnoDBDialect"
 	username = "synote"
 	password = "synote"
 }
@@ -16,7 +16,7 @@ environments {
 	development {
 		dataSource {
 			//dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			url = "jdbc:mysql://localhost/synote_aluiar"
+			url = "jdbc:mysql://localhost/synote"
 			//url= ApplicationHolder.application.metadata['app.database.development.url']
 		}
 	}

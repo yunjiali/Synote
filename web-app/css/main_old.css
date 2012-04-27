@@ -1,0 +1,656 @@
+body {
+	background: #fff;
+	font-family: verdana, arial, helvetica, sans-serif;
+}
+
+.spinner {
+	padding: 5px;
+	position: absolute;
+	right: 0;
+}
+
+.warning {
+	color:red;
+}
+
+/* Don't delete
+#main_content
+{
+	background-color: #EFEFEF;
+    border: 2px solid #FFFFFF;
+    outline: 1px solid #CCCCCC;
+}
+*/
+
+.topMainMenu {
+	/*background: url("jquery/aristo/images/bg_fallback.png") repeat-x scroll 0 0 transparent;
+	background-color: #d4d4d4;
+	padding: 3px 6px;
+	border: none;
+	-webkit-border-radius: 0px 0px 15px 15px;
+	-moz-border-radius: 0px 0px 15px 15px;
+	border-radius: 0px 0px 15px 15px;*/
+	list-style:none;
+	font-size:80%;
+}
+
+#topMainMenu img{
+	border:0px;
+	height:16px;
+	position:relative;
+	top:3px;
+}
+
+#topMainLoginMenu_div
+{
+	background-color:#a7cfe6 !important;
+	float:right !important;
+	font-weight:normal !important;
+	font-size:1em !importatn;
+	-webkit-border-radius: 0px 0px 10px 10px !important;
+	-moz-border-radius: 0px 0px 10px 10px !important;
+	border-radius: 0px 0px 10px 10px !important;
+	padding:0.4em 1em;
+}
+
+#topMainLoginMenu a
+{
+	background-image:none !important;
+	border:none !important;
+	font-weight: normal !important;
+}
+
+#topMainLoginMenu a:hover
+{
+	background-color:#5599bb !important;
+	color: #fff !important;
+	-webkit-border-radius: 0px 0px 10px 10px !important;
+	-moz-border-radius: 0px 0px 10px 10px !important;
+	border-radius: 0px 0px 10px 10px !important;
+	border:none !important;
+}
+
+#bottomMainFooter {
+	clear: both;
+	text-align: center;
+}
+
+/* GENERAL */
+
+h1
+{
+	color: #006dba;
+	font-weight: normal;
+	font-size: 2em;
+	margin: .8em 0 .5em 0;
+}
+
+h2
+{
+	color:#3366cc;
+	font-weight:normal;
+	font-size:1.5em;
+	margin: .5em 0 .3em 0;
+}
+
+h3
+{
+	color:#3366cc;
+	font-weight:bold;
+	font-size:1.2em;
+	margin: .3em 0 .2em 0;
+}
+/*Hide the title in a accessibility and seo friendly way*/
+.hiding
+{
+	position: absolute;
+    left: -9999px;
+}
+.body {
+	float: left;
+	margin: 0 15px 10px 15px;
+}
+
+/* NAVIGATION MENU */
+.nav {
+	background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+	border: 1px solid #ccc;
+	border-style: solid none solid none;
+	margin-top: 1em;
+	padding: 7px 12px;
+}
+
+.menuButton a.home {
+	background: url(../images/skin/house.png) center left no-repeat;
+}
+
+.menuButton a.help {
+	background: url(../images/skin/information.png) center left no-repeat;
+}
+
+.menuButton a.list {
+	background: url(../images/skin/database_table.png) center left no-repeat;
+}
+
+.menuButton a.show {
+	background: url(../images/skin/database_edit.png) center left no-repeat;
+}
+
+.menuButton a.login {
+	background: url(../images/skin/key_16.png) center left no-repeat;
+}
+
+.menuButton a.register {
+	background: url(../images/skin/pencil_16.png) center left no-repeat;
+}
+
+.menuButton a.user {
+	background: url(../images/skin/database_edit.png) center left no-repeat;
+}
+
+.menuButton a.userProfile {
+	background: url(../images/skin/settings_16.png) center left no-repeat;
+}
+
+.menuButton a.logout {
+	background: url(../images/skin/logout_16.png) center left
+		no-repeat;
+}
+
+.menuButton a.create {
+	background: url(../images/skin/database_add.png) center left no-repeat;
+}
+
+.menuButton a.upload {
+	background: url(../images/skin/database_add.png) center left no-repeat;
+}
+
+.menuButton a.search {
+	background: url(../images/skin/question.gif) center left no-repeat;
+}
+
+/*panelBox*/
+.panelBox{
+    background: -moz-linear-gradient(top, #eee, #fff);
+    background: -webkit-linear-gradient(top, #eee, #fff);
+    background: -o-linear-gradient(top, #eee, #fff);
+    background: linear-gradient(top, #eee, #fff);
+    /* versions of IE use these */
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr='#eeeeee',EndColorStr='#ffffff');
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#eeeeee, endColorstr=#ffffff)";
+    box-shadow:2px 2px 5px #78807D;
+    border-radius: 5px 5px 5px 5px; 
+	-moz-border-radius: 5px 5px 5px 5px; 
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.panelBox .titleHeader{
+	padding-left:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+    /*background: -moz-linear-gradient(center top , rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0 #85B2CB;
+    background: -webkit-linear-gradient(center top , rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0 #85B2CB;
+    background: -o-linear-gradient(center top , rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0 #85B2CB;
+    background: linear-gradient(center top , rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0 #85B2CB;*/
+    /*border: 1px solid #7096AB;*/
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.titleHeader h2
+{
+	color: #2F556A !important;
+    text-decoration: none;
+    font-size:1em;
+    font-weight: bold;
+}
+.panelBox .mainBody
+{
+	padding:0 1em 1em 1em;
+}
+/* info, success and errors */
+.info {
+	background: url(../images/skin/information.png) 8px 50% no-repeat;
+	background-color:#f3f8fc;
+	border: 1px solid #b2d1ff;
+	color: #006dba;
+	margin: 10px 0 5px 0;
+	padding: 5px 5px 5px 30px
+}
+
+.success {
+	background: url(../images/skin/accept_16.png) 8px 50% no-repeat;
+	background-color:#dff2bf;
+	border: 1px solid #006400;
+	color: #4f8a10;
+	margin: 10px 0 5px 0;
+	padding: 5px 5px 5px 30px
+}
+
+.error {
+	background: url(../images/skin/exclamation.png) 8px 50% no-repeat;
+	background-color: #ffdfdf;
+	border: 1px solid red;
+	color: #cc0000;
+	margin: 10px 0 5px 0;
+	padding: 5px 5px 5px 30px
+}
+
+div.errors {
+	background: #fff3f3;
+	border: 1px solid red;
+	color: #cc0000;
+	margin: 10px 0 5px 0;
+	padding: 5px 0 5px 0;
+}
+
+div.errors ul {
+	list-style: none;
+	padding: 0;
+}
+
+div.errors li {
+	background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
+	line-height: 16px;
+	padding-left: 30px;
+}
+
+td.errors select {
+	border: 1px solid red;
+}
+
+td.errors input {
+	border: 1px solid red;
+}
+
+/* TABLES */
+
+/*over write the screen.css settings*/
+.ui-state-highlight td
+{
+	border: 1px solid #666666;
+    background: #aaaaaa !important;
+    background: #aaaaaa linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0)) !important;
+    background: #aaaaaa -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.25)), to(rgba(0,0,0,0))) !important;
+    background: #aaaaaa -moz-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0)) !important; /*    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000, endColorstr=#00000000);     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000, endColorstr=#00000000)"; */
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #333333;
+}
+
+td .jqGrid_action_link
+{
+	margin:0 3px;
+}
+/* LIST */
+.list table {
+	border-collapse: collapse;
+}
+
+.list th,.list td {
+	border-left: 1px solid #ddd;
+}
+
+.list th:hover,.list tr:hover {
+	background: #b2d1ff;
+}
+
+/* PAGINATION */
+.paginateButtons {
+	background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+	border: 1px solid #ccc;
+	border-top: 0;
+	color: #666;
+	font-size: 10px;
+	overflow: hidden;
+	padding: 10px 3px;
+}
+
+.paginateButtons a {
+	background: #fff;
+	border: 1px solid #ccc;
+	border-color: #ccc #aaa #aaa #ccc;
+	color: #666;
+	margin: 0 3px;
+	padding: 2px 6px;
+}
+
+.paginateButtons span {
+	padding: 2px 3px;
+}
+
+/* DIALOG */
+.dialog table {
+	padding: 5px 0;
+}
+
+.prop {
+	padding: 5px;
+}
+
+.prop .name {
+	text-align: left;
+	width: 20%;
+	white-space: nowrap;
+	font-weight:bold;
+}
+
+.prop .value {
+	text-align: left;
+	width: 80%;
+}
+
+.prop .add {
+	padding-left: 24px;
+	font-size: 10px;
+	background: transparent url(../images/skin/add.png) 2px 50% no-repeat;
+	cursor: pointer;
+}
+
+.prop .delete {
+	padding-left: 24px;
+	font-size: 10px;
+	background: transparent url(../images/skin/delete.png) 2px 50% no-repeat;
+	cursor: pointer;
+}
+
+/* ACTION BUTTONS */
+.buttons {
+	background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+	border: 1px solid #ccc;
+	color: #666;
+	font-size: 10px;
+	margin-top: 5px;
+	overflow: hidden;
+	padding: 0;
+}
+
+.buttons input {
+	background: #fff;
+	border: 0;
+	color: #333;
+	cursor: pointer;
+	font-size: 10px;
+	font-weight: bold;
+	margin-left: 3px;
+	overflow: visible;
+	padding: 2px 6px;
+	padding-left: 28px;
+}
+
+.buttons input.delete {
+	background: transparent url(../images/skin/delete.png) 5px 50% no-repeat;
+}
+
+.buttons input.edit {
+	background: transparent url(../images/skin/edit.gif) 5px 50% no-repeat;
+}
+
+.buttons input.save {
+	background: transparent url(../images/skin/save.gif) 5px 50% no-repeat;
+}
+
+.buttons input.login {
+	background: transparent url(../images/skin/database_edit.png) 5px 50%
+		no-repeat;
+}
+
+.buttons input.register {
+	background: transparent url(../images/skin/database_save.png) 5px 50%
+		no-repeat;
+}
+
+.buttons input.preview {
+	background: transparent url(../images/skin/database_table.png) 5px 50%
+		no-repeat;
+}
+
+.buttons input.upload {
+	background: transparent url(../images/skin/database_save.png) 5px 50%
+		no-repeat;
+}
+
+.buttons input.cancel {
+	background: transparent url(../images/skin/cancel.gif) 5px 50% no-repeat;
+}
+
+.buttons input.tweetUpload {
+	background: transparent url(../images/skin/twitter-small.png) 5px 50%
+		no-repeat;
+}
+
+.buttons input.advancedSearch {
+	background: transparent url(../images/skin/icon_search.png) 5px 50%
+		no-repeat;
+}
+
+.buttons a.replay {
+	background: transparent url(../images/skin/icon_replay.gif) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.buttons a.print {
+	background: transparent url(../images/skin/icon_print.gif) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.buttons a.generateTranscript {
+	background: transparent url(../images/skin/comment.gif) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.buttons a.tweetUpload {
+	background: transparent url(../images/skin/twitter-small.png) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.links {
+	background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+	border: 1px solid #ccc;
+	color: #666;
+	font-size: 10px;
+	margin-top: 5px;
+	overflow: hidden;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.links a {
+	background: #fff;
+	border: 0;
+	color: #333;
+	cursor: pointer;
+	font-size: 10px;
+	font-weight: bold;
+	margin-left: 3px;
+	overflow: visible;
+	padding: 2px 6px;
+}
+
+.links a.replay {
+	background: transparent url(../images/skin/icon_replay.gif) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.links a.print {
+	background: transparent url(../images/skin/icon_print.gif) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.links a.edit {
+	background: transparent url(../images/skin/edit.gif) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+
+.links a.update {
+	background: transparent url(../images/skin/update.gif) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+
+.links a.delete {
+	background: transparent url(../images/skin/delete.png) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+
+.link a.upload {
+	background: transparent url(../images/skin/upload.png) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+
+.link a.download {
+	background: transparent url(../images/skin/download.png) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.link a.tweetUpload {
+	background: transparent url(../images/skin/twitter-small.png) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+//Group related buttons
+
+.group a
+{
+	background: #fff;
+	border: 0;
+	color: #333;
+	cursor: pointer;
+	font-size: 10px;
+	font-weight: bold;
+	margin-left: 3px;
+	overflow: visible;
+	padding: 2px 6px;
+	padding-left: 28px;
+	text-decoration: none;
+}
+.group a.edit
+{
+	background: transparent url(../images/skin/user_group_16.png) 5px 50% no-repeat;
+	padding-left:32px;
+}
+.group a.join
+{
+	background: transparent url(../images/skin/user_group_add_user_16.png) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.group a.addRecording
+{
+	background: transparent url(../images/skin/user_group_add_recording_16.png) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.group a.removeRecording
+{
+	background: transparent url(../images/skin/user_group_remove_recording_16.png) 5px 50%
+		no-repeat;
+	padding-left: 32px;
+}
+
+.group a.removeUser
+{
+	background: transparent url(../images/skin/user_group_remove_user_16.png) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+
+.group a.editMember
+{
+	background: transparent url(../images/skin/user_group_edit_member_16.png) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+
+.group a.editRecording
+{
+	background: transparent url(../images/skin/user_group_edit_recording_16.png) 5px 50% no-repeat;
+	padding-left: 32px;
+}
+/*css for tags*/
+.tag
+{
+	border: 1px solid #A5D24A;
+	background: #CDE69C;
+	color: #638421;
+	
+	-moz-border-radius:4px;
+	-webkit-border-radius: 4px;
+	border-radius:4px;
+	display: block;
+	float: left;
+	padding: 5px;
+	text-decoration: none;
+	
+	
+	margin-right: 5px;
+	margin-bottom: 5px;
+	font-size: 1.2em;
+	
+	/*background: #B2CCE5;
+	border: 1px solid #73A1D0;
+	color: white;*/
+}
+
+.tag a
+{
+	text-decoration:none;
+}
+
+/*paging*/
+.paging {
+	margin: 3em 0 2em 0;
+	text-align: center;
+}
+
+.paging a {
+	border: 1px solid rgb(212, 212, 212);
+	display: inline;
+	margin: 0px 0.38em 0em 0px;
+	padding: 0.3em 0.7em;
+	text-align: center;
+}
+
+.paging span {
+	border: 1px solid rgb(0, 60, 108);
+	display: inline;
+	margin: 0px 0.38em 0em 0px;
+	padding: 0.3em 0.7em;
+	text-align: center;
+	background: rgb(216, 227, 240);
+}
+/*Combobox*/
+
+.combowrap
+{
+	
+}
+
+.combowrap input
+{
+	padding:.5em .2em;
+	text-align:left;
+}
+
+
+/* My Synote */
+
+#my_synote_content a {
+	display: block;
+	width: 20%;
+	float: left;
+	text-align: center;
+	margin: 2%;
+	text-decoration:none;
+}
+
+#my_synote_content #mysynote_filter {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
