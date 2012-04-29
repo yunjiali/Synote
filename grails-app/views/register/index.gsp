@@ -2,77 +2,92 @@
 <meta name="layout" content="main" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>User Registration</title>
-<link rel="stylesheet" href="${resource(dir: 'css/jquery/aristo/uniform', file: 'uni-form.css')}" media="screen" charset="utf-8"/>
-<link rel="stylesheet" href="${resource(dir: 'css/jquery/aristo/uniform', file: 'default.uni-form.css')}" media="screen" charset="utf-8"/>
-<script type="text/javascript" src="${resource(dir:'js/jquery/uniform',file:'uni-form.jquery.min.js')}"></script>
-<script type="text/javascript" src="${resource(dir:'js/jquery/uniform',file:'uni-form-validation.jquery.min.js')}"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".uniForm").uniform();
-		$("input[type=text], input[type=password]").wijtextbox();
-		$("#registrationForm_submit").button();
-		$("#registerForm").wijexpander({allowExpand:false});
-		$("#read_only_help_span [title]").wijtooltip();
+		$("#loginForm").validate(
+		{
+			highlight: function(label) {
+				$(label).closest('.control-group').addClass('error');
+			},
+		});
 	});
 </script>
 </head>
 
 <body>
-
-<g:render template="/common/message" model="[bean: user]" /> 
-
-<div class="span-16 prepend-4 append-4 prepend-top append-bottom">
-	<div id="registerForm">
-		<h1>User Registration</h1>
-		<g:form method="post" class="uniForm" controller="register" action="save">
-
-			<div class="ctrlHolder inlineLabels">
-			    <label for="userName"><em>*</em>User Name:</label>
-				<input type='text' autocomplete="off" class="textInput medium required" name='userName' id='userName' value='${fieldValue(bean: user, field: 'userName')}' />
-				<p class="formHint">Please enter the username you would like to use for Synote</p>
+<h1 class="hiding">User Registration</h1>
+<div class="container">
+	<div class="row">
+		<div class="span6 offset2 well">
+			<h3>Create a Synote account</h3>
+			<hr/>
+			<g:render template="/common/message" model="[bean: user]" />
+			<div>
+				<form action='${postUrl}' method='POST' id='loginForm' class="form-horizontal">
+				  <fieldset>
+				    <div class="control-group">
+				    	<label for="userName" class="control-label"><b><em>*</em>User Name</b></label>
+				      	<div class="controls">
+				        	<input type='text' autocomplete="off" class="required" name='userName' id='userName' value='${fieldValue(bean: user, field: 'userName')}' />
+							<p class="help-block">The username you would like to use in Synote</p>
+				      	</div>
+				    </div>
+				    <div class="control-group">
+				     	<label for="password" class="control-label"><b><em>*</em>Password</b></label>
+				      	<div class="controls">
+							<input type='password' name='password' class="required" id='password'/>
+				      	</div>
+				    </div>
+				    <div class="control-group">
+				     	<label for="confirmed" class="control-label"><b><em>*</em>Confirmed Password</b></label>
+				      	<div class="controls">
+							<input type='password' name='confirmed' class="required" id='confirmed'/>
+				      	</div>
+				    </div>
+					<div class="control-group">
+					    <label for="firstName" class="control-label"><b><em>*</em>First Name</b></label>
+					    <div class="controls">
+					    	<input type='text' autocomplete="off" class="required" name='firstName' id='firstName' value='${fieldValue(bean: user, field: 'firstName')}' />	
+					    </div>
+					</div>
+					<div class="control-group">
+					    <label for="lastName" class="control-label"><b><em>*</em>Last Name</b></label>
+					    <div class="controls">
+					    	<input type='text' autocomplete="off" class="required" name='lastName' id='lastName' value='${fieldValue(bean: user, field: 'lastName')}' />
+					    </div>
+					</div>
+					<div class="control-group">
+					    <label for="email" class="control-label"><b><em>*</em>Email</b></label>
+					    <div class="controls">
+					    	<div class="input-prepend">
+					    		<span class="add-on"><i class="icon-envelope"></i></span><input type='text' class="required email" name='email' id='email' value='${fieldValue(bean: user, field: 'email')}' />
+					    	</div>
+					    </div>
+					</div>
+					<g:captchaEnabled>
+					<div class="control-group">
+					    <label for="captcha" class="control-label"><b><em>*</em>Enter Code:</b></label>
+					    <div class="controls">
+					    	<input type='text' autocomplete="off" class="required" name='captcha' id='captcha' />
+							<p class="help-block"><img src="${createLink(controller:'captcha', action:'index')}" align="absmiddle" /></p>
+					    </div>
+					</div>
+					</g:captchaEnabled>
+					<div class="control-group">
+			    		<label class="checkbox" for="termsAndConditions">
+			    			<input type="checkbox" name="termsAndConditions" id="termsAndConditions" class="required"/>
+							I have read and agreed the <g:link controller="user" action="termsAndConditions">Synote Terms and Conditions.</g:link>
+			    		</label>
+			   		</div>
+				    <div class="form-actions">
+			            <input class="btn-large btn-primary" id="registrationForm_submit" type="submit" value="Register" />
+			            <input class="btn-large" id="registrationForm_reset" type="reset" value="Reset"/>
+			        </div>
+				  </fieldset>
+				</form>
 			</div>
-			
-			<div class="ctrlHolder inlineLabels">
-			    <label for="password"><em>*</em>Password:</label>
-				<input type='password' autocomplete="off" class="textInput medium required" name='password' id='password' value='${fieldValue(bean: user, field: 'password')}' />
-			</div>
-
-			<div class="ctrlHolder inlineLabels">
-			    <label for="confirm"><em>*</em>Confirm Password:</label>
-				<input type='password' autocomplete="off" class="textInput medium required" name='confirm' id='confirm' value='${params.confirm}' />
-			</div>
-			
-			
-			<div class="ctrlHolder inlineLabels">
-			    <label for="firstName">First Name:</label>
-				<input type='text' autocomplete="off" class="textInput medium required" name='firstName' id='firstName' value='${fieldValue(bean: user, field: 'firstName')}' />
-			</div>
-
-			<div class="ctrlHolder inlineLabels">
-			    <label for="lastName">Last Name:</label>
-				<input type='text' autocomplete="off" class="textInput medium required" name='lastName' id='lastName' value='${fieldValue(bean: user, field: 'lastName')}' />
-			</div>
-
-			<div class="ctrlHolder inlineLabels">
-			    <label for="email"><em>*</em>Email:</label>
-				<input type='text' autocomplete="off" class="textInput medium required" name='email' id='email' value='${fieldValue(bean: user, field: 'email')}' />
-			</div>
-			<g:captchaEnabled>
-			<div class="ctrlHolder inlineLabels">
-			    <label for="captcha"><em>*</em>Enter Code:</label>
-				<input type='text' autocomplete="off" class="textInput medium required" name='captcha' id='captcha' />
-				<p class="formHint"><img src="${createLink(controller:'captcha', action:'index')}" align="absmiddle" /></p>
-			</div>
-			</g:captchaEnabled>
-			<g:checkBox name="termsAndConditions"
-				value="agree" checked="false" />&nbsp;&nbsp;I have read and agreed
-			the <g:link controller="user" action="termsAndConditions">Synote Terms and Conditions.</g:link>
-			
-			<div class="prepend-top append-bottom">
-				<input id="registrationForm_submit" type="submit" value="Register" />
-			</div>
-		</g:form>
-
+		</div>
 	</div>
 </div>
 </body>

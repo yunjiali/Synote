@@ -10,6 +10,14 @@
 	margin-top:10px;
 }
 
+/*error in the form*/
+label.error {
+  font-weight: bold;
+  color: red;
+  padding: 2px 8px;
+  margin-top: 2px;
+}
+
 /* Search form */
 #search_bar_div
 {

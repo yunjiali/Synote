@@ -1,10 +1,10 @@
 <g:if test="${flash.error}">
-	<div class="error">
+	<div class="alert alert-error">
 	${flash.error}
 	</div>
 </g:if>
 <g:if test="${flash.info}">
-	<div class="info">
+	<div class="alert alert-info">
 	${flash.info}
 	</div>
 </g:if>
@@ -12,7 +12,7 @@
 	<div class="errors"><g:renderErrors bean="${bean}" as="list" /></div>
 </g:hasErrors>
 <g:if test="${flash.message}">
-	<div class="success">
+	<div class="alert alert-success">
 	${flash.message}
 	</div>
 </g:if>

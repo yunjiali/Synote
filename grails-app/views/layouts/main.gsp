@@ -48,7 +48,7 @@
 						<ul class="dropdown-menu">
 					    	<li><g:link controller="user" action="showUserProfile" title="Show user profile">My Profile</g:link></li>
 					    	<g:isAdminLoggedIn>
-							<li><g:link controller="admin" action="index" title="Administration">Administration </g:link></li>
+							<li><g:link controller="admin" action="index" title="Administration">Administration</g:link></li>
 							</g:isAdminLoggedIn>
 					        <li class="divider"></li>
 					        <li><g:link controller="logout" action="index" title="Log out">Log out</g:link></li>
