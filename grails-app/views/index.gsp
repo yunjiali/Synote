@@ -8,14 +8,11 @@
 <script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.zrssfeed.min.js")}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	
-	//start the carousel
-	$('.carousel').carousel();
 	//Get the RSS feed from Synote blog
 	$("#blog_feed_div").rssfeed("http://blog.lsl.ecs.soton.ac.uk/synote/feed/",{
-		limit:7,
+		limit:6,
 		content:false,
-		titletag:"h3"
+		titletag:"h4"
 	})
 });
 </script>
@@ -59,15 +56,21 @@ $(document).ready(function(){
 </head>
 <body>
 	<h1 class="hiding"><g:message code="org.synote.home.title" /></h1>
+	<!-- Synote introduction and slide show -->
 	<div class="row">
 		<div class="span5">
 			<h2>What is Synote</h2>
 			<p>
-				Make a transcript for a recording by selecting the 'Edit Transcript' then 'Add ...'
-				Type or import text. You can play, edit, merge, split or delete transcripts by using the right-hand mouse features.
-				your recording by returning to the 'Recordings' menu button.
-				Change the look and feel of the player by using the 'Settings' button.
+				Synote makes multimedia resources such as video and audio easier to access, search, manage, and exploit. Learners, teachers and other users can create notes, bookmarks, tags, links, images and text captions synchronised to any part of a recording, such as a lecture.
 			</p>
+			<p>Imagine how difficult it would be to use a textbook if it had no contents page, index or page numbers. Synote actually provides the way to find or associate notes with a particular part of a recording,i.e. the media fragments.
+			</p>
+			<div>
+				<g:link controller="user" action="help" fragment="step" title="5 steps quick start" class="btn btn-info">
+					 5 Steps quick start</g:link>	 
+				<g:link controller="register" action="index" title="Register" class="btn btn-success">
+					 Get a free account</g:link>
+			</div>
 		</div>
 		<div class="span6 offset1">
 			<div id="slider" class="carousel">
@@ -75,28 +78,21 @@ $(document).ready(function(){
 			    <div class="carousel-inner">
 				    <div class="carousel-inner">
 						<div class="item">
-							<img src="${resource(dir:'images',file:'Step1small.jpg')}" alt="Step 1" />	
+							<img src="${resource(dir:'images',file:'test/web_design.jpg')}" alt="Step 1" />	
 							<div class="carousel-caption">
-								<h4>Safe and Secure</h4>
-							<div>256-bit SSL data encryption</div>
-								<div>firewall protected servers</div>
-						</div>
-					</div>
-						<div class="item">
-							<img src="${resource(dir:'images',file:'Step2small.jpg')}" alt="Step 2" />
-							<div class="carousel-caption">
-								<h4>Easy and Flexible</h4>
-								<div>intuitive and user-friendly interface</div>
-									<div>working on desktop and mobile devices</div>
-								</div>
+								<h4>Share your annotations on the Web</h4>
 							</div>
-							<div class="item">
-								<img src="${resource(dir:'images',file:'Step3small.jpg')}" alt="Step 3" />	
-								<div class="carousel-caption">
-									<h4>Powerful and Universal</h4>
-									<div>advanced reports and charts</div>
-									<div>external services integration</div>
-								</div>
+						</div>
+						<div class="item">
+							<img src="${resource(dir:'images',file:'test/varioggetti.jpg')}" alt="Step 2" />
+							<div class="carousel-caption">
+								<h4>Working on desktop and mobile devices</h4>
+							</div>
+						</div>
+						<div class="item">
+							<img src="${resource(dir:'images',file:'test/seo.jpg')}" alt="Step 3" />	
+							<div class="carousel-caption">
+								<h4>Search engine optimisation for media fragments</h4>
 							</div>
 						</div>
 				    </div>
@@ -105,6 +101,64 @@ $(document).ready(function(){
 				    <a class="carousel-control right" href="#slider" data-slide="next">&rsaquo;</a>
 				</div>
 			</div>
+			<script type="text/javascript">
+				//start the carousel
+				$('.carousel').carousel({
+					interval: 2000
+				});
+			</script>
 		</div>
+	</div>
+	<div class="row block">
+		<div class="span12">
+			<div class="row">
+				<div class="span1">
+					<img src="${resource(dir:'images',file:"multimedia_48.png")}" title="annotation multimedia online"/>
+				</div>
+				<div class="span3">
+					<h3>Multimedia Online</h3>
+					<p>Annotate most auido and video resources online as long as they are accessible through URLs, including YouTube video.</p>
+				</div>
+				<div class="span1">
+					<img src="${resource(dir:'images',file:"sync_48.png")}" title="synchronised"/>
+				</div>
+				<div class="span3">
+					<h3>Synchronised</h3>
+					<p>Listen to recordings whilst viewing the transcript and slides and making synchronised notes.</p>
+				</div>
+				<div class="span1">
+					<img src="${resource(dir:'images',file:"media_fragment_48.png")}" title="media fragment"/>
+				</div>
+				<div class="span3">
+					<h3>Media Fragments</h3>
+					<p>Annotate only a certain part of audio-visual resources from all over the Web and share them online. </p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">
+					<img src="${resource(dir:'images',file:"linkeddata_48.png")}" title="linked data"/>
+				</div>
+				<div class="span3">
+					<h3>Linked Data</h3>
+					<p>Automatically publish media fragments and annotations using Linked Data and they are searchable by Google.
+					<g:link controller="user" action="help" fragment="linkeddata">Learn more...</g:link></p>
+				</div>
+				<div class="span1">
+					<img src="${resource(dir:'images',file:"speech_recognition_48.png")}" title="speech recognition"/>
+				</div>
+				<div class="span3">
+					<h3>Speech Recognition</h3>
+					<p>Transcripts can be automatically uploaded via speech recognition if linked to this type of service.</p>
+				</div>
+				<div class="span1">
+					<img src="${resource(dir:'images',file:"pda_48.png")}" title="mobile access"/>
+				</div>
+				<div class="span3">
+					<h3>Mobile Access</h3>
+					<p>Check your annotations and transcript on mobile devices, such as iPhone, iPad and Android tablet.</p>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

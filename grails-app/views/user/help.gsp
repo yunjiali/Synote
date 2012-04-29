@@ -27,6 +27,7 @@ This is an easy guide to working with your research media and annotations
 		<li>Search for a recording you have made or for someone else’s recording by title, tag or keywords or browse through <b>Recordings</b>.</li> 
 		<li>Refine your search by going to <b>My Synote</b>, select <b>My Resources</b>,  <b>My Groups</b> or <b>My Tags</b>.</li>
 	</ul>
+	<img src="${resource(dir:'images',file:"Step1small.jpg")}" alt="Step 1" />	
 	<h3 id="step2">Step 2</h3>
 	<ul>
 		<li>Just want to listen or annotate a recording? Select the <b>Recordings</b> button to view a list of public recordings and <b'Play'</b> , 
@@ -34,12 +35,14 @@ This is an easy guide to working with your research media and annotations
 		<li>You may be able to annotate or change the transcript – use <b>'Edit Transcript'</b> or <b>'Add Synmark'</b> if available. </li>
 		<li><b>Right-hand mouse button</b> will reveal more options for editing. </li> 
 	</ul>
+	<img src="${resource(dir:'images',file:"Step2small.jpg")}" alt="Step 2" />	
 	<h3 id="step3">Step 3</h3>
 	<ul>
 		<li>To make your own recording  - select <b>'Create'</b> then <b>'Create a recording'</b>.</li>
 		<li>Choose how you wish to upload your recording, add details and set permissions. </li>
 		<li><b>The 'i' button provides more information.</b></li> 
 	</ul>
+	<img src="${resource(dir:'images',file:"Step3small.jpg")}" alt="Step 3" />	
 	<h3 id="step4">Step 4</h3>
 	<ul>
 		<li>Make a transcript for a recording by selecting the <b>'Edit Transcript'</b> then <b>'Add …'</b>  </li>
@@ -47,6 +50,7 @@ This is an easy guide to working with your research media and annotations
 		<li>View your recording by returning to the <b>'Recordings'</b> menu button </li>
 		<li>Change the look and feel of the player by using the <b>'Settings'</b> button. </li>
 	</ul>
+	<img src="${resource(dir:'images',file:"Step4small.jpg")}" alt="Step 4" />	
 	<h3 id="step5">Step 5</h3>
 	<ul>
 		<li>Add synchronised annotations or notes (synmarks) at selected points in the recording by selecting the <b>'create'</b> button in the Synmark panel.  You can edit and delete your synmarks. </li>
@@ -57,6 +61,7 @@ This is an easy guide to working with your research media and annotations
 		<li>Synote can be linked to Twitter comments that appear as notes synchronised with a discussion,</li>
 		<li>Synote transcripts can be automatically uploaded via speech recognition if linked to this type of service. </li>
 	</ul>
+	<img src="${resource(dir:'images',file:"Step5small.jpg")}" alt="Step 5" />	
 	<a href="#help" title="back to top">Back to top</a>
 <h2 id="demo">Demo Video</h2>
 <hr/>

@@ -4,16 +4,30 @@
 	position: absolute;
     left: -9999px;
 }
+/* a component on the page is a block */
+.block
+{
+	margin-top:10px;
+}
 
 /* Search form */
 #search_bar_div
 {
 	padding-top:10px;
-	background: none repeat scroll 0 0 whiteSmoke; 
-	border-bottom: 1px solid #e5e5e5;
+	background: none repeat scroll 0 0 #F5F5F5; 
+	border-bottom: 1px solid #DDDDDD;
 	width:100%;
 }
 
+/*footer*/
+footer
+{	
+	background: none repeat scroll 0 0 #F5F5F5;
+    border-top: 1px solid #DDDDDD;
+    margin-top: 17px;
+    padding: 18px 20px;
+    text-align: center;	
+}
 #main_content
 {
 	margin-top:10px;	

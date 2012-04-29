@@ -198,16 +198,15 @@ class SynoteTagLib {
 			def res = MultimediaResource.get(m.id)
 			cal.setTimeInMillis(m.date_created.getTime())
 			//<p class="calendar">7 <em>Feb</em></p>
-			out << "<div class='span-11'>"
-			out << "<div class='span-2'>"
+			out << "<div class='span1'>"
 			out << "<p class='calendar'>"+cal.get(GregorianCalendar.DAY_OF_MONTH)+"<em>"+monthShortName[cal.get(GregorianCalendar.MONTH)]+"</em></p></br>"
 			out << "</div>"
-			out << "<div class='span-8 last'>"
-			out << "<h3><a style='text-decoration:none;' href='${replayPath}' target='_blank' title='replay ${m.title}'>"+m.title+"</a></h3>"
+			out << "<div class='span2'>"
+			def displayTitle = m.title?.size() > 70?m.title.substring(0,70):m.title
+			out << "<a style='text-decoration:none;' href='${replayPath}' target='_blank' title='replay ${m.title}'>"+displayTitle+"</a><br/>"
 			out << "<span>By<i> "+m.owner_name+"</i></span><br/>"
 			out << "<span>"+Views.countByResource(res)+" Views</span>"
-			out << "</div>"
-			out << "</div>"
+			out << "</div>"	
 		}
 	}
 	

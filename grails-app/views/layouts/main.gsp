@@ -35,6 +35,50 @@
 			<div class="container" style="width:940px;">
 				<!-- top menu -->
 				<div class="nav-collapse">
+					<g:isLoggedIn>
+					<div class="btn-group pull-right">
+						<a class="btn btn-success" href="#">
+							<i class="icon-user icon-white"></i>
+							<g:loggedInUsername />
+						</a>
+						<a href="#" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
+							<span class="caret"></span>
+						</a>
+						</a>
+						<ul class="dropdown-menu">
+					    	<li><g:link controller="user" action="showUserProfile" title="Show user profile">My Profile</g:link></li>
+					    	<g:isAdminLoggedIn>
+							<li><g:link controller="admin" action="index" title="Administration">Administration </g:link></li>
+							</g:isAdminLoggedIn>
+					        <li class="divider"></li>
+					        <li><g:link controller="logout" action="index" title="Log out">Log out</g:link></li>
+            			</ul>
+					</div>
+					<div class="btn-group pull-right">
+						<a class="btn" href="#">
+							<i class="icon-plus-sign"></i>
+							Create
+						</a>
+						<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+					    	<li>
+			    				<g:link controller="multimediaResource" action="create" title="recording diretory">
+			    				Create a recording </g:link>
+				    		</li>
+				    		<li>
+				    			<g:link controller="userGroup" action="create" title="recording diretory">
+				    			 Create a group </g:link>
+				    		</li>
+            			</ul>
+					</div>
+					<div class="btn-group pull-right">
+						<g:link controller="user" action="index" title="Edit your profile" class="btn">
+						<i class="icon-briefcase"></i>
+						My Synote</g:link>
+					</div>
+					</g:isLoggedIn>
 					<g:isNotLoggedIn>
 					<div class="btn-group pull-right">
 						<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" class="btn btn-primary">
@@ -52,16 +96,15 @@
 					    </li>
 						<!-- Recordings -->   
 					    <li><g:link controller="multimediaResource" action="list" title="Multimedia recordings">
-					    	<i class="icon-film"></i>Recordings</g:link>
+					    	<i class="icon-film icon-white"></i>Recordings</g:link>
 					    </li>
 					    
 						<!-- Groups -->    
 					    <li><g:link controller="userGroup" action="list" title="Groups list">
-							<i class="icon-magnet"/></i>Groups</g:link>
-						</li>
-						<!-- Synote Guide --> 
+							<i class="icon-magnet icon-white"/></i>Groups</g:link>
+						</li> 
 						<li><g:link controller="user" action="help" target="_blank" title="help">
-							<i class="icon-info-sign"/></i>Help</g:link>
+							<i class="icon-info-sign icon-white"/></i>Help</g:link>
 						</li>
 					</ul>
 				</div>
@@ -84,37 +127,38 @@
 	<div id="main_content" class="container" itemprop="maincontentOfPage" itemscope="itemscope" itemtype="http://schema.org/WebPageElement">
 		<g:layoutBody />
 	</div>
-	<div itemscope="itemscope" itemtype="WPFooter" class="span-24 prepend-top" style="margin-bottom:24px;">
-			<ul id="bottomMainFooter">
-				<li>
+	<footer>
+		<div "itemscope="itemscope" itemtype="WPFooter" class="container">
+				<span>
 					<a href="http://www.soton.ac.uk" target="_blank"
 						title="University of Southampton">&copy; <span itemprop="copyrightYear">2012</span> <span itemprop="copyrightHolder">University of Southampton</span></a>
-				</li>
-				<li>
+				</span>|
+				<span>
 					<g:link controller="user" action="contact"
 						target="_blank" title="Contact Us">Contact Us</g:link>
-				</li>
-				<li>
+				</span>|
+				<span>
 					<g:link
 				action="termsAndConditions" controller="user" title="Legal"
 				target="_blank">Legal</g:link>
-				</li>
-				<li>
+				</span>|
+				<span>
 					<g:link
 				action="accessibility" controller="user" title="Accessibility"
 				target="_blank">Accessibility</g:link>
-				</li>
-				<li>
-					<a
-				href="http://www.synote.ecs.soton.ac.uk" target="_blank"
+				</span>|
+				<span>
+					<a href="http://www.synote.ecs.soton.ac.uk" target="_blank"
 				title="About synote">About Synote</a> 
-				</li>
-				<li>
-					<a
-				href="http://blog.lsl.ecs.soton.ac.uk/synote/" target="_blank"
+				</span>|
+				<span>
+					<a href="http://blog.lsl.ecs.soton.ac.uk/synote/" target="_blank"
 				title="Synote News">Synote News</a>
-				</li>
-			</ul>
-	</div>
+				</span>|
+				<span>
+					<img src="${resource(dir: 'images', file: 'licenses-bsd-88x31.png')}" alt="BSD license"/>
+				</span>
+		</div>
+	</footer>
 </body>
 </html>
