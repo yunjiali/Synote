@@ -44,6 +44,8 @@ grails.logging.jul.usebridge = true
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 
+//Grails Database Migration plugin configuration
+grails.plugin.databasemigration.changelogFileName = "changelog.xml"
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
@@ -70,30 +72,6 @@ environments {
     }
 
 }
-
-//Envriorment variables for IBM transcription server
-//These configuration properties should at last can be set in Web interface
-/*
-synote.IBMTransServer.url = "http://lslvm-yl2.ecs.soton.ac.uk:8080/SLWeb/"
-synote.IBMTransServer.protocol = "http://"
-synote.IBMTransServer.name = "quartz.org"//"lslvm-yl2.ecs.soton.ac.uk"
-synote.IBMTransServer.port = "8080"
-synote.IBMTransServer.appPath="/SLWeb/"
-synote.IBMTransServer.api.login="api/login?"
-synote.IBMTransServer.api.logout ="api/logout?"
-synote.IBMTransServer.api.addJob ="api/addJob?"
-synote.IBMTransServer.api.getJobs ="api/getJobs?"
-synote.IBMTransServer.api.getJob ="api/getJob?"
-synote.IBMTransServer.api.getTranscript ="api/getTranscript?"
-synote.IBMTransServer.api.removeJob ="api/removeJob?"
-//synote.IBMTransServer.sourceDir ="C:\\Program Files\\Apache Software Foundation\\Tomcat 6.0\\webapps\\SLWeb\\webJobs\\yl2@ecs.soton.ac.uk\\"
-synote.IBMTransServer.sourceDir ="webJobs/mw@ecs.soton.ac.uk/"
-//use System.getProperty("base.dir") instead of the following one
-//synote.IBMTransServer.destDir ="C:\\Users\\rabbit\\Projects\\macfob\\svn\\projects\\synote\\web-app\\content\\IBMTranscripts"
-synote.IBMTransServer.username ="synote"
-synote.IBMTransServer.password ="synote"
-synote.IBMTransServer.enabled = false
-*/
 
 // log4j configuration
 log4j = {

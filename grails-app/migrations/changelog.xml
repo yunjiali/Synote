@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+                    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 	<!-- Add description and long_val to configuration table. long_val is the longger version of the val, in case the val is not long enough -->
-	<changeSet id="v5_configuration_modify" author="Yunjia Li" context="v0.1">
+	<changeSet id="v5_configuration_modify" author="Yunjia Li" context="v1">
 		<!-- check if the configuration table has description and long_val coloumn -->
 		<preConditions>
 			<and>
@@ -19,9 +19,7 @@
 				<constraints nullable="true" />
 			</column>
 		</addColumn>
-		<modifyColumn tableName="configuration">
-			<column name="val" type="text" />
-		</modifyColumn>
+		<modifyDataType tableName="configuration" columnName="val" newDataType="text"/>
 	</changeSet>
 	<!-- Add description and date_created, last updated for user group -->
 	<changeSet id="v5_user_group_add_columns" author="Yunjia Li" context="v0.1">
@@ -95,7 +93,7 @@
 			Values(0,"org.synote.integration.entermedia.fileDownload","downloads/originals",now(),now());
 		</sql>
 	</changeSet>
-	<!-- insert configurations related to capcha, admin contact, title, etc-->
+	<!-- insert configurations related to capcha, admin contact, title, etc
 	<changeSet id="v5_configuration_insert" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<sqlCheck expectedResult="0">
@@ -138,7 +136,7 @@
 			last_updated)
 			Values(0,"org.synote.linkeddata.settings.serverContext","synote/", "the context path of the application",now(),now());
 		</sql>
-	</changeSet>
+	</changeSet>-->
 	<!--add data_created and date_updated to permission class-->
 	<changeSet id="v5_permission_modify" author="Yunjia Li" context="v0.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
@@ -210,7 +208,7 @@
 				u.id = m.user_id AND m.group_id = g.id AND g.id = p.group_id AND p.resource_id = r.id AND r.owner_id != u.id AND pv.id = p.perm_id;
 		</createView>
 	</changeSet>
-	<!-- Add WebVTTItem and WEbVTTResource classes to resource table -->
+	<!-- Add WebVTTItem and WebVTTResource classes to resource table -->
 	<changeSet id="v5_resource_add_columns" author="Yunjia Li" context="v0.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
 		<preConditions>
@@ -242,11 +240,9 @@
 	<changeSet id="v5_resource_add_columns_2" author="Yunjia Li" context="v0.1.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
 		<preConditions>
-			<and>
-				<not>
-					<columnExists tableName="resource" columnName="thumbnail" />
-				</not>
-			</and>
+			<not>
+				<columnExists tableName="resource" columnName="thumbnail" />
+			</not>
 		</preConditions>
 		<!-- thumbnail picture for resource -->
 		<addColumn tableName="resource">
@@ -287,12 +283,12 @@
 			</and>
 		</preConditions>
 		<sql>
-			UPDATE resource SET uuid = UUID() where uuid = NULL AND class="org.synote.resource.compound.MultimediaResource";
+			UPDATE resource SET uuid = UUID() where uuid IS NULL AND class="org.synote.resource.compound.MultimediaResource";
 		</sql>
 	</changeSet>
 	
 	<!--  Add more columns to vw vw_multimedia_user_permissionvalue_modify -->
-	<changeSet id="v5_vw_multimedia_user_permissionvalue_update" author="Yunjia Li" context="v0.1.1">
+	<changeSet id="v5_vw_multimedia_user_permissionvalue_update_v0.1.1" author="Yunjia Li" context="v0.1.1">
 		<preConditions>
 			<and>
 				<columnExists tableName="permission" columnName="date_created" />
@@ -306,7 +302,7 @@
 		</createView>
 	</changeSet>
 	<!-- Add date_created and last_updated, perm_date_created and perm_last_updated to vw_multimedia_user_group_member_permission -->
-	<changeSet id="v5_vw_multimedia_user_group_member_permission_update" author="Yunjia Li" context="v0.1.1">
+	<changeSet id="v5_vw_multimedia_user_group_member_permission_update_v0.1.1" author="Yunjia Li" context="v0.1.1">
 		<preConditions>
 			<and>
 				<columnExists tableName="permission" columnName="date_created" />
