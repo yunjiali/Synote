@@ -5,8 +5,14 @@
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#loginForm").validate(
+		$("#registrationForm").validate(
 		{
+			rules: {
+			    password: "required",
+			    confirm: {
+			      equalTo: "#password"
+			    }
+			 },
 			highlight: function(label) {
 				$(label).closest('.control-group').addClass('error');
 			},
@@ -24,7 +30,7 @@
 			<hr/>
 			<g:render template="/common/message" model="[bean: user]" />
 			<div>
-				<form action='${postUrl}' method='POST' id='loginForm' class="form-horizontal">
+				<g:form method='POST' name='registrationForm' class="form-horizontal" controller="register" action="save">
 				  <fieldset>
 				    <div class="control-group">
 				    	<label for="userName" class="control-label"><b><em>*</em>User Name</b></label>
@@ -40,9 +46,9 @@
 				      	</div>
 				    </div>
 				    <div class="control-group">
-				     	<label for="confirmed" class="control-label"><b><em>*</em>Confirmed Password</b></label>
+				     	<label for="confirm" class="control-label"><b><em>*</em>Confirm Password</b></label>
 				      	<div class="controls">
-							<input type='password' name='confirmed' class="required" id='confirmed'/>
+							<input type='password' name='confirm' class="required" id='confirm'/>
 				      	</div>
 				    </div>
 					<div class="control-group">
@@ -85,7 +91,7 @@
 			            <input class="btn-large" id="registrationForm_reset" type="reset" value="Reset"/>
 			        </div>
 				  </fieldset>
-				</form>
+				</g:form>
 			</div>
 		</div>
 	</div>

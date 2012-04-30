@@ -42,7 +42,7 @@
 			<h3>Login</h3>
 			<hr/>
 			<g:render template="/common/message" />
-			<form action='${postUrl}' method='POST' id='loginForm'>
+			<form action='${postUrl}' method='POST' name='loginForm'>
 			  <fieldset>
 			    <div class="control-group">
 			     	<label for="j_username" class="control-label"><b><em>*</em>User Name</b></label>
