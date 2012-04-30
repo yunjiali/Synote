@@ -15,6 +15,8 @@ class Resource
 
 	String title
 	PermissionValue perm
+	/*url of the thumbnail picture*/
+	String thumbnail
 	
 	/*created date*/
 	Date dateCreated //DB
@@ -31,6 +33,7 @@ class Resource
 	{
 		title(nullable:true, blank: false, maxSize:255)
 		perm(nullable:true)
+		thumbnail(nullable:true)
 	}
 	
 	public String toString()

@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 	<!-- Add description and long_val to configuration table. long_val is the longger version of the val, in case the val is not long enough -->
-	<changeSet id="v5_configuration_modify" author="Yunjia Li">
+	<changeSet id="v5_configuration_modify" author="Yunjia Li" context="v0.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
 		<preConditions>
 			<and>
@@ -24,7 +24,7 @@
 		</modifyColumn>
 	</changeSet>
 	<!-- Add description and date_created, last updated for user group -->
-	<changeSet id="v5_user_group_add_columns" author="Yunjia Li">
+	<changeSet id="v5_user_group_add_columns" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<and>
 				<not>
@@ -48,8 +48,8 @@
 			</column>
 		</addColumn>
 	</changeSet>
-	<!-- insert configurations related to entermedia-->
-	<changeSet id="v5_configuration_insert_entermedia" author="Yunjia Li">
+	<!-- DEPRECATED, WE ARE NOT USING ENTERMEDIA ANYMORE: insert configurations related to entermedia-->
+	<changeSet id="v5_configuration_insert_entermedia" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<sqlCheck expectedResult="0">
 				SELECT COUNT(0) from configuration
@@ -96,7 +96,7 @@
 		</sql>
 	</changeSet>
 	<!-- insert configurations related to capcha, admin contact, title, etc-->
-	<changeSet id="v5_configuration_insert" author="Yunjia Li">
+	<changeSet id="v5_configuration_insert" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<sqlCheck expectedResult="0">
 				SELECT COUNT(0) from configuration
@@ -140,7 +140,7 @@
 		</sql>
 	</changeSet>
 	<!--add data_created and date_updated to permission class-->
-	<changeSet id="v5_permission_modify" author="Yunjia Li">
+	<changeSet id="v5_permission_modify" author="Yunjia Li" context="v0.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
 		<preConditions>
 			<and>
@@ -182,8 +182,8 @@
 			) engine=innodb default charset=utf8;
 		</sql>
 	</changeSet>
-	<!-- Add more columns to vw vw_multimedia_user_permissionvalue_modify-->
-	<changeSet id="v5_vw_multimedia_user_permissionvalue_update" author="Yunjia Li">
+	<!-- OLD, ADD MORE COLUMNS NEXT: Add more columns to vw vw_multimedia_user_permissionvalue_modify -->
+	<changeSet id="v5_vw_multimedia_user_permissionvalue_update" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<columnExists tableName="permission" columnName="date_created" />
 			<viewExists viewName="vw_multimedia_user_permissionvalue" />
@@ -194,8 +194,8 @@
 			where r.class="org.synote.resource.compound.MultimediaResource" and r.owner_id = u.id and r.perm_id=pv.id
 		</createView>
 	</changeSet>
-	<!-- Add date_created and last_updated, perm_date_created and perm_last_updated to vw_multimedia_user_group_member_permission-->
-	<changeSet id="v5_vw_multimedia_user_group_member_permission_update" author="Yunjia Li">
+	<!-- OLD, ADD MORE COLUMNS NEXT: Add date_created and last_updated, perm_date_created and perm_last_updated to vw_multimedia_user_group_member_permission -->
+	<changeSet id="v5_vw_multimedia_user_group_member_permission_update" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<and>
 				<columnExists tableName="permission" columnName="date_created" />
@@ -211,7 +211,7 @@
 		</createView>
 	</changeSet>
 	<!-- Add WebVTTItem and WEbVTTResource classes to resource table -->
-	<changeSet id="v5_resource_add_columns" author="Yunjia Li">
+	<changeSet id="v5_resource_add_columns" author="Yunjia Li" context="v0.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
 		<preConditions>
 			<and>
@@ -233,6 +233,107 @@
 		</addColumn>
 		<addColumn tableName="resource" >
 			<column name="file_header" type="text" >
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+	
+	<!--THE CHANGES ABOVE ARE MADE BEFORE SYNOTE MOBILE PROJECT. THE FOLLOWING CHANGES ARE MADE AFTER SYNOTE MOBILE PROJECT -->
+	<changeSet id="v5_resource_add_columns_2" author="Yunjia Li" context="v0.1.1">
+		<!-- check if the configuration table has description and long_val coloumn -->
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="resource" columnName="thumbnail" />
+				</not>
+			</and>
+		</preConditions>
+		<!-- thumbnail picture for resource -->
+		<addColumn tableName="resource">
+			<column name="thumbnail" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<!-- real start and end time for MultimediaResource -->
+		<addColumn tableName="resource" >
+			<column name="real_starttime" type="datetime" >
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<addColumn tableName="resource" >
+			<column name="real_endtime" type="datetime" >
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<!-- duration field for MultimediaResource in milliseconds -1 means not available-->
+		<addColumn tableName="resource" >
+			<column name="duration" type="bigint(20)" defaultValueNumeric="-1">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<!-- uuid for MultimediaResource -->
+		<addColumn tableName="resource" >
+			<column name="uuid" type="varchar(255)" >
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+	
+	<!-- Add uuid to each MultimediaResource -->
+	<changeSet id="v5_resource_update_uuid" author="Yunjia Li" context="v0.1.1">
+		<preConditions>
+			<and>
+				<columnExists tableName="resource" columnName="uuid" />
+			</and>
+		</preConditions>
+		<sql>
+			UPDATE resource SET uuid = UUID() where uuid = NULL AND class="org.synote.resource.compound.MultimediaResource";
+		</sql>
+	</changeSet>
+	
+	<!--  Add more columns to vw vw_multimedia_user_permissionvalue_modify -->
+	<changeSet id="v5_vw_multimedia_user_permissionvalue_update" author="Yunjia Li" context="v0.1.1">
+		<preConditions>
+			<and>
+				<columnExists tableName="permission" columnName="date_created" />
+				<viewExists viewName="vw_multimedia_user_permissionvalue" />
+			</and>
+		</preConditions>
+		<dropView viewName="vw_multimedia_user_permissionvalue"/>
+		<createView viewName="vw_multimedia_user_permissionvalue">
+			select r.id as id, r.version as version, u.user_name as owner_name, u.id as owner_id, r.title as title, pv.name as public_perm_name, pv.val as public_perm_val, pv.id as public_perm_id, r.date_created as date_created, r.last_updated as last_updated, r.real_starttime as real_starttime, r.real_endtime as real_endtime, r.thumbnail as thumbnail, r.duration as duration, r.uuid as uuid from resource as r, user as u, permission_value as pv
+			where r.class="org.synote.resource.compound.MultimediaResource" and r.owner_id = u.id and r.perm_id=pv.id
+		</createView>
+	</changeSet>
+	<!-- Add date_created and last_updated, perm_date_created and perm_last_updated to vw_multimedia_user_group_member_permission -->
+	<changeSet id="v5_vw_multimedia_user_group_member_permission_update" author="Yunjia Li" context="v0.1.1">
+		<preConditions>
+			<and>
+				<columnExists tableName="permission" columnName="date_created" />
+				<viewExists viewName="vw_multimedia_user_group_member_permission" />
+			</and>
+		</preConditions>
+		<dropView viewName="vw_multimedia_user_group_member_permission"/>
+		<createView viewName="vw_multimedia_user_group_member_permission">
+			SELECT DISTINCT p.resource_id as resource_id,r.title as title, u.id as user_id,u.user_name as user_name,g.id as group_id, g.name as group_name,pv.id as user_perm_id, pv.name as user_perm_name, pv.val as user_perm_val,r.date_created as date_created, r.last_updated as last_updated, p.date_created as perm_date_created, p.last_updated as perm_last_updated,r.real_starttime as real_starttime, r.real_endtime as real_endtime, r.thumbnail as thumbnail, r.duration as duration, r.uuid as uuid
+			FROM user u, user_group_member m, user_group g, resource r, permission p, permission_value pv 
+			WHERE r.class="org.synote.resource.compound.MultimediaResource" AND p.class="org.synote.permission.ResourcePermission" AND 
+				u.id = m.user_id AND m.group_id = g.id AND g.id = p.group_id AND p.resource_id = r.id AND r.owner_id != u.id AND pv.id = p.perm_id;
+		</createView>
+	</changeSet>
+	
+	<!-- Add xywh field for Synpoint -->
+	<changeSet id="v5_synpoint_add_columns" author="Yunjia Li" context="v0.1.1">
+		<!-- check if the synpoint has target_xywh coloumn -->
+		<preConditions>
+			<and>
+				<not>
+					<columnExists tableName="synpoint" columnName="target_xywh" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="synpoint">
+			<column name="target_xywh" type="varchar(255)">
 				<constraints nullable="true" />
 			</column>
 		</addColumn>

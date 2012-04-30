@@ -3,6 +3,7 @@ package org.synote.resource.compound
 import org.synote.resource.single.text.MultimediaTag
 import org.synote.resource.single.text.MultimediaTextNote
 import org.synote.resource.single.binary.MultimediaUrl
+import java.util.UUID
 
 class MultimediaResource extends CompoundResource {
 
@@ -14,6 +15,16 @@ class MultimediaResource extends CompoundResource {
 	MultimediaUrl url
 	MultimediaTextNote note
 	
+	/*the real start and end time of the recording*/
+	Date realStarttime
+	Date realEndtime
+	
+	/*duration in milliseconds*/
+	long duration
+	
+	/*universal identifier*/
+	String uuid = UUID.randomUUID().toString()
+	
 	static mapping = {
     	url column:'child_multimedia_url_id'
 		note column:'child_note_id'
@@ -22,6 +33,7 @@ class MultimediaResource extends CompoundResource {
     static constraints = {
     	url(nullable:false)
 		note(nullable:true)
+		uuid(nullable:false)
 	}
 	
 	void saveUrl(String newUrl)
