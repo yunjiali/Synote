@@ -25,6 +25,9 @@ class MultimediaResource extends CompoundResource {
 	/*universal identifier*/
 	String uuid = UUID.randomUUID().toString()
 	
+	/*if this multimedia resource is a video or audio*/
+	boolean isVideo
+	
 	static mapping = {
     	url column:'child_multimedia_url_id'
 		note column:'child_note_id'

@@ -38,10 +38,11 @@ Authors
 
 **E.A. Draffan (Project Manager)**
 
-+ ead@ecs.soton.ac.uk
++ http://www.ecs.soton.ac.uk/people/ead
 
 Copyright
 ---------------------
+This application is protected under Modified BSD License
 
 Copyright 2012 University of Southampton.
 All rights reserved.
