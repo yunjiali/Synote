@@ -36,9 +36,53 @@ footer
     padding: 18px 20px;
     text-align: center;	
 }
+
 #main_content
 {
 	margin-top:10px;	
+}
+
+/*Costomise icons for bootstrap*/
+.icon-group-small {
+    background-image: url('../images/skin/user_group_16.png');
+    background-position: center center;
+    margin-right:2px;
+}
+
+.icon-user-profile-small {
+	background-image: url('../images/skin/user_profile_16.png');
+    background-position: center center;
+     margin-right:2px;
+}
+
+.icon-recordings-small {
+	background-image: url('../images/skin/recording_16.png');
+    background-position: center center;
+    margin-right:2px;
+}
+
+.icon-synmarks-small {
+	background-image: url('../images/skin/synmark_16.png');
+    background-position: center center;
+    margin-right:2px;
+}
+
+.icon-tag-c-small {
+	background-image: url('../images/skin/tag_16.png');
+    background-position: center center;
+    margin-right:2px;
+}
+
+.icon-twitter-small {
+	background-image: url('../images/skin/twitter_16.png');
+    background-position: center center;
+    margin-right:2px;
+}
+
+.icon-document-small {
+	background-image: url('../images/skin/document_16.png');
+    background-position: center center;
+    margin-right:2px;
 }
 
 /* My Synote */

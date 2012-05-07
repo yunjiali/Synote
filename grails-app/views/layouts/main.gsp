@@ -96,12 +96,12 @@
 					    </li>
 						<!-- Recordings -->   
 					    <li><g:link controller="multimediaResource" action="list" title="Multimedia recordings">
-					    	<i class="icon-film icon-white"></i>Recordings</g:link>
+					    	<i class="icon-film icon-white"></i>Browse</g:link>
 					    </li>
 					    
 						<!-- Groups -->    
 					    <li><g:link controller="userGroup" action="list" title="Groups list">
-							<i class="icon-magnet icon-white"/></i>Groups</g:link>
+							<i class="icon-user icon-white"/></i>Groups</g:link>
 						</li> 
 						<li><g:link controller="user" action="help" target="_blank" title="help">
 							<i class="icon-info-sign icon-white"/></i>Help</g:link>
