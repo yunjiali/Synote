@@ -22,7 +22,7 @@
 		<div>
 			<g:each in="${tags}" status="i" var="tag">
 				<span class="tag">
-					<g:link controller="user" action="listResources" params='[text:"${tag.text}"]'>${tag.text}(${tag.weight})</g:link>
+					<g:link controller="user" action="listSynmarks" params='[text:"${tag.text}"]'>${tag.text}(${tag.weight})</g:link>
 				</span>
 			</g:each>
 		</div>

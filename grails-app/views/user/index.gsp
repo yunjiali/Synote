@@ -12,7 +12,7 @@
 			<g:render template="/common/userNav" model="['active':null]"/>
 		</div>
 		<div class="span10" id="user_content_div">
-			<h1><g:message code="org.synote.user.index.title" /></h1>
+			<h2><g:message code="org.synote.user.index.title" /></h2>
 			<div id="my_synote_content">
 			
 			<g:allowRegistering>

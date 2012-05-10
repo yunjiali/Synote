@@ -626,14 +626,14 @@ class MultimediaResourceController {
 		if (!multimediaResource)
 		{
 			flash.error = "Multimedia with id ${params.id} not found"
-			redirect(controller:'user',action:'listResources')
+			redirect(controller:'user',action:'listSynmarks')
 			return
 		}
 		
 		if (!securityService.isOwnerOrAdmin(multimediaResource.owner.id))
 		{
 			flash.error = "Permission denied - cannot update multimedia with id ${params.id}"
-			redirect(controller:'user',action:'listResources')
+			redirect(controller:'user',action:'listSynmarks')
 			return
 		}
 		
@@ -686,14 +686,14 @@ class MultimediaResourceController {
 		if (!multimediaResource)
 		{
 			flash.error = "Multimedia with id ${params.id} not found"
-			redirect(controller:'user',action:'listResources')
+			redirect(controller:'user',action:'listSynmarks')
 			return
 		}
 		
 		if (!securityService.isOwnerOrAdmin(multimediaResource.owner.id))
 		{
 			flash.error = "Permission denied - cannot delete multimedia with id ${params.id}"
-			redirect(controller:'user',action:'listResources')
+			redirect(controller:'user',action:'listSynmarks')
 			return
 		}
 		
@@ -703,7 +703,7 @@ class MultimediaResourceController {
 		multimediaResource.delete()
 		flash.message = "Multimedia ${title} was successfully deleted"
 		//redirect to user resource list page
-		redirect(controller:'user',action:'listResources')
+		redirect(controller:'user',action:'listSynmarks')
 		return
 	}
 	

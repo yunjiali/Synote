@@ -1,4 +1,3 @@
-
 <%@ page import="org.synote.user.User"%>
 <%@ page import="org.synote.user.group.UserGroup"%>
 <html>

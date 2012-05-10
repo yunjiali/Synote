@@ -275,7 +275,7 @@
 		</addColumn>
 		<!-- is_video for MultimediaResource -->
 		<addColumn tableName="resource" >
-			<column name="is_video" type="boolean">
+			<column name="is_video" type="boolean" defaultValueBoolean="true">
 				<constraints nullable="true" />
 			</column>
 		</addColumn>

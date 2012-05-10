@@ -10,6 +10,11 @@
 	margin-top:10px;
 }
 
+.nodata
+{
+	color: #666666;
+    padding: 0.3em;
+}
 /*error in the form*/
 label.error {
   font-weight: bold;
@@ -84,7 +89,37 @@ footer
     background-position: center center;
     margin-right:2px;
 }
+/* customise labels and badge for bootstrap */
+.label-tag, .badge-tag
+{
+	background-color: #CDE69C;
+	color: #638421;
+	font-size:1.1em;
+	font-weight: normal;
+}
+/* Recording, Synmark and Transcript Widget */
+.recording-row, .synmark-row
+{
+	padding:5px 0px;
+	border-top:1px solid #eeeeee;
+}
 
+.heading-inline
+{
+	display:inline;
+}
+
+.datetime-info
+{
+	color: #999999;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.metrics-item, .tag-item
+{
+	padding-right:5px;
+}
 /* My Synote */
 
 #my_synote_content a {

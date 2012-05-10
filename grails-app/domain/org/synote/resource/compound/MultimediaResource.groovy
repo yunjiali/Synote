@@ -26,7 +26,7 @@ class MultimediaResource extends CompoundResource {
 	String uuid = UUID.randomUUID().toString()
 	
 	/*if this multimedia resource is a video or audio*/
-	boolean isVideo
+	boolean isVideo = true //We need to give a default value, or all the hibernate functions will not work
 	
 	static mapping = {
     	url column:'child_multimedia_url_id'
@@ -37,6 +37,9 @@ class MultimediaResource extends CompoundResource {
     	url(nullable:false)
 		note(nullable:true)
 		uuid(nullable:false)
+		isVideo(nullable:true)
+		realStarttime(nullable:true)
+		realEndtime(nullable:true)
 	}
 	
 	void saveUrl(String newUrl)

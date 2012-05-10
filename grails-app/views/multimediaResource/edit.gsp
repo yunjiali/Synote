@@ -53,7 +53,7 @@
 		<div class="prepend-top append-bottom">
 			<input id="resourceEditForm_submit" type="submit" value="Save" />
 			<g:link controller='multimediaResource' action='delete' onclick="return confirm('Are you sure?');" id="${multimediaResource?.id}" elementId="resourceEditForm_delete">Delete</g:link>
-			<g:link controller='user' action='listResources' elementId="resourceEditForm_cancel">Cancel</g:link>
+			<g:link controller='user' action='listSynmarks' elementId="resourceEditForm_cancel">Cancel</g:link>
 		</div>
 	</g:form>
 </div>

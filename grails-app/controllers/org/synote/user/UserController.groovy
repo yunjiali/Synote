@@ -335,22 +335,15 @@ class UserController {
 	}
 
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
-	def listResources = {
-		return [params:params]	
+	def listRecordings = {
+		def multimediaList = resourceService.getMyMultimediaAsJSON(params) as Map
+		return [multimediaList:multimediaList, params:params]
 	}
 	
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
-	def listMultimediaAjax = {
-		def multimediaList = resourceService.getMyMultimediaAsJSON(params)
-		render multimediaList as JSON
-		return
-	}
-	
-	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
-	def listSynmarkAjax = {
-		def synmarkList = resourceService.getMySynmarksAsJSON(params)
-		render synmarkList as JSON
-		return	
+	def listSynmarks = {
+		def synmarksList = resourceService.getMySynmarksAsJSON(params)
+		return [synmarksList:synmarksList, params:params]
 	}
 	
 	

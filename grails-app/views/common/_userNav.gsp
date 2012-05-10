@@ -19,14 +19,14 @@
     </g:if>
     <g:else>
     	<li>
-    </g:else><g:link controller="user" action="listResources">
+    </g:else><g:link controller="user" action="listRecordings">
     	<i class="icon-recordings-small"></i>My Recordings</g:link></li>
     <g:if test="${active == 'synmarks'}">
     	<li class="active">
     </g:if>
     <g:else>
     	<li>
-    </g:else><g:link controller="user" action="listResources">
+    </g:else><g:link controller="user" action="listSynmarks">
     	<i class="icon-synmarks-small"></i>My Synmarks</g:link></li>
     <g:if test="${active == 'tags'}">
     	<li class="active">
