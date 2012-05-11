@@ -19,8 +19,18 @@
 						<g:form class="form-inline pull-right" action="listRecordings">
 							<label for="sidx">Sorted By:</label>
 							<select name="sidx">
-								<option value="dateCreated" selected="${params.sidx == 'dateCreated'?true:false}">Date Created</option>
-								<option value="perm" selected="${params.sidx == 'perm'?true:false}">Permission</option>
+								<g:if test="${params.sidx == 'dateCreated'}">
+									<option value="dateCreated" selected="selected">Date Created</option>
+								</g:if>
+								<g:else>
+									<option value="dateCreated">Date Created</option>
+								</g:else>
+								<g:if test="${params.sidx =='perm'}">
+									<option value="perm" selected="selected">Permission</option>
+								</g:if>
+								<g:else>
+									<option value="perm">Permission</option>
+								</g:else>
 							</select>
 							<input type="text" name="text" class="input-medium" placeholder="Search your recordings" value="${params.text}">
 							<input type="submit" class="btn" value="Submit" />
@@ -34,7 +44,7 @@
 						<div class="nodata">You have no recordings</div>
 					</g:if>
 					<g:each in="${multimediaList.rows}" var="row">
-						<g:render template="/common/recording" model="['row':row]"/>
+						<g:render template="/common/recording" model="['row':row,'editable':true]"/>
 					</g:each>
 				</div>
 			</div>

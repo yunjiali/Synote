@@ -26,21 +26,34 @@
 </g:else>
 
 <div class="recording-row row">
-	<div class="span2">					
-		<img style="width: 120px; height: 90px;" src="${thumbnail_src}"/>
-		<br/>
-		<span>Duration:${duration}</span>
+	<div class="span2">	
+		<div style="position:relative">	
+			<g:link controller='recording' action='replay' id="${row.id}" title="play ${row.title}">				
+			<img style="width: 120px; height: 90px;" src="${thumbnail_src}"/>
+			<div style="position:absolute;z-index:1;left:0;bottom:0">
+				<span class="label label-inverse label-duration">${duration}</span>
+			</div>
+			</g:link>
+		</div>
 	</div>
 	<div class="span8">
 	  	<h3 class="heading-inline">${title}</h3>
 	  	<div class="pull-right">
-	  		<g:render template="/common/permbar" model="['perm_val':row.public_perm_val,'perm_name':row.public_perm_name]"/>
+	  		<g:render template="/common/permbar" model="['perm_val':row.perm_val,'perm_name':row.perm_name]"/>
 	  	</div>
 	  	<g:if test="${row.cc == true}">
-	 		<span class="badge pull-right" style="margin-right: 5px;">cc</span>
+	  	<div class="pull-right">
+	  		<span class="badge" style="margin-right: 5px;">cc</span>
+	  	</div>	
 	 	</g:if>
 	  	<br/>
-	  	<span class="datetime-info">${row.date_created}</span><br>
+	  	<div>
+	  		<g:if test="${row.owner_name != null}">
+	  			<span class="owner-info">by ${row.owner_name} |</span>
+	  		</g:if>
+	  		<span class="datetime-info">${row.date_created}</span>
+	  	</div>
+	  	<br>
 	  	<div class="row" style="padding: 5px 0px;">
 	  		<div class="span1">
 	  			<span title="number of views"><i class="icon-signal metrics-item"></i>${row.views}</span></div>
@@ -54,7 +67,9 @@
 	  			Actions<span class="caret"></span></a>
 	  		<ul class="dropdown-menu">
 	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Details</g:link></li>
+	  				<g:if test="${editable}">
 	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Edit</g:link></li>
+	  				</g:if>
 	  				<li class="divider"></li>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>

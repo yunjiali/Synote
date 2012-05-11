@@ -13,6 +13,7 @@
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2><g:message code="org.synote.user.index.title" /></h2>
+			<g:render template="/common/message"/>
 			<div id="my_synote_content">
 			
 			<g:allowRegistering>

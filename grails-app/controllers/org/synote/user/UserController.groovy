@@ -336,14 +336,32 @@ class UserController {
 
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def listRecordings = {
-		def multimediaList = resourceService.getMyMultimediaAsJSON(params) as Map
-		return [multimediaList:multimediaList, params:params]
+		try
+		{
+			def multimediaList = resourceService.getMyMultimediaAsJSON(params) as Map
+			return [multimediaList:multimediaList, params:params]
+		}
+		catch(org.hibernate.QueryException qex) //In case the query params not found
+		{
+			flash.error = qex.getMessage()
+			redirect(action:'index')
+			return
+		}
 	}
 	
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def listSynmarks = {
-		def synmarksList = resourceService.getMySynmarksAsJSON(params)
-		return [synmarksList:synmarksList, params:params]
+		try
+		{
+			def synmarksList = resourceService.getMySynmarksAsJSON(params)
+			return [synmarksList:synmarksList, params:params]
+		}
+		catch(org.hibernate.QueryException qex) //In case the query params not found
+		{
+			flash.error = qex.getMessage()
+			redirect(action:'index')
+			return
+		}
 	}
 	
 	

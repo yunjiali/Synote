@@ -109,7 +109,7 @@ footer
 	display:inline;
 }
 
-.datetime-info
+.datetime-info, .owner-info, .views-info
 {
 	color: #999999;
     white-space: nowrap;
@@ -119,6 +119,11 @@ footer
 .metrics-item, .tag-item
 {
 	padding-right:5px;
+}
+
+.label-duration
+{
+	opacity:0.6;
 }
 /* My Synote */
 

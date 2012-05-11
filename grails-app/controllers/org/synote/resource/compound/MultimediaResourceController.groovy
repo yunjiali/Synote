@@ -173,22 +173,19 @@ class MultimediaResourceController {
 	
 	def list = {
 		
-		//Since we use listAjax, we don't need this method any more.
-		//def multimediaResourceList = databaseService.listMultimedia(params)
-		//int count = databaseService.countMultimediaList(params)
-		//return [multimediaResourceList: multimediaResourceList,
-		//multimedi/aResourcesCount:count]
-		return
-	}
-	
-	/*
-	 * Ajax list multimedia, return jqGrid compatiable json file, also used by get latest recordings
-	 */
-	def listMultimediaAjax = {
-		//need a mapping between jqGrid to params
-		def multimediaResourceList = resourceService.getMultimediaAsJSON(params)
-		render multimediaResourceList as JSON
-		return
+		try
+		{
+			def multimediaList = resourceService.getMultimediaAsJSON(params) as Map
+			def viewList = resourceService.getMostViewedMultimedia(5) as Map
+			return [multimediaList:multimediaList, viewList:viewList, params:params]
+		}
+		catch(org.hibernate.QueryException qex) //In case the query params not found
+		{
+			flash.error = qex.getMessage()
+			params.sidx = ''
+			redirect(action:'list',params:params)
+			return
+		}
 	}
 	
 	def show = {

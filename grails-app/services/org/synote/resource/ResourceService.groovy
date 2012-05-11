@@ -29,8 +29,10 @@ class ResourceService {
 	 */
     def getMultimediaAsJSON(jqGridParams)
 	{
-		def sortIndex = jqGridParams.sidx ?: 'date_created'
-		def sortOrder  = jqGridParams.sord ?: 'desc'
+		if(!jqGridParams.sidx)
+			jqGridParams.sidx = 'date_created'
+		if(!jqGridParams.sord)
+			jqGridParams.sord = 'desc'
 		if(!jqGridParams.rows)
 			jqGridParams.rows ="10"
 		def maxRows = Integer.valueOf(jqGridParams.rows)
@@ -59,17 +61,32 @@ class ResourceService {
 		def numberOfPages = Math.ceil(count / maxRows)
 		
 		
-		def results = multimediaResourceList?.collect{ r->
-			[
+		def results = []
+		
+		multimediaResourceList?.collect{ r->
+			def multimedia = MultimediaResource.findById(r.id)
+			def views = Views.countByResource(multimedia)
+			def metrics = getMultimediaResourceMetrics(multimedia)
+			
+			def item = [
 				id:r.id, 
 				title:r.title,
 				url:MultimediaResource.findById(r.id).url?.url,
 				owner_name:r.owner_name,
 				perm_name:isLoggedIn?PermissionValue.findByVal(r.user_perm_val).name:r.public_perm_name,
-				perm_val:isLoggedIn?r.user_perm_val:r.public_perm_val
-				//date_created:MultimediaResource.findById(r.id)?.dateCreated,
-				//last_updated:MultimediaResource.findById(r.id)?.lastUpdated
+				perm_val:isLoggedIn?r.user_perm_val:r.public_perm_val,
+				date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.date_created,"dd.MM.yyyy HH:mm"),
+				last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.last_updated,"dd.MM.yyyy HH:mm"),
+				thumbnail:r.thumbnail,
+				duration:r.duration,
+				isVideo:r.is_video,
+				cc:metrics.cc,
+				slides_count:metrics.slides_count,
+				synmarks_count: metrics.synmarks_count,
+				views:views
 			]
+			
+			results << item
 		}
 		def jqGridData = [rows:results, page:currentPage, records:count, total:numberOfPages]
 		return jqGridData
@@ -113,11 +130,11 @@ class ResourceService {
 				id:r.id, 
 				//owner_name:r.owner.userName, Don't need owner_name, it's you!
 				title:r.title,
-				url:MultimediaResource.findById(r.id).url?.url,
-				public_perm_name:r.perm?.name,
-				public_perm_val:r.perm?.val,
+				url:r.url?.url,
+				perm_name:r.perm?.name,
+				perm_val:r.perm?.val,
 				date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.dateCreated,"dd.MM.yyyy HH:mm"),
-				last_updated:r.lastUpdated,
+				last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.lastUpdated,"dd.MM.yyyy HH:mm"),,
 				thumbnail:r.thumbnail,
 				duration:r.duration,
 				isVideo:r.isVideo,
@@ -209,6 +226,44 @@ class ResourceService {
 		//println "size:"+synmarkList.size()
 		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 		return jqGridData
+	}
+	
+	def getMostViewedMultimedia(max)
+	{
+		def viewList = Views.executeQuery(
+			"select v.resource.id,count(v.id) from Views v, MultimediaResource mr where mr.id=v.resource.id and mr.perm.val > 0 group by v.resource order by count(v.id) desc",[],[max:max])
+		
+		def results = []
+		viewList.each{ v->
+			
+			def r = MultimediaResource.findById(v[0].toLong())
+			
+			if(r)
+			{
+				def metrics = getMultimediaResourceMetrics(r)
+			
+				results << [
+					id:r.id,
+					//owner_name:r.owner.userName, Don't need owner_name, it's you!
+					title:r.title,
+					url:r.url?.url,
+					owner_name:r.owner.userName,
+					perm_name:r.perm?.name,
+					perm_val:r.perm?.val,
+					date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.dateCreated,"dd.MM.yyyy HH:mm"),
+					last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.lastUpdated,"dd.MM.yyyy HH:mm"),,
+					thumbnail:r.thumbnail,
+					duration:r.duration,
+					isVideo:r.isVideo,
+					cc:metrics.cc,
+					slides_count:metrics.slides_count,
+					synmarks_count: metrics.synmarks_count,
+					views:v[1]
+				]
+			}	
+		}
+		
+		return [rows:results,records:max]
 	}
 	
 	def getTagsAsArray(user)
