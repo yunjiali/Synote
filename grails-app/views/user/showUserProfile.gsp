@@ -55,10 +55,10 @@
 			<div class="row">
 				<div class="span6 offset1">
 					<g:link class="btn" controller='user' action='editUserProfile' elementId="user_profile_edit">
-					<i class="icon-pencil"></i>Edit your profile</g:link>
+					Edit your profile</g:link>
 					<g:allowRegistering>
 						<g:link class="btn btn-warning" controller='user' action='changePassword' elementId="user_profile_change_password">
-						<i class="icon-wrench"></i>Change password</g:link>
+						Change password</g:link>
 					</g:allowRegistering>
 				</div>
 			</div>

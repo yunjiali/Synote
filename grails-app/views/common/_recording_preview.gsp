@@ -28,7 +28,7 @@
 <div style="margin-top:20px;">
 	<div style="position:relative;">
 		<g:link controller='recording' action='replay' id="${preview_row.id}" title="play ${preview_row.title}">			
-			<img style="width: 120px; height: 90px;" src="${preview_thumbnail_src}"/>
+			<img class="thumbnail-img" src="${preview_thumbnail_src}"/>
 			<div style="position:absolute;z-index:1;left:0;bottom:0">
 				<span class="label label-inverse label-duration">${preview_duration}</span>
 			</div>

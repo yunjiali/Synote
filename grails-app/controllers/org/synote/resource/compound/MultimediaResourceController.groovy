@@ -613,7 +613,7 @@ class MultimediaResourceController {
 			return
 		}
 		
-		return [multimediaResource: multimediaResource, ownerUserName: multimediaResource?.owner?.userName, groupList: getGroupList()]
+		return [multimedia: multimediaResource, ownerUserName: multimediaResource?.owner?.userName, groupList: getGroupList()]
 	}
 	
 	def update = {

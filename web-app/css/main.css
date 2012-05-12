@@ -116,6 +116,15 @@ footer
     word-wrap: normal;
 }
 
+.permission-info
+{
+	color: #666666;
+    display: block;
+    font-size: 0.9em;
+    margin-top: -0.2em;
+    padding: 0 0 5px 24px;
+}
+
 .metrics-item, .tag-item
 {
 	padding-right:5px;
@@ -124,6 +133,12 @@ footer
 .label-duration
 {
 	opacity:0.6;
+}
+
+.thumbnail-img
+{
+	width:120px;
+	height:90px;
 }
 /* My Synote */
 

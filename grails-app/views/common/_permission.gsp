@@ -4,8 +4,7 @@
 	value="${template_title?template_title:'Select permission'}" />
 <g:set var="defaultPermission"
 	value="${defaultPerm?defaultPerm:org.synote.permission.PermissionValue.findByName('ANNOTATE')}" />
-<div id="combowrap_{id}_div" class="combowrap">
-<select name="${name}" id="${id}" title="Select permission" class="${selectorClass}">
+<div class="controls">
 	<g:if test="${canPrivate}">
 		<g:set var="permissionValues"
 			value="${org.synote.permission.PermissionValue.list()}" />
@@ -16,16 +15,32 @@
 	</g:else>
 	<g:each var="permissionValue" in="${permissionValues}">
 		<g:if test="${permissionValue?.val.equals(defaultPermission?.val)}">
-			<option value="${permissionValue?.val}" selected="selected">
-			${permissionValue?.name.trim()}
-			</option>
+			<label class="radio">
+				<input type="radio" value="${permissionValue?.val}" checked="checked">
+						${permissionValue?.name.trim().toLowerCase()}
+			</label>
 		</g:if>
 		<g:else>
-			<option value="${permissionValue?.val}">
-			${permissionValue?.name.trim()}
-			</option>
+			<label class="radio">
+				<input type="radio" value="${permissionValue?.val}">
+						${permissionValue?.name.trim().toLowerCase()}
+			</label>
+		</g:else>
+		<g:if test="${permissionValue?.val == 0}">
+			<span class="permission-info">Only you can view</span>
+		</g:if>
+		<g:elseif test="${permissionValue?.val == 100}">
+			<span class="permission-info">Every body can view, but they cannot make annotations</span>
+		</g:elseif>
+		<g:elseif test="${permissionValue?.val == 200}">
+			<span class="permission-info">Every body can view and make annotations, but they cannot edit transripts and slides</span>
+		</g:elseif>
+		<g:else>
+			<span class="permission-info">Every body can view, make annotations, edit transcript and slides</span>
 		</g:else>
 	</g:each>
-</select>
+	<label class="radio">
+		
+	</label>
 </div>
 

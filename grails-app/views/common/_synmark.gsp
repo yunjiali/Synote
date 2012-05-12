@@ -24,7 +24,7 @@
 	<div class="span2">
 		<div style="position:relative;">
 			<g:link controller='recording' action='replay' id="${row.rid}" fragment="${row.mf} title="play synamrk">			
-				<img style="width: 120px; height: 90px;" src="${thumbnail_src}"/>
+				<img class="thumbnail-img" src="${thumbnail_src}"/>
 				<div style="position:absolute;z-index:1;left:0;bottom:0">
 					<span class="label label-inverse label-duration">${row.start} to ${row.end}</span>
 				</div>

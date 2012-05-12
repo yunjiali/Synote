@@ -29,7 +29,7 @@
 	<div class="span2">	
 		<div style="position:relative">	
 			<g:link controller='recording' action='replay' id="${row.id}" title="play ${row.title}">				
-			<img style="width: 120px; height: 90px;" src="${thumbnail_src}"/>
+			<img class="thumbnail-img" src="${thumbnail_src}"/>
 			<div style="position:absolute;z-index:1;left:0;bottom:0">
 				<span class="label label-inverse label-duration">${duration}</span>
 			</div>
@@ -66,11 +66,10 @@
 	 		<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
 	  			Actions<span class="caret"></span></a>
 	  		<ul class="dropdown-menu">
-	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Details</g:link></li>
 	  				<g:if test="${editable}">
-	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Edit</g:link></li>
-	  				</g:if>
+	  				<li><g:link controller="multimediaResource" action="edit" id="${row.id}">Edit</g:link></li>
 	  				<li class="divider"></li>
+	  				</g:if>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
