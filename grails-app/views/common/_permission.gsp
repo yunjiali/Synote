@@ -16,13 +16,13 @@
 	<g:each var="permissionValue" in="${permissionValues}">
 		<g:if test="${permissionValue?.val.equals(defaultPermission?.val)}">
 			<label class="radio">
-				<input type="radio" value="${permissionValue?.val}" checked="checked">
+				<input type="radio" value="${permissionValue?.val}" checked="checked" name="${name}" />
 						${permissionValue?.name.trim().toLowerCase()}
 			</label>
 		</g:if>
 		<g:else>
 			<label class="radio">
-				<input type="radio" value="${permissionValue?.val}">
+				<input type="radio" value="${permissionValue?.val}" name="${name}" />
 						${permissionValue?.name.trim().toLowerCase()}
 			</label>
 		</g:else>

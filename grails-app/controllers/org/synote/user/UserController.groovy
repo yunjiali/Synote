@@ -314,6 +314,8 @@ class UserController {
 	   tagList.each{key,value->
 		   tagArray << ["text":key,"weight":value]
 	   }
+	   
+	   def topTagArray = tagArray.sort{-it.weight}[0..50]
 	  
 	   /*return (contentType:"text/xml", encoding:"UTF-8")
 	   {
@@ -330,7 +332,7 @@ class UserController {
 				   }
 			   }
 	   }*/
-	   render tagArray as JSON
+	   render topTagArray as JSON
 	   return
 	}
 

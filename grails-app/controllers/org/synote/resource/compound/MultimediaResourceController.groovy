@@ -4,6 +4,8 @@ import grails.converters.*
 import org.xml.sax.SAXParseException
 import org.synote.resource.Resource
 import org.synote.resource.ResourceService
+import org.synote.resource.single.text.MultimediaTag
+import org.synote.resource.single.text.MultimediaTextNote
 import org.synote.resource.single.binary.MultimediaUrl
 import org.synote.resource.single.text.*
 import org.synote.annotation.synpoint.Synpoint
@@ -613,12 +615,12 @@ class MultimediaResourceController {
 			return
 		}
 		
-		return [multimedia: multimediaResource, ownerUserName: multimediaResource?.owner?.userName, groupList: getGroupList()]
+		return [multimedia: multimediaResource, ownerUserName: multimediaResource?.owner?.userName]
 	}
 	
 	def update = {
 		
-		def multimediaResource = MultimediaResource.get(params.id)
+		def multimediaResource = MultimediaResource.get(params.id?.toLong())
 		
 		if (!multimediaResource)
 		{
@@ -634,20 +636,71 @@ class MultimediaResourceController {
 			return
 		}
 		
-		//TODO: This will be changed in the further as multimedia is not a single resource any more
+		def owner = multimediaResource.owner
+		
 		//MultimediaTextNote and multimediaTags will also been included.
 		//Try multimediaResource.properties = params to see if it's still work
 		multimediaResource.saveUrl(params.url)
 		multimediaResource.title = params.title
-		multimediaResource.perm = PermissionValue.findByVal(params.perm)
+		multimediaResource.perm = PermissionValue.findByVal(params.perm?.toString())
+		
+		//multimedia description and tags
+		if(multimediaResource.note == null)
+		{
+			multimediaResource.note = new MultimediaTextNote(owner:owner, content:params.note)
+		}
+		else
+		{
+			multimediaResource.saveNote(params.note)	
+		}
+			
+		//thumbnail pictures, duration and isVideo
+		multimediaResource.thumbnail = params.thumbnail
+		multimediaResource.isVideo = Boolean.valueOf(params.isVideo)
+		multimediaResource.duration = Integer.valueOf(params.duration)
 		
 		Resource.withTransaction{status->
+			
+			def tags = params.tags?.split(",")
+			if(multimediaResource.tags == null)
+			{
+				tags.each{t->
+					if(t.trim()?.size() >0)
+						multimediaResource.addToTags(new MultimediaTag(owner: owner,content:tag.trim()))
+				}
+			}
+			else if(tags?.size()>0)//tags is an array of string
+			{
+				def removeTags = []
+				multimediaResource.tags.each {mt ->
+					!tags.find {t ->
+						mt.content?.trim() && mt.content?.equalsIgnoreCase(t)
+					}
+				}.each {mt ->
+					removeTags << mt
+				}
+				
+				removeTags.each{rt->
+					multimediaResource.removeFromTags(rt)
+					rt.delete()
+				}
+				tags.findAll {t ->
+					t.trim() && !multimediaResource.tags?.find {mt ->
+						mt.content.equalsIgnoreCase(t)
+					}
+				}.each {t ->
+					multimediaResource.addToTags(new MultimediaTag(owner: owner, content: t.trim()))
+				}
+			}
 			
 			try
 			{
 		
 				if(multimediaResource.hasErrors() || !multimediaResource.save())
 				{
+					//multimediaResource.errors.allErrors.each {
+				     //   println it
+				    //}
 					log.error "Cannot update multimedia ${multimediaResource.title}"
 					throw new ResourceException("Cannot update multimediaResource ${multimediaResource.title}")
 				}
@@ -660,7 +713,7 @@ class MultimediaResourceController {
 				}
 				
 				flash.message = "Multimedia ${multimediaResource.title} was successfuly updated"
-				redirect(action: show, id: multimediaResource.id)
+				redirect(action:'edit',id: multimediaResource.id)
 				return
 			}
 			catch(SynoteException syex)
@@ -670,7 +723,7 @@ class MultimediaResourceController {
 			}
 			finally
 			{
-				render(view: 'edit', model: [multimediaResource: multimediaResource, ownerUserName: params.ownerUserName, params:params])
+				render(view: 'edit', model: [multimedia: multimediaResource, ownerUserName: params.ownerUserName, params:params])
 				return
 			}
 		}

@@ -50,6 +50,20 @@ class MultimediaResource extends CompoundResource {
 		}
 	}
 	
+	void saveNote(String newNote)
+	{
+			
+		if(!note?.content.equals(newNote))
+		{
+			note?.content = newNote	
+		}
+	}
+	
+	void saveTags(String tags)
+	{
+		
+	}
+	
 	def propertiesToString ={
 
 		def propMap = [:]

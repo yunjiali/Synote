@@ -1,5 +1,5 @@
 <!-- set thumbnail url -->
-<g:if test="${preview_row.thumbnail != null && preview_row.isVideo==true}">
+<g:if test="${preview_row.thumbnail?.size()>0 && preview_row.isVideo==true}">
 	<g:set var="preview_thumbnail_src" value="${preview_row.thumbnail}"/>
 </g:if>
 <g:elseif test="${preview_row.isVideo == false }">

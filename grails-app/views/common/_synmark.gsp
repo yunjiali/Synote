@@ -1,5 +1,5 @@
 <!-- set thumbnail url -->
-<g:if test="${row.thumbnail != null && row.isVideo==true}">
+<g:if test="${row.thumbnail?.size() >0 && row.isVideo==true}">
 	<g:set var="thumbnail_src" value="${row.thumbnail}"/>
 </g:if>
 <g:elseif test="${row.isVideo == false}">
@@ -41,9 +41,9 @@
 	  		</g:else>
 	  	</h3>
 	  	<br/>
-	  	<span class="datetime-info">${row.date_created}</span><br>
+	  	<span class="datetime-info">${row.date_created}</span><br/>
 	  	<div style="padding: 5px 0px;">
-	  		<p>${row.note?.size()>0?row.note: "No description"}</p>
+	  		<p>${row.note}</p>
 	  	</div>
 	  	<div>
 	  		<g:each var="tag" in="${row.tags}">

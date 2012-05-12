@@ -65,6 +65,10 @@ class ResourceService {
 		
 		multimediaResourceList?.collect{ r->
 			def multimedia = MultimediaResource.findById(r.id)
+			def tags = []
+			multimedia.tags.each{
+				tags<<it.content
+			}
 			def views = Views.countByResource(multimedia)
 			def metrics = getMultimediaResourceMetrics(multimedia)
 			
@@ -80,6 +84,8 @@ class ResourceService {
 				thumbnail:r.thumbnail,
 				duration:r.duration,
 				isVideo:r.is_video,
+				note:multimedia.note?.content,
+				tags:tags,
 				cc:metrics.cc,
 				slides_count:metrics.slides_count,
 				synmarks_count: metrics.synmarks_count,
@@ -124,8 +130,11 @@ class ResourceService {
 		
 		multimediaList?.collect{ r->
 			def views = Views.countByResource(r)
-			
 			def metrics = getMultimediaResourceMetrics(r)
+			def tags = []
+			r.tags.each{
+				tags<<it.content	
+			}
 			results << [
 				id:r.id, 
 				//owner_name:r.owner.userName, Don't need owner_name, it's you!
@@ -138,6 +147,8 @@ class ResourceService {
 				thumbnail:r.thumbnail,
 				duration:r.duration,
 				isVideo:r.isVideo,
+				note:r.note?.content,
+				tags:tags,
 				cc:metrics.cc,
 				slides_count:metrics.slides_count,
 				synmarks_count: metrics.synmarks_count,

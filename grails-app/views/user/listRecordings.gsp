@@ -32,7 +32,7 @@
 									<option value="perm">Permission</option>
 								</g:else>
 							</select>
-							<input type="text" name="text" class="input-medium" placeholder="Search your recordings" value="${params.text}">
+							<input type="text" name="text" class="input-medium" placeholder="Search recording title" value="${params.text}">
 							<input type="submit" class="btn" value="Submit" />
 						</g:form>
 					</div>

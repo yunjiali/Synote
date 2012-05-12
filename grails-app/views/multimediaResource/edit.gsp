@@ -35,8 +35,8 @@
 </head>
 <body>
 <!-- set thumbnail url -->
-<g:if test="${multimedia.thumbnail != null && multimedia.isVideo==true}">
-	<g:set var="thumbnail_src" value="${row.thumbnail}"/>
+<g:if test="${multimedia.thumbnail?.size() > 0 && multimedia.isVideo==true}">
+	<g:set var="thumbnail_src" value="${multimedia.thumbnail}"/>
 </g:if>
 <g:elseif test="${multimedia.isVideo == false }">
 	<g:set var="thumbnail_src" value="${resource(dir: 'images', file: 'audio_default.png')}"/>
@@ -63,35 +63,37 @@
 			<hr/>
 			<g:render template="/common/message" model="[bean: multimediaResource]" />
 			<div>
-				<g:form method='POST' name='multimediaEditForm' controller="multimediaResource" action="save">
+				<g:form method='POST' name='multimediaEditForm' controller="multimediaResource" action="update">
 					<fieldset>
 						<div class="span5">
-							<input type="hidden" name="id" value="${fieldValue(bean: multimedia, field: 'id')}" />
+							<input type="hidden" name="id" value="${multimedia.id}" />
 							<div class="control-group">
 								<label for="title" class="control-label"><b><em>*</em>Title</b></label>
 						      	<div class="controls">
-						        	<input type='text' autocomplete="off" class="required span4" name='title' id='title' value='${fieldValue(bean: multimedia, field: 'title')}' />
+						        	<input type='text' autocomplete="off" class="required span4" name='title' id='title' value="${fieldValue(bean: multimedia, field: 'title')}" />
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
 								<label for="url" class="control-label"><b><em>*</em>URL</b></label>
 						      	<div class="controls">
-						        	<input type='text' autocomplete="off" class="required span4" name='url' id='url' value='${fieldValue(bean: multimedia, field: 'url')}' />
+						        	<input type='text' autocomplete="off" class="required span4" name='url' id='url' value="${fieldValue(bean: multimedia, field: 'url')}" />
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
 								<label for="note" class="control-label"><b>Description</b></label>
 						      	<div class="controls">
-						        	<textarea class="input-xlarge span4" name='note' id='note' rows="8" value='${fieldValue(bean: multimedia, field: 'note')}'></textarea>
+						        	<textarea class="input-xlarge span4" name='note' id='note' rows="8">${multimedia.note?.content}</textarea>
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
 								<label for="tags" class="control-label"><b>Tags</b></label>
 						      	<div class="controls">
+						      		<g:set var="tagStr" value=""/>
 						      		<g:each in="${multimedia.tags}" var="t">
-						      			<g:set var="tagStr" value="${tagStr+t}"/>
+						      			<g:set var="tagStr" value="${tagStr+','+t}"/>
 						      		</g:each>
-						        	<input class="span4" name='tags' id='tags' value="${tagStr}" />
+						        	<input class="span4" name='tags' id='tags' value="${tagStr?.size() >0?tagStr.substring(1):tagStr}" />
+						        	<span class="help-block">Please separate the tags by comma ","</span>
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
@@ -124,7 +126,7 @@
 						      			<span class="span2 uneditable-input" id="duration_span">${duration}</span>
 						      			<button class="btn btn-info" type="button" id="duration_button">Get duration</button>
 						      		</div>
-						      		<input type='hidden' class="required" name='duration' id='duration' value='${duration}' />
+						      		<input type='hidden' class="required" name='duration' id='duration' value="${multimedia.duration}" />
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
@@ -135,7 +137,7 @@
 						      			<button class="btn btn-info" type="button" id="isVideo_button">Is it a Video?</button>
 						      		</div>
 						      	</div>
-						      	<input type='hidden' class="required" name='isVideo' id='isVideo' value='${multimedia.isVideo}' />
+						      	<input type='hidden' class="required" name='isVideo' id='isVideo' value="${multimedia.isVideo}" />
 					      	</div>
 					      	<div class="control-group">
 								<label for="url" class="control-label"><b>Thumbnail Picture</b></label>
@@ -143,7 +145,7 @@
 						        	<img src="${thumbnail_src}" class="thumbnail-img"/><br/><br/>
 						        	<button class="btn btn-info" type="button" id="thumbnail_button">Generate thumbnail</button>
 						      	</div>
-						      	<input type='hidden' class="required span4" name='url' id='url' value='${multimedia.thumbnail}' />
+						      	<input type='hidden' class="required span4" name='thumbnail' id='thumbnail' value="${multimedia.thumbnail}" />
 						    </div>
 				      	</div>
 					</fieldset>

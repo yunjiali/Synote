@@ -116,6 +116,11 @@ footer
     word-wrap: normal;
 }
 
+.recording-description
+{
+	color: #666666;
+}
+
 .permission-info
 {
 	color: #666666;

@@ -1,5 +1,5 @@
 <!-- set thumbnail url -->
-<g:if test="${row.thumbnail != null && row.isVideo==true}">
+<g:if test="${row.thumbnail?.size()>0 && row.isVideo==true}">
 	<g:set var="thumbnail_src" value="${row.thumbnail}"/>
 </g:if>
 <g:elseif test="${row.isVideo == false }">
@@ -25,6 +25,14 @@
 	<g:set var="title" value="${row.title}"/>
 </g:else>
 
+<!-- set note depending on length -->
+<g:if test="${row.note?.size() > 255}">
+	<g:set var="note" value="${row.title?.substring(0,255)+'...'}"/>
+</g:if>
+<g:else>
+	<g:set var="note" value="${row.note}"/>
+</g:else>
+
 <div class="recording-row row">
 	<div class="span2">	
 		<div style="position:relative">	
@@ -46,14 +54,20 @@
 	  		<span class="badge" style="margin-right: 5px;">cc</span>
 	  	</div>	
 	 	</g:if>
-	  	<br/>
 	  	<div>
+	  		<p class="recording-description">${note}</p>
+	  	</div>
+	  	<div>
+	  		<g:each var="tag" in="${row.tags}">
+	  			<span class="badge badge-tag"><i class="icon-tag tag-item icon-white"></i>${tag}</span>
+	  		</g:each>
+	  	</div>
+	  	<div style="padding-top:10px">
 	  		<g:if test="${row.owner_name != null}">
 	  			<span class="owner-info">by ${row.owner_name} |</span>
 	  		</g:if>
-	  		<span class="datetime-info">${row.date_created}</span>
+	  		<span class="datetime-info">Created at ${row.date_created}</span>
 	  	</div>
-	  	<br>
 	  	<div class="row" style="padding: 5px 0px;">
 	  		<div class="span1">
 	  			<span title="number of views"><i class="icon-signal metrics-item"></i>${row.views}</span></div>
