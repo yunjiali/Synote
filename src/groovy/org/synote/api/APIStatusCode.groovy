@@ -2,7 +2,7 @@ package org.synote.api
 
 class APIStatusCode {
 	/**
-	* status code: To indicate the status of the return xml
+	* status code: To indicate the status of the return xml or json
 	*/
    private final static int SUCCESS = 0
    private final static int AUTHENTICATION_FAILED = 1
@@ -51,6 +51,14 @@ class APIStatusCode {
    private final static int RESOURCEANNOTATION_NOT_FOUND = 81
    
    private final static int INTERNAL_ERROR = 99
+   
+   /*for external integration errors*/
+   private final static int NERD_TEXT_NOT_FOUND = 110
+   private final static int NERD_EXTRACTOR_NOT_FOUND = 111
+   private final static int NERD_ID_MiSSING = 112
+   private final static int NERD_RESOURCE_NOT_FOUND = 113
+   private final static int NERD_EXTRACTOR_INTERAL_ERROR = 119
+   
    
    /**
     * Ussed to get the last exception in the session

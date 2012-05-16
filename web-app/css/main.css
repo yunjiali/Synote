@@ -116,7 +116,7 @@ footer
     word-wrap: normal;
 }
 
-.recording-description
+.recording-description, .nerd-entity-count
 {
 	color: #666666;
 }
@@ -144,6 +144,13 @@ footer
 {
 	width:120px;
 	height:90px;
+}
+
+.nerd-extractor-li
+{
+	display:inline-block;
+	padding-left:10px;
+	padding-bottom:10px;
 }
 /* My Synote */
 

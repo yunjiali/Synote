@@ -23,17 +23,12 @@
     text-decoration: none;
 }
 </style>
-<script type="text/javascript">
-	$(document).ready(function(){
-		
-	});
-</script>
 </head>
 <body>
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:render template="/common/userNav" model="['active':'recordings']"/>
+			<g:render template="/common/userNav" model="['active':'tags']"/>
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline">My Tags</h2>

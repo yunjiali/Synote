@@ -46,6 +46,14 @@
 	</div>
 	<div class="span8">
 	  	<h3 class="heading-inline">${title}</h3>
+	  	<div style="display:inline">
+	  		<g:if test="${row.isVideo}">
+	  			<img src="${resource(dir: 'images/skin', file: 'video_16.png')}" alt="This is a video" title="This is a video"/>
+	  		</g:if>
+	  		<g:else>
+	  			<img src="${resource(dir: 'images/skin', file: 'video_16.png')}" alt="This is an audio" title="This is an audio"/>
+	  		</g:else>
+	  	</div>
 	  	<div class="pull-right">
 	  		<g:render template="/common/permbar" model="['perm_val':row.perm_val,'perm_name':row.perm_name]"/>
 	  	</div>
