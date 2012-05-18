@@ -3,7 +3,7 @@
 <head>
 	<title><g:layoutTitle default="Synote" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="viewpoint" cotnent="width=device-width, initial-scale=1.0"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="author" content="Yunjia Li"/>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
@@ -27,7 +27,7 @@
 	<g:layoutHead />
 </head>
 <body itemscope="itemscope" itemtype="http://schema.org/WebPage" itemref="bottomMainFooter">
-<meta itemprop="author" content="Yunjia Li">
+<meta itemprop="author" content="Yunjia Li"/>
 	<!-- Top Navigation bar -->
 	<div class="navbar" style="margin-bottom:0px !important;" itemscope="itemscope" itemtype="WPHeader">
 		<div class="navbar-inner">
@@ -42,7 +42,6 @@
 						</a>
 						<a href="#" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
 							<span class="caret"></span>
-						</a>
 						</a>
 						<ul class="dropdown-menu">
 					    	<li><g:link controller="user" action="showUserProfile" title="Show user profile">My Profile</g:link></li>
@@ -63,17 +62,17 @@
 						</a>
 						<ul class="dropdown-menu">
 					    	<li>
-			    				<g:link controller="multimediaResource" action="create" title="recording diretory">
+			    				<g:link controller="multimediaResource" action="create" title="create a recording">
 			    				Create a recording </g:link>
 				    		</li>
 				    		<li>
-				    			<g:link controller="userGroup" action="create" title="recording diretory">
+				    			<g:link controller="userGroup" action="create" title="create a group">
 				    			 Create a group </g:link>
 				    		</li>
             			</ul>
 					</div>
 					<div class="btn-group pull-right">
-						<g:link controller="user" action="index" title="Edit your profile" class="btn">
+						<g:link controller="user" action="index" title="Edit my profile" class="btn">
 						<i class="icon-briefcase"></i>
 						My Synote</g:link>
 					</div>
@@ -126,38 +125,6 @@
 	<div id="main_content" class="container" itemprop="maincontentOfPage" itemscope="itemscope" itemtype="http://schema.org/WebPageElement">
 		<g:layoutBody />
 	</div>
-	<footer>
-		<div "itemscope="itemscope" itemtype="WPFooter" class="container">
-				<span>
-					<a href="http://www.soton.ac.uk" target="_blank"
-						title="University of Southampton">&copy; <span itemprop="copyrightYear">2012</span> <span itemprop="copyrightHolder">University of Southampton</span></a>
-				</span>|
-				<span>
-					<g:link controller="user" action="contact"
-						target="_blank" title="Contact Us">Contact Us</g:link>
-				</span>|
-				<span>
-					<g:link
-				action="termsAndConditions" controller="user" title="Legal"
-				target="_blank">Legal</g:link>
-				</span>|
-				<span>
-					<g:link
-				action="accessibility" controller="user" title="Accessibility"
-				target="_blank">Accessibility</g:link>
-				</span>|
-				<span>
-					<a href="http://www.synote.ecs.soton.ac.uk" target="_blank"
-				title="About synote">About Synote</a> 
-				</span>|
-				<span>
-					<a href="http://blog.lsl.ecs.soton.ac.uk/synote/" target="_blank"
-				title="Synote News">Synote News</a>
-				</span>|
-				<span>
-					<img src="${resource(dir: 'images', file: 'licenses-bsd-88x31.png')}" alt="BSD license"/>
-				</span>
-		</div>
-	</footer>
+	<g:render template="/common/footer"/>
 </body>
 </html>

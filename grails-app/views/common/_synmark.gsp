@@ -23,7 +23,7 @@
 <div class="synmark-row row">
 	<div class="span2">
 		<div style="position:relative;">
-			<g:link controller='recording' action='replay' id="${row.rid}" fragment="${row.mf} title="play synamrk">			
+			<g:link controller='recording' action='replay_old' id="${row.rid}" fragment="${row.mf} title="play synamrk">			
 				<img class="thumbnail-img" src="${thumbnail_src}"/>
 				<div style="position:absolute;z-index:1;left:0;bottom:0">
 					<span class="label label-inverse label-duration">${row.start} to ${row.end}</span>
@@ -57,7 +57,7 @@
 	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Details</g:link></li>
 	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Edit</g:link>
 	  				</li><li class="divider"></li>
-	  				<li><g:link controller="recording" action="replay" id="${row.rid}" fragment="${row.mf}">Play it in Synote Player</g:link></li>
+	  				<li><g:link controller="recording" action="replay_old" id="${row.rid}" fragment="${row.mf}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.rid}" fragment="${row.mf }">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>

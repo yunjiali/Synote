@@ -322,7 +322,7 @@ function selectCheckBox(cbx_val)
 				-&nbsp; Go to a page where the detail about this recording is listed<br/>
 			</span>
 			<span id="play_recording_span">
-				<g:link controller="recording" action="replay" title="play recording">Play this recording</g:link>
+				<g:link controller="recording" action="replay_old" title="play recording">Play this recording</g:link>
 				-&nbsp; Play this recording in synote player<br/>
 			</span>
 			<span>

@@ -36,7 +36,7 @@
 <div class="recording-row row">
 	<div class="span2">	
 		<div style="position:relative">	
-			<g:link controller='recording' action='replay' id="${row.id}" title="play ${row.title}">				
+			<g:link controller='recording' action='replay_old' id="${row.id}" title="play ${row.title}">				
 			<img class="thumbnail-img" src="${thumbnail_src}"/>
 			<div style="position:absolute;z-index:1;left:0;bottom:0">
 				<span class="label label-inverse label-duration">${duration}</span>
@@ -92,7 +92,7 @@
 	  				<li><g:link controller="multimediaResource" action="edit" id="${row.id}">Edit</g:link></li>
 	  				<li class="divider"></li>
 	  				</g:if>
-	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
+	  				<li><g:link controller="recording" action="replay_old" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>

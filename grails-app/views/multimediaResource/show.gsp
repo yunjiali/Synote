@@ -96,7 +96,7 @@
 	</table>
 	<div class="prepend-top append-bottom">
 	<div class="span-20">
-		<g:link class="replay" controller="recording" action="replay" id="${multimediaResource?.id}" elementId="recording_replay" title="Replay recording">Replay</g:link>
+		<g:link class="replay" controller="recording" action="replay_old" id="${multimediaResource?.id}" elementId="recording_replay" title="Replay recording">Replay</g:link>
 		<g:link class="print" controller="recording" action="print" id="${multimediaResource?.id}" elementId="recording_print" title="Display the recording in accessible style">Print Friendly</g:link>
 		<g:isOwnerOrAdmin owner="${multimediaResource?.owner?.id}">
 			<g:link controller="multimediaResource" action="edit" id="${multimediaResource?.id}" elementId="recording_edit" title="Edit recording">Edit</g:link>

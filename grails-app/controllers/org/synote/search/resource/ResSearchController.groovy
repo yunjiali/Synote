@@ -89,7 +89,7 @@ class ResSearchController {
 		}
 		MultimediaResource multimediaResource = MultimediaResource.get(params.id)
 		
-		redirect(controller:"recording",action:"replay", id:params.id)
+		redirect(controller:"recording",action:"replay_old", id:params.id)
 	}
 	
 	//used to locate the position where to start playing the recording for synmark
@@ -136,7 +136,7 @@ class ResSearchController {
 			if(synpoints.size() == 1)
 			{
 				def synpoint = synpoints[0]
-				redirect(controller:"recording", action:"replay", params:[id:multimediaResource.id, position:synpoint.targetStart])
+				redirect(controller:"recording", action:"replay_old", params:[id:multimediaResource.id, position:synpoint.targetStart])
 				return
 			}
 			else //I don't think it's possible but...
@@ -215,7 +215,7 @@ class ResSearchController {
 			return
 		}
 		def synpoint = synpoints[0]
-		redirect(controller:"recording", action:"replay", params:[id:multimediaResource.id, position:synpoint.targetStart])
+		redirect(controller:"recording", action:"replay_old", params:[id:multimediaResource.id, position:synpoint.targetStart])
 		
 	}
 	
