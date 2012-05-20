@@ -101,7 +101,7 @@
 		margin-left:0;
 	}
 	
-	.row-fluid .span-synmarks,.row-fluid .span-slides{
+	.row-fluid .span-synmarks,.row-fluid .span-slides, .row-fluid .span-transcripts{
 		width: 99.999999993% !important;
     	*width: 99.9468085036383% !important;
     	float: none;

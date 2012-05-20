@@ -210,6 +210,18 @@ class SynoteTagLib {
 		}
 	}
 	
+	//Display SQL time stamp on the webpage with a certain format
+	def printSQLTime = { attrs ->
+		if(!attrs.format)
+		{
+			attrs.format = "dd.MM.yyyy HH:mm"
+		}
+		if(attrs.datetime)
+		{
+			out << utilsService.convertSQLTimeStampToFormattedTimeString(attrs.datetime,attrs.format);
+		}
+	}
+	
 	private String formatTime(Integer start, Integer end)
 	{
 		def result = '['

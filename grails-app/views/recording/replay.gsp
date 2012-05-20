@@ -9,10 +9,6 @@
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" href="${resource(dir: 'css', file: 'player.css')}" />
 	<style type="text/css">
-		#multimedia_title_div
-		{
-			background-color:#efefef;
-		}
 		#recording_content_div
 		{
 			background-color:#333333;
@@ -38,6 +34,7 @@
 	<link rel="shortcut icon" href="${resource(dir: 'images', file: 'synote_icon.ico')}" type="image/x-icon" />
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
+	<script type="text/javascript" src="${resource(dir: 'js', file: 'player/player.responsive.js')}"></script>
 	<script id="scriptInit" type="text/javascript">
 		//In case I forget to remove console.log in IE
 		var alertFallback = true;
@@ -51,7 +48,7 @@
 		         console.log = function() {};
 		     }
 		};
-
+		
 		
 	</script>
 </head>
@@ -151,25 +148,22 @@
 		<!-- Recording title -->
 		<div id="multimedia_title_div" style="height:50px;">
 			<div>
-				<div id="recording_title_div" itemprop="name">${recording.title}</div>
+				<h2 id="recording_title_h2" itemprop="name">${recording.title}</h2>
 				<div id="recording_owner_div" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${g.getUserURI(recording.owner?.id.toString())}">
-					by <g:link controller="user" action="show" id="${recording.owner?.id}" elementId="recording_owner_a" itemprop="name">
-						${recording.owner?.userName}</g:link>
 					<meta itemprop="familyName" content="${recording.owner?.firstName}"/>
 					<meta itemprop="givenName" content="${recording.owner?.lastName}"/>
-					<meta itemprop="email" content="${recording.owner?.email}"/>		
+					<meta itemprop="email" content="${recording.owner?.email}"/>
+					<span class="owner-info">by <g:link controller="user" action="show" id="${recording.owner?.id}" elementId="recording_owner_a" itemprop="name">
+						${recording.owner?.userName}</g:link> |</span>
+	  				<span class="datetime-info" itemprop="dateCreated">Created at <g:printSQLTime datetime="${recording.dateCreated}"/></span>	
 				</div>
-				<!-- Yunjia: Add a link to the username, when user clicks, they can see other recordings from this user -->
-				<!--  Yunjia: Use 18 days ago, 1 year ago, etc. We need javascript library to do it -->
-				<div id="created_time_div">created <span id="created_time_span" itemprop="dateCreated">${new SimpleDateFormat("dd/MM/yyyy").format(recording.dateCreated)}</span></div>
 			</div>
 			<div id="player_settings_div" style="z-index:999;"></div>
 		</div>
 		<!-- Player and Description-->
 		<div class="container">
 		<div class="row">
-			
-			<div class="player-fixed-width">
+			<div id="col_left_div" class="player-fixed-width">
 				<div id="recording_content_div" style="height:320px;" itemscope="itemscope" itemtype="http://schema.org/AuidoObject" 
 				itemref="recording_title_div recording_owner_div created_time_span"> <!-- player -->
 					<h3>Player</h3>
@@ -204,15 +198,16 @@
 			
 		
 			<!-- synmarks and transcript -->
-			<div class="span-fluid-right tabbable">
+			<div id="col_right_div" class="span-fluid-right tabbable">
 				<div class="container-fluid">
 					<div class="row-fluid">
 						<!-- Synmarks -->
 						<ul class="nav nav-tabs" id="tab_right">
 							<li class="active"><a href="#synmarks_div" data-toggle="tab">Synmarks</a></li>
 							<li><a href="#slides_div" data-toggle="tab">Slides</a></li>
+							<li class="visible-phone"><a href="#transcripts_div" data-toggle="tab">Transcripts</a></li>
 						</ul>
-						<div class="tab-content">
+						<div class="tab-content" id="tab_content_div">
 							<div id="synmarks_div" class="tab-pane active span-synmarks" style="height:600px;">
 								<h3>Synmarks</h3>
 								<div id="synmarks_inner_div">
@@ -222,7 +217,7 @@
 								</div>
 							</div>
 							<!-- Slides  -->
-							<div id="slides_div" class="pull-right tab-pane span-slides" style="height:600px;">
+							<div id="slides_div" class="tab-pane span-slides" style="height:600px;">
 								<h3>Slides</h3>
 								<div id="image_container_div">
 								</div>	
