@@ -5,9 +5,6 @@
 <meta name="layout" content="main" />
 <g:urlMappings/>
 <script type="text/javascript">
-$(document).ready(function(){
-	nerdit("${extractor}","${rn.id}","${rn.extractors[i+1]?rn.extractors[i+1]:null}",nerdit);
-});
 
 var nerdit = function(extractor_name,id){
 	
@@ -61,7 +58,6 @@ var nerdit = function(extractor_name,id){
 		   complete:function(jqXHR,textStatus)
 		   {
 			   $("#loading_img_"+extractor_name+"_"+id).hide();
-			   callback()
 		   }
 		   
 	});				
@@ -104,13 +100,18 @@ var nerdit = function(extractor_name,id){
 								</tr>
 							</thead>
 							<tbody>
-								<g:each in="${resoruceList.extractors}" var="${extractor}" status="i">
+								<g:each in="${resourceList.extractors}" var="${extractor}" status="i">
 								<tr id="tr_${extractor}_${rn.id}">
 									<td>
 										<img width="120" height="48" alt="${extractor}" src="${resource(dir: 'images/nerd', file: extractor+'.png')}"/>
 									</td>
 									<td style="vertical-align:middle" id="ne_td_${extractor}_${rn.id}"><img id="loading_img_${extractor}_${rn.id}" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></td>
 								</tr>
+								<script type="text/javascript">
+								$(document).ready(function(){
+									nerdit("${extractor}","${rn.id}");
+								});
+								</script> 			
 								</g:each>
 							</tbody>
 						</table>

@@ -10,6 +10,8 @@ import org.synote.api.APIStatusCode
 import org.synote.permission.PermService
 import grails.converters.*
 
+import java.util.UUID
+
 import fr.eurecom.nerd.client.*
 import fr.eurecom.nerd.client.schema.*
 
@@ -74,6 +76,8 @@ class NerdController {
 			params.lang = "en"
 		try
 		{
+			String uuid = UUID.randomUUID().toString()
+			println uuid
 			NERD nerd = new NERD(NERD_KEY)
 			//println "${params.id} ${params.extractor} text:"+text
 			def result= nerd.extractionJSON(nerdExtractor, text?.trim(),"en",true)
@@ -85,7 +89,7 @@ class NerdController {
 				entityStr+= j.entity+" "
 			}
 			//println " ${params.id} ${params.extractor} entities:"+entityStr
-			
+			println uuid
 			render JSON.parse(result) as JSON
 			return
 		}
@@ -138,6 +142,7 @@ class NerdController {
 		}
 		
 		def resourceList = []
+		def extractors = []
 		
 		for(int n=0;n<idList.size();n++)
 		{
@@ -152,7 +157,7 @@ class NerdController {
 			
 			def textField = nerdService.getTextFromResource(resource)
 			
-			def extractors = params.list('extractor')
+			extractors = params.list('extractor')
 			
 			def item = [
 					id: i,
