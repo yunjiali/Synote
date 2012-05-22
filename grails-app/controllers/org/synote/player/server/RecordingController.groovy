@@ -176,8 +176,9 @@ class RecordingController {
 						//Do nothing currently	
 					}
 				}*/
+			def views = Views.countByResource(recording)
 			return [recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
-				resourceBaseURI:linkedDataService.getResourceBaseURI()]
+				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views]
 		}
 		else
 		{

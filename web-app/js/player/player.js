@@ -12,28 +12,11 @@ function initSynotePlayer(recording)
 {
 	var multimediaId = recording.id
 	//default settings of screen: search bar is hidden
-	$("#search_bar_div").hide();
-	$("#player_help_btn").button({
-		icons:{
-			primary:"ui-icon-info"
-		}
-	}).click(function(){
-		var url = g.createLink({controller:"recording",action:"help"});
-		window.open(url,"Synote Player Help");
-	});
-	$("#settings_btn").button({
-		icons:{
-			primary:"ui-icon-gear",
-			secondary:"ui-icon-carat-1-s"
-		}
-	});
-	$("#settings_menu_ul").wijmenu({
-		orientation:'vertical',
-		trigger:"#settings_btn",
-		triggerEvent:"click",
-		position:{my:"left top",at:"left bottom"},
-		animation:{animated:"slide",option:{direction:"left"}}
-	});
+	
+	//$("#player_help_btn").click(function(){
+	//	var url = g.createLink({controller:"recording",action:"help"});
+	//	window.open(url,"Synote Player Help");
+	//});
 	
 	//alert("1");
 	factory = new MultimediaFactory(recording);
@@ -55,25 +38,22 @@ function initSynotePlayer(recording)
 	}
 	else
 	{
-		var message_p = $("<p/>");
-		message_p.text("Cannot find an appropriate player! Please check the if the url is valid.");
-		$("multimedia_player_error_div").append(message_p).show();
+		var message_div = $("<div/>").addClass("alert alert-error");
+		message_div.html("<button class='close' data-dismiss='alert'>x</button> Cannot find an appropriate player on this device! Please check the if the url is valid.");
+		$("multimedia_player_error_div").append(message_div);
 	}
 
-	transcript = new Transcript(recording,$("transcripts_div"),$("#transcripts_content_div"));
-	transcript.initTranscript();
-	synmark = new Synmark(recording,$("#synmarks_div"),$("#synmark_list_div"));
-	synmark.initSynmark();
-	presentation = new Presentation(recording,$("#slides_div"),$("#image_container_div"));
-	presentation.initPresentation();
-	//console.log("player:"+ $("#recording_content_div").outerHeight());
-	//presentation.refresh();
-	synmark.refresh();
+	//transcript = new Transcript(recording,$("transcripts_div"),$("#transcripts_content_div"));
+	//transcript.initTranscript();
+	//synmark = new Synmark(recording,$("#synmarks_div"),$("#synmark_list_div"));
+	//synmark.initSynmark();
+	//presentation = new Presentation(recording,$("#slides_div"),$("#image_container_div"));
+	//presentation.initPresentation();
 	//synmark.refresh();
-	transcript.refresh();
-	presentation.refresh();
+	//transcript.refresh();
+	//presentation.refresh();
 	
-	timer = new SynoteTimer();
-	timer.run();
+	//timer = new SynoteTimer();
+	//timer.run();
 }
 

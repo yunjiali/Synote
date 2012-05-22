@@ -27,7 +27,7 @@
 
 <!-- set note depending on length -->
 <g:if test="${row.note?.size() > 255}">
-	<g:set var="note" value="${row.title?.substring(0,255)+'...'}"/>
+	<g:set var="note" value="${row.note?.substring(0,255)+'...'}"/>
 </g:if>
 <g:else>
 	<g:set var="note" value="${row.note}"/>
@@ -92,7 +92,7 @@
 	  				<li><g:link controller="multimediaResource" action="edit" id="${row.id}">Edit</g:link></li>
 	  				<li class="divider"></li>
 	  				</g:if>
-	  				<li><g:link controller="recording" action="replay_old" id="${row.id}">Play it in Synote Player</g:link></li>
+	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>

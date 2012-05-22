@@ -22,7 +22,7 @@ var MultimediaBase = Base.extend({
 	
 	//audio only player height and width
 	height_audio:26,
-	width_audio:320,
+	width_audio:480,
 	
 	height:0,
 	width:0,
@@ -54,45 +54,9 @@ var MultimediaBase = Base.extend({
 		
 		//in the base class init player's control panels	
 		//init control buttons
-		$("#control_play").button({
-			text:false,
-			icons:{
-				primary:"ui-icon-play"
-			}
-		});
-		$("#control_pause").button({
-			text:false,
-			icons:{
-				primary:"ui-icon-pause"
-			}
-		});
-		$("#control_stop").button({
-			text:false,
-			icons:{
-				primary:"ui-icon-stop"
-			}
-		});
-		$("#control_rewind").button({
-			text:false,
-			icons:{
-				primary:"ui-icon-seek-prev"
-			}
-		});
-		$("#control_forward").button({
-			text:false,
-			icons:{
-				primary:"ui-icon-seek-next"
-			}
-		});
-		$("#control_pace_div select").combobox();
-		$("#control_pace_div input").width(30);
+	
 		$("#control_goto_tb").mask("99:99:99");
-		$("#control_goto").button({
-			text:false,
-			icons:{
-				primary:"ui-icon-clock"
-			}
-		}).click(function()
+		$("#control_goto").click(function()
 		{
 			var pos = stringToMilisec($("#control_goto_tb").val());
 			//console.log("pos:"+pos);
@@ -123,7 +87,7 @@ var MultimediaBase = Base.extend({
 			var et = mf_json.hash.t[0].end?mf_json.hash.t[0].end:-1;
 			var old_text = $("#control_mf").text();
 			
-			if(st === 0 || st === null || st==="0" || st==="00.000" || st==="00:00.000" ||st === "00:00:00.000")
+			if(st === 0 || st === undefined || st==="0" || st==="00.000" || st==="00:00.000" ||st === "00:00:00.000")
 			{
 				old_text+=" the beginning";
 			}

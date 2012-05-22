@@ -251,6 +251,11 @@ public class TimeFormat
 	{
 		return (time != null) ? toString(time.intValue()) : null;
 	}
+	
+	public String toString(Long time)
+	{
+		return (time != null) ? toString(time.intValue()) : null;
+	}
 
 	public String toString(String time)
 	{

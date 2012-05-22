@@ -1,4 +1,5 @@
 <%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="org.synote.player.client.TimeFormat" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional with HTML5 microdata//EN" "xhtml1-transitional-with-html5-microdata.dtd">
 <html lang="en">
 <head>
@@ -6,13 +7,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="author" content="Yunjia Li"/>
+	<g:urlMappings/>
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" href="${resource(dir: 'css', file: 'player.css')}" />
 	<style type="text/css">
-		#recording_content_div
-		{
-			background-color:#333333;
-		}
 		#transcripts_div
 		{
 			background-color:#111111;
@@ -35,6 +33,34 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
 	<script type="text/javascript" src="${resource(dir: 'js', file: 'player/player.responsive.js')}"></script>
+	<script type="text/javascript" src="${resource(dir:'js',file:"Base.js")}"></script>
+	<!-- Other jquery libraries  -->
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.maskedinput-1.3.min.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.contextMenu.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.url.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.timers.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.field_selection.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.scrollTo-1.4.2-min.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.okShortcut.min.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"mediafragments.js")}"></script>
+	<!-- Player settings -->
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.media.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"microdataHelper.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/tiny_mce',file:"jquery.tinymce.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"webvtt.parser.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.util.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.settings.js")}"></script>
+	<!-- For player -->
+	<script type="text/javascript" src="${resource(dir:'js/jwplayer',file:"jwplayer.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/wmvplayer',file:"silverlight.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/wmvplayer',file:"wmvplayer.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js',file:"swfobject.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.media.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia_factory.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.mediafragment.controller.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.js")}"></script>
+	<!--  -->
 	<script id="scriptInit" type="text/javascript">
 		//In case I forget to remove console.log in IE
 		var alertFallback = true;
@@ -48,8 +74,71 @@
 		         console.log = function() {};
 		     }
 		};
+	</script>
+	<script type="text/javascript">
+	var recording = null;
+	var appPath = "${grailsApplication.metadata['app.name']}";
+	var mf_json = null; //pasrse the media fragment as json object
+	var ctrler = null; //multimedia controller, including play media fragment
+	var user = null;
+	var mdHelper = null //helper to help embed microdata
+	var userBaseURI = "${userBaseURI}";
+	var resourceBaseURI = "${resourceBaseURI}";
+	$(document).ready(function(){
+		//Deal with the media fragment first
 		
+		var uglyURI = decodeURIComponent(window.location);
+		var prettyURI = uglyURI;
+		if(uglyURI.indexOf("#!") != -1)
+			prettyURI = uglyURI.replace("#!","#");
+		var currentURL = $.url(prettyURI);
+		var recordingURLStr = "${recording.url.url}";
+		if(currentURL.attr('fragment')) //if current url has fragment
+		{
+			if(recordingURLStr.indexOf('#') == -1)
+				recordingURLStr+='#';
+				
+			recordingURLStr +=currentURL.attr('fragment');
+			//console.log(recordingURLStr);
+		}
+		mf_json = MediaFragments.parseMediaFragmentsUri(recordingURLStr);
+		//console.log(mf_json);
 		
+		recording = new Object();
+		recording.id = "${recording.id}";
+		recording.title = "${recording.title?.encodeAsHTML()}";
+		recording.url = "${recording.url.url}";//Yunjia: We have to think about it, if the url has fragment but the server cannot regonise it..., what should we do then
+		recording.canEdit = "${canEdit}".toLowerCase();
+		recording.canCreateSynmark = "${canCreateSynmark}".toLowerCase();
+
+		user = new Object();
+		if("${user}".length>0)
+		{
+			//console.log("1");
+			user.id = "${user?.id}";
+			user.user_name = "${user?.userName}";
+		}
+		else //No user logged in
+		{
+			//console.log("2");
+			user.id = -1;
+			user.user_name = "Guest User";
+		}
+		mdHelper= new MicrodataHelper(true);
+		initSynotePlayer(recording);
+		//initShortCutKeys();
+
+		if(recording.canEdit)
+		{
+			//initEditMode(recording);
+		}
+		//Start playing from media fragment is exisiting
+		if(!$.isEmptyObject(mf_json.hash) || !$.isEmptyObject(mf_json.query))
+		{
+			//ctrler.start_playback();
+		}
+		
+	});
 	</script>
 </head>
 <body itemscope="itemscope" itemtype="http://schema.org/WebPage" itemref="bottomMainFooter">
@@ -95,7 +184,7 @@
 				</g:isLoggedIn>
 				<g:isNotLoggedIn>
 				<div class="btn-group pull-right">
-					<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" class="btn btn-primary">
+					<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" title="Login to make annotations" class="btn btn-primary">
 							Login</g:link>
 					<g:allowRegistering>
 						<g:link controller="register" action="index" title="Register" class="btn btn-success hidden-phone">
@@ -146,7 +235,7 @@
 	
 	<div class="container" id="content">
 		<!-- Recording title -->
-		<div id="multimedia_title_div" style="height:50px;">
+		<div id="multimedia_title_div">
 			<div>
 				<h2 id="recording_title_h2" itemprop="name">${recording.title}</h2>
 				<div id="recording_owner_div" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${g.getUserURI(recording.owner?.id.toString())}">
@@ -155,38 +244,58 @@
 					<meta itemprop="email" content="${recording.owner?.email}"/>
 					<span class="owner-info">by <g:link controller="user" action="show" id="${recording.owner?.id}" elementId="recording_owner_a" itemprop="name">
 						${recording.owner?.userName}</g:link> |</span>
-	  				<span class="datetime-info" itemprop="dateCreated">Created at <g:printSQLTime datetime="${recording.dateCreated}"/></span>	
+	  				<span class="datetime-info" itemprop="dateCreated">Created at <g:printSQLTime datetime="${recording.dateCreated}"/> |</span>
+	  				<span class="datetime-info">${views} Views</span>
 				</div>
 			</div>
-			<div id="player_settings_div" style="z-index:999;"></div>
 		</div>
 		<!-- Player and Description-->
 		<div class="container">
 		<div class="row">
 			<div id="col_left_div" class="player-fixed-width">
+				<div style="margin-bottom:30px;">
+					<div class="pull-left">
+						<button style="" class="btn btn-success" id="control_mf" title="Play this fragment"><i class="icon-play-circle icon-white"></i>Play from</button>
+					</div>
+					<div id="control_time_div" class="pull-right">
+						<span id="time_current_position">00:00</span> / <span id="time_duration_span">${TimeFormat.getInstance().toString(recording.duration)}</span>
+					</div>
+				</div>
+				<div id="multimedia_player_error_div">
+					<!-- attach error messages as another span class="error" here -->
+				</div>
 				<div id="recording_content_div" style="height:320px;" itemscope="itemscope" itemtype="http://schema.org/AuidoObject" 
 				itemref="recording_title_div recording_owner_div created_time_span"> <!-- player -->
-					<h3>Player</h3>
 					<meta itemprop="contentURL" content="${recording.url.url}"/>
 					<meta itemprop="dateModified" content="${new SimpleDateFormat("dd/MM/yyyy").format(recording.lastUpdated)}"/>
-					<div>
-						<div>
-							<button style="display:none;" id="control_mf" title="Play this fragment">Play from</button>
-						</div>
-						<div id="control_time_div" style="text-align:right;float:right;">
-							<span id="time_current_position">00:00</span> / <span id="time_duration_span">00:00</span>
-						</div>
-					</div>
-					<div id="multimedia_player_error_div" class="error" style="display:none">
-					</div>
+					
 					<div id="multimedia_player_div">
 					</div>
 				</div><!-- end player -->
-				<div style="height:100px;"><!-- description -->
-					some description					
-				</div><!-- end description -->
+				<div id="recording_control_div" >
+					<div style="display:inline;">
+						<button id="control_play" title="Play" class="btn"><i class="icon-play"></i></button>
+						<button id="control_pause" title="Pause" class="btn"><i class="icon-pause"></i></button>
+						<button id="control_stop" title="Stop" class="btn"><i class="icon-stop"></i></button>
+						<button id="control_rewind" title="Rewind" class="btn"><i class="icon-backward"></i></button>
+						<button id="control_forward" title="Forward" class="btn"><i class="icon-forward"></i></button>
+					</div>	
+					<div id="control_pace_div" style="display:inline;">
+						Pace:
+						<select name="control_pace_select" class="span1" style="margin-top:9px;" id="control_pace_select">
+							<option value="1">1s</option>
+							<option value="5">5s</option>
+							<option value="10">10s</option>
+							<option value="20">20s</option>
+						</select>
+					</div>
+					<div class="input-append pull-right" style="display:inline;margin-top:9px;">
+						<input type="text" size="10" class="span1" name="control_goto_tb" id="control_goto_tb" value="00:00:00"/>
+						<button id="control_goto" class="btn" title="Go to a certain time"><i class="icon-arrow-right"></i></button>
+					</div>
+				</div>
 				<!-- Transcript -->
-				<div id="transcripts_div" style="height:500px;">
+				<div id="transcripts_div" style="height:500px;" class="tab-pane span-left">
 					<h3>Transcript</h3>
 					<div id="transcripts_inner_div">
 						<div id="transcripts_content_div">
@@ -201,6 +310,32 @@
 			<div id="col_right_div" class="span-fluid-right tabbable">
 				<div class="container-fluid">
 					<div class="row-fluid">
+						<!-- description and tags -->
+						<div id="tags_description_div" class="span12 hidden-phone description-brief"><!-- description -->	
+							<div>
+								<b>Tags</b><br/>
+								<g:if test="${recording.tags?.size() >0}">
+						  		<g:each var="tag" in="${recording.tags}">
+						  			<span class="badge badge-tag"><i class="icon-tag tag-item icon-white"></i>${tag?.content}</span>
+						  		</g:each>
+						  		</g:if>
+						  		<g:else>
+						  			No tags
+						  		</g:else>
+						  	</div>
+						  	<div id="description_div">
+								<b>Description</b>
+								<g:if test="${recording.note?.content?.size() >0}">
+								<p>${recording.note?.content}</p>	
+								</g:if>
+								<g:else>
+									No description
+								</g:else>
+							</div>				
+						</div><!-- end description -->
+						<div id="description_show_div" class="span12 hidden-phone">
+							<button class="btn btn-mini">more</button>
+						</div>
 						<!-- Synmarks -->
 						<ul class="nav nav-tabs" id="tab_right">
 							<li class="active"><a href="#synmarks_div" data-toggle="tab">Synmarks</a></li>
@@ -208,7 +343,7 @@
 							<li class="visible-phone"><a href="#transcripts_div" data-toggle="tab">Transcripts</a></li>
 						</ul>
 						<div class="tab-content" id="tab_content_div">
-							<div id="synmarks_div" class="tab-pane active span-synmarks" style="height:600px;">
+							<div id="synmarks_div" class="tab-pane active span-middle" style="height:600px;">
 								<h3>Synmarks</h3>
 								<div id="synmarks_inner_div">
 								<!-- Yunjia: Add tooltip to explain what is synmark, maybe add a picture to explain -->
@@ -217,7 +352,7 @@
 								</div>
 							</div>
 							<!-- Slides  -->
-							<div id="slides_div" class="tab-pane span-slides" style="height:600px;">
+							<div id="slides_div" class="tab-pane span-right" style="height:600px;">
 								<h3>Slides</h3>
 								<div id="image_container_div">
 								</div>	
