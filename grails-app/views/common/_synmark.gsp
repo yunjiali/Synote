@@ -43,7 +43,7 @@
 	  	<br/>
 	  	<span class="datetime-info">${row.date_created}</span><br/>
 	  	<div style="padding: 5px 0px;">
-	  		<p>${row.note}</p>
+	  		<p>${row.note?.encodeAsHTML()}</p>
 	  	</div>
 	  	<div>
 	  		<g:each var="tag" in="${row.tags}">

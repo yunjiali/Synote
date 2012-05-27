@@ -76,8 +76,8 @@ class NerdController {
 			params.lang = "en"
 		try
 		{
-			String uuid = UUID.randomUUID().toString()
-			println uuid
+			//String uuid = UUID.randomUUID().toString()
+			//println uuid
 			NERD nerd = new NERD(NERD_KEY)
 			//println "${params.id} ${params.extractor} text:"+text
 			def result= nerd.extractionJSON(nerdExtractor, text?.trim(),"en",true)
@@ -89,7 +89,7 @@ class NerdController {
 				entityStr+= j.entity+" "
 			}
 			//println " ${params.id} ${params.extractor} entities:"+entityStr
-			println uuid
+			//println uuid
 			render JSON.parse(result) as JSON
 			return
 		}

@@ -23,9 +23,44 @@
 .description-brief
 {
 	max-height:100px;
-	overflow:scroll;
+	overflow:hidden;
 }
 
+.description-full
+{
+	height:auto;
+	overflow:hidden;
+}
+
+/*###############transcript########################*/
+/*when mouseover a transcript div*/
+.transcript_highlight
+{
+	background-color:#d1e1fa !important;
+	background-image:url(../images/skin/play_16.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	cursor:pointer;
+}
+/*when a transcript is selected and playing*/
+.transcript_selected
+{
+	background-color:#d1e1fa !important;
+	cursor:pointer;
+}
+/*when a transcript has just been added*/
+.transcript_edited
+{
+	background-color:#c8ffbf;
+}
+/*when a transcript has something wrong*/
+.transcript_error
+{
+	background-color:#ffdfdf;
+}
+
+/*###############synmarks########################*/
+/*###############slides########################*/
 @media (min-width: 1200px) /* span-fluid-right + 480px = 1140px*/
 {
 	.player-fixed-width

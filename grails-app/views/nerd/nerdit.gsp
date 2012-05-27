@@ -3,17 +3,20 @@
 <title>Analyse multimedia using NERD</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
+<style type="text/css">
+	.table td{line-height:24px;}
+</style>
 <g:urlMappings/>
 <script type="text/javascript">
 
 var nerdit = function(extractor_name,id){
-	
+	var finished_extractors = 0;
 	var extract_url = g.createLink({controller:'nerd',action:'extractAjax'});
 	$.ajax({
 		   type: "GET",
 		   url: extract_url,
 		   data: {extractor:extractor_name,id:id}, //default language is English
-		   timeout:30000,
+		   timeout:60000, // the call will be queued on the server-side, so we need to set it for a longer time
 		   dataType: "json",
 		   //Yunjia: Add a beforeSend function to display the loading message
 		   success:function(data,textStatus, jqXHR)
@@ -22,7 +25,7 @@ var nerdit = function(extractor_name,id){
 				if(data.error !== undefined)
 				{
 					//Show error messages
-					ne_td.html("<span class='alert alert-error'>"+data.error.description+"</span>").
+					ne_td.html("<span class='alert alert-error'>"+data.error.description+"</span>");
 					return;
 				}
 
@@ -35,25 +38,41 @@ var nerdit = function(extractor_name,id){
 				{
 					if(i!= 0)
 						ne_td.append($("<br/>"));
-					ne_td.append($("<span/>",{text:data[i].entity}));
+					var entity_type = data[i].type === undefined ?"unknown type":data[i].type.toLowerCase();
+					var entity_span = $("<span/>",{
+						html:"<a target='_blank' href='"+data[i].uri+"' title='"+data[i].entity+
+								"'>"+data[i].entity+"<i class='icon-link-small'></i></a> is a(n) "+entity_type
+					});
 					
+					var approve_btn = $("<button/>").addClass("btn btn-success btn-mini btn-nerd-entity-approve").text("approve").attr('title', "approve");
+					var reject_btn = $("<button/>").addClass("btn btn-danger btn-mini btn-nerd-entity-reject").text("reject").attr('title','reject');
+					entity_span.append(approve_btn);
+					entity_span.append(reject_btn);
+					ne_td.append(entity_span);
 				}
 		   },
 		   error:function(jqXHR,textStatus,errorThrown)
 		   {
 				if(textStatus == "abort")
 				{
-					
+					ne_td.html("<span class='alert alert-error'>Request abort</span>");
+					return;
 				}
 				else if(textStatus == "timeout")
 				{
-
+					ne_td.html("<span class='alert alert-error'>Request timeout</span>");
+					return;
 				}
 				else if(textStatus == "error")
 				{
-
+					ne_td.html("<span class='alert alert-error'>Request error</span>");
+					return;
 				}
-				console.log(jqXHR.statusCode());
+				else
+				{
+					ne_td.html("<span class='alert alert-error'>Request "+textStatus+"</span>");
+					return;
+				}
 		   },
 		   complete:function(jqXHR,textStatus)
 		   {
@@ -76,14 +95,14 @@ var nerdit = function(extractor_name,id){
 				<hr/>
 				<div>
 					<div class="row" style="padding-bottom:10px;">
-						<div class="span6"><b>Content Preview</b><br/>
+						<div class="span9"><b>Content Preview</b><br/>
 							${rn.text}
 						</div>
-						<div class="span3 pull-right">
+						<div class="span3 pull-right" style="display:none;"><!-- Add this function later -->
 							<div class="progress progress-striped active">
-								<div class="bar" style="width:0%;"></div>
+								<div class="bar" id="prgs_div_${rn.id}" style="width:0%;"></div>
 							</div>
-							<span class="nerd-entity-count">0%</span>
+							<span class="nerd-entity-count"><span id="finished_count_span-${rn.id}">0</span> out of ${resourceList.extractors?.size()}</span>
 							<span id="prgs_span_${rn.id}" class="pull-right nerd-entity-count">0 entities found</span>
 						</div>
 					</div>

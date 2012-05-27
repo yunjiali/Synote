@@ -11,10 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" href="${resource(dir: 'css', file: 'player.css')}" />
 	<style type="text/css">
-		#transcripts_div
-		{
-			background-color:#111111;
-		}
 		#synmarks_div
 		{
 			background-color:#666666;
@@ -127,11 +123,7 @@
 		mdHelper= new MicrodataHelper(true);
 		initSynotePlayer(recording);
 		//initShortCutKeys();
-
-		if(recording.canEdit)
-		{
-			//initEditMode(recording);
-		}
+		
 		//Start playing from media fragment is exisiting
 		if(!$.isEmptyObject(mf_json.hash) || !$.isEmptyObject(mf_json.query))
 		{
@@ -264,7 +256,7 @@
 				<div id="multimedia_player_error_div">
 					<!-- attach error messages as another span class="error" here -->
 				</div>
-				<div id="recording_content_div" style="height:320px;" itemscope="itemscope" itemtype="http://schema.org/AuidoObject" 
+				<div id="recording_content_div" itemscope="itemscope" itemtype="http://schema.org/AuidoObject" 
 				itemref="recording_title_div recording_owner_div created_time_span"> <!-- player -->
 					<meta itemprop="contentURL" content="${recording.url.url}"/>
 					<meta itemprop="dateModified" content="${new SimpleDateFormat("dd/MM/yyyy").format(recording.lastUpdated)}"/>
@@ -272,7 +264,7 @@
 					<div id="multimedia_player_div">
 					</div>
 				</div><!-- end player -->
-				<div id="recording_control_div" >
+				<div id="recording_control_div" class="hidden-phone">
 					<div style="display:inline;">
 						<button id="control_play" title="Play" class="btn"><i class="icon-play"></i></button>
 						<button id="control_pause" title="Pause" class="btn"><i class="icon-pause"></i></button>
@@ -296,7 +288,44 @@
 				</div>
 				<!-- Transcript -->
 				<div id="transcripts_div" style="height:500px;" class="tab-pane span-left">
-					<h3>Transcript</h3>
+					<div>
+						<h3 class="heading-inline">Transcript</h3>
+						<div class="pull-right btn-toolbar" style="display:inline">
+							<g:if test="${canEdit}">
+							<div class="btn-group" id="transcript_edit_enter_div">
+								<button class="btn" title="Add a new transcript block" id="edit_transcript_add_btn">
+									<img src="${resource(dir:'images/player',file:"edit_transcript_add_22.png")}"  id="edit_transcript_add_img" title="Add new transcript block"/>
+								</button>
+								<button class="btn" title="Edit the selected transcript block" id="edit_transcript_enter_btn">	
+									<img src="${resource(dir:'images/player',file:"edit_transcript_22.png")}"  id="edit_transcript_enter_img" title="Edit Transcript"/>
+								</button>
+								<button class="btn" title="Delete the selected transcript block" id="edit_transcript_clear_btn">	
+									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_clear_img" title="Remove all the transcripts"/>
+								</button>
+								<button class="btn" title="Transcript editing help" id="edit_transcript_help_btn">	
+									<img src="${resource(dir:'images/player',file:"edit_transcript_help_22.png")}"  id="edit_transcript_help_img" title="Transcript editing help"/>
+								</button>
+							</div>
+							</g:if>
+							<div class="btn-group">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Export current transcript as .vtt file">
+									<img src="${resource(dir:'images/player',file:"edit_transcript_export_22.png")}" alt="Export current transcript as .vtt file" id="edit_transcript_export_img" title="Export current transcript as .vtt file"/>
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#" title="download transcript as plain text format">Plain text</a>
+									</li>
+									<li>
+										<a href="#" title="download transcript as srt format">SRT Format</a>
+									</li>
+									<li>
+										<a href="#" title="download transcript as webvtt format">WebVTT Format</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
 					<div id="transcripts_inner_div">
 						<div id="transcripts_content_div">
 							<ol id="transcript_ol" style="list-style:none;"></ol>
@@ -329,12 +358,12 @@
 								<p>${recording.note?.content}</p>	
 								</g:if>
 								<g:else>
-									No description
+									<br/>No description
 								</g:else>
 							</div>				
 						</div><!-- end description -->
 						<div id="description_show_div" class="span12 hidden-phone">
-							<button class="btn btn-mini">more</button>
+							<button id="description_show_btn" class="btn btn-mini">more</button>
 						</div>
 						<!-- Synmarks -->
 						<ul class="nav nav-tabs" id="tab_right">

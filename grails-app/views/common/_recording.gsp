@@ -96,5 +96,8 @@
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>
+	 	<div class="pull-right" style="margin-right:10px;">
+	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdmm" id="${row.id}">Nerd it</g:link>
+	 	</div>
 	</div>
 </div>

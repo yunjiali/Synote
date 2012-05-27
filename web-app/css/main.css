@@ -89,6 +89,12 @@ footer
     background-position: center center;
     margin-right:2px;
 }
+
+.icon-link-small{
+	background-image: url('../images/skin/link_10.png');
+	background-position: center center;
+	margin-right:2px;
+}
 /* customise labels and badge for bootstrap */
 .label-tag, .badge-tag
 {
@@ -118,6 +124,11 @@ footer
 .recording-description, .nerd-entity-count
 {
 	color: #666666;
+}
+
+.btn-nerd-entity-approve, .btn-nerd-entity-reject
+{
+	margin-left:10px;
 }
 
 .permission-info
