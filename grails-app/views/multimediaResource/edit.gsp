@@ -6,7 +6,13 @@
 <meta name="layout" content="main" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${resource(dir:'js',file:'synote-multimedia-service-client.js')}"></script>
 <script type="text/javascript">
+	var mmServiceURL = "${mmServiceURL}";
+	var client = new SynoteMultimediaServiceClient(mmServiceURL);
+	var recording = new Object();
+	recording.url = "${multimedia.url?.url}";
+	
 	$(document).ready(function(){
 		$("#multimediaEditForm").validate(
 		{
@@ -30,6 +36,25 @@
 				$(label).closest('.control-group').addClass('error');
 			},
 		});
+
+		$("#duration_button").click(function(){
+			$("#duration_button").button('loading');
+			client.getDuration(recording.url, function(duration, errMsg){
+				if(duration != null)
+				{
+					$("#duration").val(duration);
+					$("#duration_span").text(duration);
+				}
+				else
+				{
+					$("#error_msg_div").html(
+						"<div class='alert alert-error'><button class='close' data-dismiss='alert'>×</button>"+
+						errMsg+"</div>"
+					);
+				}
+				$("#duration_button").button('reset');
+			});
+		});
 	});
 </script>
 </head>
@@ -50,7 +75,7 @@
 	<g:set var="duration" value="unknown"/>
 </g:if>
 <g:else>
-	<g:set var="duration" value="${multimedia.duration }"/>
+	<g:set var="duration" value="${multimedia.duration}"/>
 </g:else>
 <div class="container">
 	<div class="row">
@@ -62,6 +87,7 @@
 			<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdmm" id="${multimedia.id}">Nerd this recording&gt;&gt;</g:link>
 			<hr/>
 			<g:render template="/common/message" model="[bean: multimediaResource]" />
+			<div id="error_msg_div"></div>
 			<div>
 				<g:form method='POST' name='multimediaEditForm' controller="multimediaResource" action="update">
 					<fieldset>
@@ -124,7 +150,7 @@
 						      	<div class="controls">
 						      		<div class="input-append">
 						      			<span class="span2 uneditable-input" id="duration_span">${duration}</span>
-						      			<button class="btn btn-info" type="button" id="duration_button">Get duration</button>
+						      			<button class="btn btn-info" type="button" id="duration_button" data-loading-text="Loading...">Get duration</button>
 						      		</div>
 						      		<input type='hidden' class="required" name='duration' id='duration' value="${multimedia.duration}" />
 						      	</div>
@@ -139,11 +165,14 @@
 						      	</div>
 						      	<input type='hidden' class="required" name='isVideo' id='isVideo' value="${multimedia.isVideo}" />
 					      	</div>
+					      	
 					      	<div class="control-group">
-								<label for="url" class="control-label"><b>Thumbnail Picture</b></label>
+								<label class="control-label"><b>Thumbnail Picture</b></label>
 						      	<div class="controls">
 						        	<img src="${thumbnail_src}" class="thumbnail-img"/><br/><br/>
+						        	<g:if test="${multimedia.isVideo == true}">
 						        	<button class="btn btn-info" type="button" id="thumbnail_button">Generate thumbnail</button>
+						        	</g:if>
 						      	</div>
 						      	<input type='hidden' class="required span4" name='thumbnail' id='thumbnail' value="${multimedia.thumbnail}" />
 						    </div>

@@ -29,6 +29,7 @@ import org.synote.annotation.exception.AnnotationException
 import org.synote.exception.SynoteException
 import org.synote.integration.entermedia.EnterMediaService
 import org.synote.api.APIStatusCode
+import org.synote.config.ConfigurationService
 
 import groovy.xml.MarkupBuilder
 
@@ -47,6 +48,7 @@ class MultimediaResourceController {
 	def messageService
 	def enterMediaService
 	def resourceService
+	def configurationService
 	
 	private auth()
 	{
@@ -615,7 +617,9 @@ class MultimediaResourceController {
 			return
 		}
 		
-		return [multimedia: multimediaResource, ownerUserName: multimediaResource?.owner?.userName]
+		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		
+		return [multimedia: multimediaResource, ownerUserName: multimediaResource?.owner?.userName, mmServiceURL: synoteMultimediaServiceURL]
 	}
 	
 	def update = {

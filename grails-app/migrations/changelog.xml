@@ -93,7 +93,7 @@
 			Values(0,"org.synote.integration.entermedia.fileDownload","downloads/originals",now(),now());
 		</sql>
 	</changeSet>
-	<!-- insert configurations related to capcha, admin contact, title, etc
+	<!-- insert configurations related to capcha, admin contact, title, etc -->
 	<changeSet id="v5_configuration_insert" author="Yunjia Li" context="v0.1">
 		<preConditions>
 			<sqlCheck expectedResult="0">
@@ -136,7 +136,7 @@
 			last_updated)
 			Values(0,"org.synote.linkeddata.settings.serverContext","synote/", "the context path of the application",now(),now());
 		</sql>
-	</changeSet>-->
+	</changeSet>
 	<!--add data_created and date_updated to permission class-->
 	<changeSet id="v5_permission_modify" author="Yunjia Li" context="v0.1">
 		<!-- check if the configuration table has description and long_val coloumn -->
@@ -339,6 +339,27 @@
 				<constraints nullable="true" />
 			</column>
 		</addColumn>
+	</changeSet>
+	<!-- Add synote-multimedia-service configuration -->
+	<changeSet id="v5_configuration_nodejs_add" author="Yunjia Li" context="v0.1.5">
+		<preConditions>
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(0) from configuration
+				where name="org.synote.resource.service.server.url";
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
+			Values(0,"org.synote.resource.service.server.url","http://lslvm-yl2.ecs.soton.ac.uk:8000/","The base URL of the synote-multimedia-service",now(),now());
+			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
+			Values(0,"org.synote.service.generateThumbnail.path","api/generateThumbnail","The absolute path for generating thumbnail api",now(),now());
+			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
+			Values(0,"org.synote.resource.service.getMetadata.path","api/getMetadata","The absolute path for getting metadata",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,last_updated)
+			Values(0,"org.synote.resource.service.getDuration.path","api/getDuration", "The absolute path for getting recording duration",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,last_updated)
+			Values(0,"org.synote.resource.service.isVideo.path","api/isVideo", "The absolute path for getting isVideo information",now(),now());
+		</sql>
 	</changeSet>
 </databaseChangeLog>
 
