@@ -30,9 +30,10 @@
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
 	<script type="text/javascript" src="${resource(dir: 'js', file: 'player/player.responsive.js')}"></script>
 	<script type="text/javascript" src="${resource(dir:'js',file:"Base.js")}"></script>
+	<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.form.js')}"></script>
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 	<!-- Other jquery libraries  -->
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.maskedinput-1.3.min.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.contextMenu.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.url.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.timers.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.field_selection.js")}"></script>
@@ -44,7 +45,7 @@
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"microdataHelper.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/tiny_mce',file:"jquery.tinymce.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"webvtt.parser.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.util.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.settings.js")}"></script>
 	<!-- For player -->
 	<script type="text/javascript" src="${resource(dir:'js/jwplayer',file:"jwplayer.js")}"></script>
@@ -55,7 +56,9 @@
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia_factory.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.mediafragment.controller.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.transcript.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js',file:"synote-multimedia-service-client.js")}"></script>
 	<!--  -->
 	<script id="scriptInit" type="text/javascript">
 		//In case I forget to remove console.log in IE
@@ -80,6 +83,9 @@
 	var mdHelper = null //helper to help embed microdata
 	var userBaseURI = "${userBaseURI}";
 	var resourceBaseURI = "${resourceBaseURI}";
+	var mmServiceURL = "${mmServiceURL}";
+	var mmServiceClient = new SynoteMultimediaServiceClient(mmServiceURL);
+	
 	$(document).ready(function(){
 		//Deal with the media fragment first
 		
@@ -106,6 +112,9 @@
 		recording.url = "${recording.url.url}";//Yunjia: We have to think about it, if the url has fragment but the server cannot regonise it..., what should we do then
 		recording.canEdit = "${canEdit}".toLowerCase();
 		recording.canCreateSynmark = "${canCreateSynmark}".toLowerCase();
+		recording.isVideo = "${recording.isVideo}".toLowerCase();
+		recording.uuid = "${recording.uuid}";
+		recording.thumbnail = "${recording.thumbnail}";
 
 		user = new Object();
 		if("${user}".length>0)
@@ -277,7 +286,7 @@
 						<select name="control_pace_select" class="span1" style="margin-top:9px;" id="control_pace_select">
 							<option value="1">1s</option>
 							<option value="5">5s</option>
-							<option value="10">10s</option>
+							<option value="10" selected="selected">10s</option>
 							<option value="20">20s</option>
 						</select>
 					</div>
@@ -287,7 +296,7 @@
 					</div>
 				</div>
 				<!-- Transcript -->
-				<div id="transcripts_div" style="height:500px;" class="tab-pane span-left">
+				<div id="transcripts_div" class="tab-pane span-left">
 					<div>
 						<h3 class="heading-inline">Transcript</h3>
 						<div class="pull-right btn-toolbar" style="display:inline">
@@ -296,11 +305,11 @@
 								<button class="btn" title="Add a new transcript block" id="edit_transcript_add_btn">
 									<img src="${resource(dir:'images/player',file:"edit_transcript_add_22.png")}"  id="edit_transcript_add_img" title="Add new transcript block"/>
 								</button>
-								<button class="btn" title="Edit the selected transcript block" id="edit_transcript_enter_btn">	
+								<button class="btn" title="Edit the selected transcript block" id="edit_transcript_edit_btn">	
 									<img src="${resource(dir:'images/player',file:"edit_transcript_22.png")}"  id="edit_transcript_enter_img" title="Edit Transcript"/>
 								</button>
-								<button class="btn" title="Delete the selected transcript block" id="edit_transcript_clear_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_clear_img" title="Remove all the transcripts"/>
+								<button class="btn" title="Delete the selected transcript block" id="edit_transcript_delete_btn">	
+									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_delete_img" title="Remove all the transcripts"/>
 								</button>
 								<button class="btn" title="Transcript editing help" id="edit_transcript_help_btn">	
 									<img src="${resource(dir:'images/player',file:"edit_transcript_help_22.png")}"  id="edit_transcript_help_img" title="Transcript editing help"/>
@@ -314,21 +323,62 @@
 								</a>
 								<ul class="dropdown-menu">
 									<li>
-										<a href="#" title="download transcript as plain text format">Plain text</a>
+										<g:link controller="recording" action="downloadTranscript" params='[multimediaId:"${recording.id}",type:"text"]' target="_blank" title="download transcript as plain text format">Plain text</g:link>
 									</li>
 									<li>
-										<a href="#" title="download transcript as srt format">SRT Format</a>
+										<g:link ontroller="recording" action="downloadTranscript" params='[multimediaId:"${recording.id}",type:"srt"]' target="_blank" title="download transcript as srt format">SRT Format</g:link>
 									</li>
 									<li>
-										<a href="#" title="download transcript as webvtt format">WebVTT Format</a>
+										<g:link ontroller="recording" action="downloadTranscript" params='[multimediaId:"${recording.id}",type:"webvtt"]' target="_blank" title="download transcript as webvtt format">WebVTT Format</g:link>
 									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
+					<div id="transcript_msg_div"></div><!-- displaying info, error messages -->
+					<!-- transcript editing form -->
+					<g:if test="${canEdit}">
+					<div id="transcript_edit_div" class="well" style="display:none;">
+						<form id="transcript_edit_form" method="post" class="form-vertical">
+							<fieldset>
+								<input type="hidden" name="transcript_id" id="transcript_id"/> <!-- The id of srt.index -->
+								<div class="control-group">
+									<label for="transcript_st" class="control-label"><b><em>*</em>Start:</b></label>
+									<div class="input-append">
+										<input type='text' size="10" class="required" name='transcript_st' id='transcript_st'/>
+										<button class="btn" id="transcript_st_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+										<button class="btn" id="transcript_st_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+										<button class="btn" id="transcript_st_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+									</div>
+								</div>
+								<div class="control-group">
+									<label for="transcript_et" class="control-label"><b><em>*</em>End:</b></label>
+									<div class="input-append">
+										<input type='text' size="10" class="required" name='transcript_et' id='transcript_et'/>
+										<button class="btn" id="transcript_et_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+										<button class="btn" id="transcript_et_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+										<button class="btn" id="transcript_et_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+									</div>
+								</div>
+								<div class="control-group">
+									<label for="transcript_speaker" class="control-label"><b>Speaker</b></label>
+									<input type='text' size="255" autocomplete="off" name='transcript_speaker' id='transcript_speaker' value='' />
+								</div>
+								<div class="control-group">
+									<label for="transcript_content" class="control-label"><b><em>*</em>Transcript:</b></label>
+									<textarea name='transcript_content' id='transcript_content' value='' rows="5" style="width:100%;"></textarea>
+								</div>
+								<div class="form-actions">
+									<input class="btn btn-primary" id="transcript_submit" type="button" value="Submit"/><!-- This is not a submit button, because nothing will be submitted to the server -->
+									<input class="btn" id="transcript_cancel" type="reset" value="Exit" />
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					</g:if>
 					<div id="transcripts_inner_div">
 						<div id="transcripts_content_div">
-							<ol id="transcript_ol" style="list-style:none;"></ol>
+							<ol id="transcript_ol"></ol>
 						</div>
 					</div>
 				</div><!-- end transcript -->

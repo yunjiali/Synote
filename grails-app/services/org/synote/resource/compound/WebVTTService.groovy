@@ -58,6 +58,14 @@ class WebVTTService {
    }
    
    /*
+    * validate the cue json object
+    */
+   def validateWebVTTCueJSON(cueJSON)
+   {
+		//not implemented
+	   return true   
+   }
+   /*
    * Get WebVTT format of transcript
    */
   WebVTTData[] getTranscripts(multimedia)
@@ -79,7 +87,7 @@ class WebVTTService {
 				  if(cue)
 				  {
 					  cuesData << new WebVTTCueData
-						  (cue.cueIndex, synpoint.targetStart, synpoint.targetEnd, cue.content,cue.cueSettings)
+						  (cue.id.toString(), cue.cueIndex, synpoint.targetStart, synpoint.targetEnd, cue.content,cue.cueSettings,cue.thumbnail)
 				  }
 			  }
 			  
@@ -101,10 +109,11 @@ class WebVTTService {
 	 builder.append("\r\n\r\n")
 	 
 	 def cues =  vtt.cues
-	 cues.sort{it.index}.each{cue->
+	 int i =1
+	 cues.sort{it.start}.each{cue->
 		 if(cue.cueText != null && cue.cueText?.trim()?.size() != 0)
 		 {
-			 builder.append(String.valueOf(cue.index))
+			 builder.append(String.valueOf(i++))
 			 builder.append("\r\n")
 			 builder.append(TimeFormat.getInstance().toWebVTTTimeString(cue.start))
 			 builder.append(" --> ")
@@ -120,7 +129,53 @@ class WebVTTService {
 	 }
 	 return builder.toString()
  }
+ 	/*
+ 	 * Convert WebVTTResource to .srt file
+ 	 */
+ 	def convertToSRT(WebVTTData vtt)
+	{ 
+		StringBuilder builder = new StringBuilder()
+		//attach the file header
+		
+		def cues =  vtt.cues
+		int i =1
+		cues.sort{it.start}.each{cue->
+			if(cue.cueText != null && cue.cueText?.trim()?.size() != 0)
+			{
+				builder.append(String.valueOf(i++))
+				builder.append("\r\n")
+				builder.append(TimeFormat.getInstance().toSRTTimeString(cue.start))
+				builder.append(" --> ")
+				builder.append(TimeFormat.getInstance().toSRTTimeString(cue.end))
+				/* No cue settings is needed here
+				if(!cue.cueSettings.equals(null))
+				{
+					builder.append(" "+cue.cueSettings)
+				}*/
+				builder.append("\r\n")
+				builder.append(cue.cueText)
+				builder.append("\r\n\r\n")
+			}
+		}
+		return builder.toString()
+	}
  
+	def convertToText(WebVTTData vtt)
+	{
+		StringBuilder builder = new StringBuilder()
+		//attach the file header
+		
+		def cues =  vtt.cues
+		cues.sort{it.start}.each{cue->
+			if(cue.cueText != null && cue.cueText?.trim()?.size() != 0)
+			{
+				builder.append(cue.cueText)
+				builder.append("\r\n\r\n")
+			}
+		}
+		return builder.toString()
+	}
+	
    /*
     * Get WebVTTCue
     */
@@ -261,7 +316,7 @@ class WebVTTService {
 				   }
 				   
 				   String text = cueContent[2]
-				   WebVTTCueData cue = new WebVTTCueData(seqCount, startTime, endTime, text,cueSettings)
+				   WebVTTCueData cue = new WebVTTCueData(seqCount, startTime, endTime, text,cueSettings,null)
 				   cueList << cue
 			   }
 			   else
@@ -281,121 +336,115 @@ class WebVTTService {
    }
    
    /*
-    * create WebVTTResource and WebVTTCue from WebVTT JSON
+    * Create a new cue from cueJSON
+    * 
+    * No matter who edits the recording, the owner is the multimedia's owner
     */
-   def createTranscriptFromJSON(multimedia,transcriptsJSON)
+   def createCueFromJSON(multimedia,webVTTResource, cueJSON)
    {
-	   
-	   //TODO: and guest enabled, configuration settings
 	   def user = securityService.getLoggedUser()
-	   
+	   def anno = null
 	   def owner = multimedia.owner
+	   def i = 1;
+	   def cueId= null
 	   WebVTTResource.withTransaction {status->
 		   
-		   def webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
-		   def new_anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
-		   int i=1
-		   transcriptsJSON.sort{it.start}.each{c->
-			   if(c.cueText?.trim().size()>0)
+		   if(cueJSON?.cueText?.trim().size()>0)
+		   {
+			   if(!webVTTResource)
 			   {
-				   def cue = new WebVTTCue(
-					   content: c.cueText?.trim(),
-					   owner: owner,
-					   title:"WebVTTCue",
-					   cueIndex:i,
-					   cueSettings:"")
-				   webVTTResource.addToCues(cue)
-				   
-				   def sourceStart = i
-				   def targetStart = c.start
-				   def targetEnd = c.end
-				   new_anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
-						   targetStart: targetStart,
-						   targetEnd: targetEnd))
-				   i++
+			   		webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
+					anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
+			   }
+			   else
+			   {
+					anno = ResourceAnnotation.findBySource(webVTTResource)
+					def maxCue = webVTTResource.cues.max{it.cueIndex}
+					i = maxCue.cueIndex+1   
+			   }
+		  
+		  
+			   def cue = new WebVTTCue(
+				   content: cueJSON.cueText?.trim(),
+				   owner: owner,
+				   title:"WebVTTCue",
+				   cueIndex:i,
+				   cueSettings:"")
+			   webVTTResource.addToCues(cue)
+			   
+			   def sourceStart = i
+			   def targetStart = cueJSON.start
+			   def targetEnd = cueJSON.end
+			   anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
+					   targetStart: targetStart,
+					   targetEnd: targetEnd))
+			   
+			   if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+			   {
+					throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
+			   }
+			   
+			   println "cueId:"+cue.id
+			   cueId = cue.id
+			   
+			   if(anno.hasErrors() || !anno.save(flush:true))
+			   {
+				   throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
 			   }
 		   }
-		   
-		   if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
-		   {
-				throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())  
-		   }
-		   
-		   if(new_anno.hasErrors() || !new_anno.save(flush:true))
-		   {
-			   throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
-		   }
 	   }
+	   
+	   return cueId
    }
    
    /*
-   * create WebVTTResource and WebVTTCue from WebVTT JSON
-   */
-   def editTranscriptFromJSON(multimedia,vttId, transcriptsJSON)
+    * Edit the cue from cueJSON 
+    */
+   def editCueFromJSON(multimedia,webVTTResource, cueJSON)
    {
-	   def webVTTResource = WebVTTResource.get(vttId)
-	   if(!webVTTResource)
+	   
+	   def cueIndex = cueJSON.index
+	   def cue = WebVTTCue.findByWebVTTFileAndCueIndex(webVTTResource, cueIndex)
+	   if(!cue)
 	   {
-		   throw new PlayerException(APIStatusCode.TRANSCRIPT_NOT_FOUND ,"Cannot find WebVTTResource with id ${vttId}")
+		   throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTTCUE_NOT_FOUND ,"Cannot find WebVTT cue with index ${cueIndex}")
 	   }
-	   def cues = WebVTTCue.findAllByWebVTTFile(webVTTResource) //Can't use webVTTResource.cues, because it cannot be deleted later
 	   
 	   def user = securityService.getLoggedUser()
 	   def owner = multimedia.owner
+	  
+	   //Cue settings are not considered here yet
+	   if(cue.content != cueJSON.cueText)
+	   {
+			cue.content = cueJSON.cueText 
+			if(cue.hasErrors() || !cue.save(flush:true))
+			{
+				throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTTCUE_INVALID ,"Webvtt cue cannot be saved. Error:"+ cue.errors.toString())
+			}
+	   }
 	   
 	   def annotation = ResourceAnnotation.findBySourceAndTarget(webVTTResource, multimedia)
 	   if(!annotation)
 	   {
-		   throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_NOT_FOUND ,"Cannot find ResourceAnnotation about WebVTTResource ${vttId} and multimedia ${multimedia.id}")
+		   throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_NOT_FOUND ,"Cannot find ResourceAnnotation about WebVTTResource ${webVTTResource} and multimedia ${multimedia.id}")
 	   }
-	   WebVTTResource.withTransaction {status->
-		  
-		   def synpoints = Synpoint.findAllByAnnotation(annotation)
-		   synpoints.each
-		   {
-			   synpoint ->annotation.removeFromSynpoints(synpoint)
-		   }
-		   synpoints*.delete()
-		   cues.each{c->
-		   		webVTTResource.removeFromCues(c)
-		   }
-		   cues*.delete()
-		    
+	   def synpoint = Synpoint.findByAnnotationAndSourceStart(annotation,cueIndex)
+	   if(!synpoint)
+	   {
+		   throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTTCUE_SYNPOINT_NOT_FOUND ,"Cannot find Synchronisation point for cue with index ${cueIndex}")
+	   }
 	   
-		   int i=1
-		   transcriptsJSON.sort{it.start}.each{c->
-			   if(c.cueText?.trim().size()>0)
-			   {
-				   def cue = new WebVTTCue(
-					   content: c.cueText?.trim(),
-					   owner: owner,
-					   title:"WebVTTCue",
-					   cueIndex:i,
-					   cueSettings:"")
-				   webVTTResource.addToCues(cue)
-				   
-				   def sourceStart = i
-				   def targetStart = c.start
-				   def targetEnd = c.end
-				   annotation.addToSynpoints(new Synpoint(sourceStart: sourceStart,
-						   targetStart: targetStart,
-						   targetEnd: targetEnd))
-				   i++
-			   }
-		   }
-		   
-		   if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+	   if(cueJSON.start != synpoint.targetStart || cueJSON.end != synpoint.targetEnd)
+	   {
+		   synpoint.targetStart = cueJSON.start
+		   synpoint.targetEnd = cueJSON.end   
+		   if(synpoint.hasErrors() || !synpoint.save(flush:true))
 		   {
-				throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
-		   }
-		   
-		   if(annotation.hasErrors() || !annotation.save(flush:true))
-		   {
-			   throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
+			   throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTTCUE_INVALID ,"Webvtt cue cannot be saved. Error:"+ synpoint.errors.toString())
 		   }
 	   }
    }
-   
+
    //transcriptId is used to get a specific transcript if there are multiple transcripts
    def getWebVTTResource(String multimediaId, String transcriptId)
    {
@@ -418,56 +467,6 @@ class WebVTTService {
 	   def webVTTResource = WebVTTResource.findById(vttId)
 	   webVTTResource.delete(flush:true)
 	   //Yunjia:implement thoroughly later
-   }
-   
-   //##############################  WebVTT Draft  ##################################################################
-   
-   /*
-	* Operations about the webvtt draft
-	*/
-   def createWebVTTDraft(webVTTStr,user, multimediaId)
-   {
-	   def catalinaBase = System.properties.getProperty('catalina.base')
-	   if (!catalinaBase)
-		   catalinaBase = '.'
-	   
-	   def destPath = "${catalinaBase}/temp/${user.id}/transcript/"
-	   def parentDir = new File(destPath)
-	   if(!parentDir.exists())
-		   parentDir.mkdirs()
-	   
-	   def file = new File(destPath,"${multimediaId}.vtt")
-	   file.setText(webVTTStr, "utf-8")
-   }
-   
-   def getWebVTTDraft(user,multimediaId)
-   {
-	   def catalinaBase = System.properties.getProperty('catalina.base')
-	   if (!catalinaBase)
-		   catalinaBase = '.'
-	   
-	   def destPath = "${catalinaBase}/temp/${user.id}/transcript/"
-	   def file = new File(destPath,"${multimediaId}.vtt")
-	   if(file.exists())
-	   {
-			return file
-	   }
-	   else
-			return null
-   }
-   
-   def deleteWebVTTDraft(user,multimediaId)
-   {
-	   def catalinaBase = System.properties.getProperty('catalina.base')
-	   if (!catalinaBase)
-		   catalinaBase = '.'
-	   
-	   def destPath = "${catalinaBase}/temp/${user.id}/transcript/"
-	   def file = new File(destPath,"${multimediaId}.vtt")
-	   if(file.exists())
-	   {
-			file.delete()
-	   }
    }
    
    //#########################Get functions to extract information from cue############################

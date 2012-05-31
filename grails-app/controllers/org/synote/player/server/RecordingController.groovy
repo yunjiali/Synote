@@ -7,6 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import org.synote.user.User
 import org.synote.resource.compound.*
+import org.synote.resource.single.text.WebVTTCue
 import org.synote.user.SecurityService
 import org.synote.permission.PermService
 import org.synote.permission.PermissionValue
@@ -24,6 +25,7 @@ import org.synote.annotation.Annotation
 import org.synote.resource.Resource
 import org.synote.analysis.Views
 import org.synote.linkeddata.LinkedDataService
+import org.synote.config.ConfigurationService
 
 import org.synote.player.client.MultimediaData
 import org.synote.player.client.PlayerException
@@ -58,6 +60,7 @@ class RecordingController {
 	def webVTTService
 	def linkedDataService
 	def utilsService
+	def configurationService
 	
 	/*private auth()
 	{
@@ -94,29 +97,6 @@ class RecordingController {
 		}
 		recording = resource
 		
-		/*else
-		{
-			//find the multimedia
-			if(resource.instanceOf(SynmarkResource))
-			{
-				def annotation = Annotation.findBySource(resource)
-				recording = annotation?.target
-				//redirect to replay with media fragment
-				if(recording != null)
-				{
-					params.id = recording.id
-					//redirect(action:"replay",params:params, model:[chain_resource:resource], fragment:)
-				}
-				else
-				{
-					flash.error = "Cannot find the recording corresponding to resource ${resource.id}"
-					//Yunjia: should redirect to error page instead of list page
-					redirect(controller:'multimediaResource',action: 'list')
-					return
-				}
-			}
-		} */
-		
 		if (recording)
 		{
 			def perm = permService.getPerm(recording)
@@ -140,45 +120,17 @@ class RecordingController {
 				if(playerService.canCreateSynmark(recording))
 					canCreateSynmark = true
 			}
-			//Yunjia: add ?type=synmark&id=synmarkid, then use the synmarkid to get the params.position
-			
-			//def mf_uri
-			//if(!params.position)
-			//{
-				//We should put the position as part of the media fragment! Attach it at the end of the uri, ignore the original
-				//hash part
-				//mf_uri = recording.url.url+hash
-				//if in the original url there is hash we need to
-				//1. check if the position is not null, we attach the position fragment in front of other has fragments.
-				//2. if the position is null, mf_uri = recording.url
-				//see TC0055-UA http://www.w3.org/2008/WebVideo/Fragments/WD-media-fragments-impl/ only the last occurances counts
-				//params.position = position
-			//}
-			//else if(!regExService.isPositionInteger(params.position)) //The position is not an integer
-			//{
-			//	params.position = 0
-			//}
 			
 			def new_view = new Views(user:user,resource:recording)
-			//println "#####################"
-			//new_view.errors.each{err->
-			//	println err
-			//}
 			if(!new_view.save())
 			{
 					//Do nothing currently	
 			}
-				/*if(!recording.equals(resource)) //The recording is opened by clicking through other resources such as synmark or transcript
-				{
-					def another_view = new Views(user:user,resource:resource)
-					if(!another_view.save())
-					{
-						//Do nothing currently	
-					}
-				}*/
+			
 			def views = Views.countByResource(recording)
+			def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
 			return [recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
-				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views]
+				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL]
 		}
 		else
 		{
@@ -186,6 +138,166 @@ class RecordingController {
 			redirect(controller:'multimediaResource',action: 'list')
 			return
 		}
+	}
+	
+	def print = {
+		//TODO: write webtest
+		def recording = MultimediaResource.get(params.id)
+		
+		if (recording)
+		{
+			User user = securityService.getLoggedUser();
+			if(permService.getPerm(recording)?.val < PermissionValue.findByName("READ")?.val)
+			{
+				flash.error = "Access denied! You don't have permission to access this multimedia"
+				redirect(controller:'multimediaResource',action: 'list')
+				return
+			}
+			
+			def owners = []
+			
+			ResourceAnnotation.findAllByTarget(recording).each {annotation ->
+				if (annotation.source instanceof SynmarkResource && !owners.contains(annotation.owner))
+				owners << annotation.owner
+			}
+			
+			return [recording: recording, owners: owners.sort {it.userName}]
+		}
+		else
+		{
+			flash.error = "Cannot find recording with ID ${params.id}"
+			redirect(controller:'multimediaResource',action: 'list')
+			return
+		}
+	}
+	
+	def handlePrint = {
+		def recording = MultimediaResource.get(params.id)
+		
+		if (!recording)
+		{
+			flash.error = "Cannot find recording with ID ${params.id}"
+			redirect(controller:'multimediaResource',action: 'list')
+			return false
+		}
+		
+		def perm = permService.getPerm(recording)
+		if(perm?.val <=0)
+		{
+			flash.error = "Access denied! You don't have permission to access this recording"
+			//Yunjia: should redirect to error page instead of list page
+			redirect(controller:'multimediaResource',action: 'list')
+			return
+		}
+		
+		def from = null
+		def to = null
+		
+		if (params.part)
+		{
+			try
+			{
+				from = params.from ? TimeFormat.getInstance().parse(params.from) : null
+			}
+			catch (NumberFormatException ex)
+			{
+				flash.error = "Check if From time is valid"
+				redirect(action: 'print', params: params)
+				return false
+			}
+			
+			try
+			{
+				to = params.to ? TimeFormat.getInstance().parse(params.to) + 999 : null
+			}
+			catch (NumberFormatException ex)
+			{
+				flash.error = "Check if To time is valid"
+				redirect(action: 'print', params: params)
+				return false
+			}
+		}
+		
+		def synmarkedUsers = null
+		if (params.synmarked)
+		{
+			synmarkedUsers = []
+			params.each {param ->
+				if (param.key.startsWith('synmarked-user-') && param.value)
+				synmarkedUsers << param.key.substring(15, param.key.size()).toLong()
+			}
+		}
+		
+		def synmarksUsers = []
+		if (params.synmarks)
+		{
+			params.each {param ->
+				if (param.key.startsWith('synmarks-user-') && param.value)
+				synmarksUsers << param.key.substring(14, param.key.size()).toLong()
+			}
+		}
+		
+		def synpoints = printService.getSynpoints(
+		recording, from, to, synmarkedUsers, params.transcript == 'on', params.presentation == 'on', synmarksUsers)
+
+		def ends = printService.getEnds(synpoints, to)
+		
+		def settings = [id: params.synmarkId, timing: params.synmarkTiming, title: params.synmarkTitle, note: params.synmarkNote,
+		tags: params.synmarkTags, owner: params.synmarkOwner, next: params.synmarkNext]
+		
+		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: params.slideHeight, settings: settings]
+	}
+	
+	/*
+	 *Provide snapshot page for google search. Return all the trasncripts, synmarks and images related to the time interval
+	 */
+	def snapshot = {
+		def recording = MultimediaResource.get(params.id?.toLong())
+		
+		if (!recording)
+		{
+			flash.error = "Cannot find recording with ID ${params.id}"
+			redirect(controller:'multimediaResource',action: 'list')
+			return false
+		}
+		
+		def perm = permService.getPerm(recording)
+		if(perm?.val <=0)
+		{
+			flash.error = "Access denied! You don't have permission to access this recording"
+			redirect(controller:'multimediaResource',action: 'list')
+			return
+		}
+		
+		
+		//after get the fragment information after _escaped_fragment_ param
+		if(!params._escaped_fragment_ )
+		{
+			response.sendError(404)
+			response.contentType="text/plain"
+			response.outputStream.flush()
+			return
+		}
+		
+		def fragStr = params._escaped_fragment_
+		def components = utilsService.parseTimeFragment(fragStr)
+		
+		def synpoints = printService.getAllSynpoints(recording, components.start, components.end)
+		def ends = printService.getEnds(synpoints, components.to)
+		
+		//println "ends:"+synpoints?.size()
+		boolean isVideo=true
+		if(!utilsService.isVideo(recording.url?.url))
+		{
+			isVideo = false
+		}
+		
+		String encodingFormat = utilsService.getEncodingFormat(recording.url?.url)
+		
+		def settings = [id: false, timing: true, title: params.true, note: true, tags: true, owner: true, next: false]
+		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
+			canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(),
+			isVideo:isVideo, encodingFormat:encodingFormat]
 	}
 	
 	def getSynmarksAjax = {
@@ -816,12 +928,6 @@ class RecordingController {
 			}
 			return
 		}
-		
-		//Yunjia: we plan to return only the .srt or TimedText format for transcript.Both formats are easy to display
-		//compared with the current solution. The default one is .srt
-		def type = params.type
-		if(!type)
-			type = "srt"
 			
 		WebVTTData[] transList = webVTTService.getTranscripts(multimedia)
 		if(transList == null || transList?.size() == 0)
@@ -867,204 +973,8 @@ class RecordingController {
 		 
 	}
 	
-	def print = {
-		//TODO: write webtest
-		def recording = MultimediaResource.get(params.id)
-		
-		if (recording)
-		{
-			User user = securityService.getLoggedUser();
-			if(permService.getPerm(recording)?.val < PermissionValue.findByName("READ")?.val)
-			{
-				flash.error = "Access denied! You don't have permission to access this multimedia"
-				redirect(controller:'multimediaResource',action: 'list')
-				return
-			}
-			
-			def owners = []
-			
-			ResourceAnnotation.findAllByTarget(recording).each {annotation ->
-				if (annotation.source instanceof SynmarkResource && !owners.contains(annotation.owner))
-				owners << annotation.owner
-			}
-			
-			return [recording: recording, owners: owners.sort {it.userName}]
-		}
-		else
-		{
-			flash.error = "Cannot find recording with ID ${params.id}"
-			redirect(controller:'multimediaResource',action: 'list')
-			return
-		}
-	}
-	
-	def handlePrint = {
-		def recording = MultimediaResource.get(params.id)
-		
-		if (!recording)
-		{
-			flash.error = "Cannot find recording with ID ${params.id}"
-			redirect(controller:'multimediaResource',action: 'list')
-			return false
-		}
-		
-		def perm = permService.getPerm(recording)
-		if(perm?.val <=0)
-		{
-			flash.error = "Access denied! You don't have permission to access this recording"
-			//Yunjia: should redirect to error page instead of list page
-			redirect(controller:'multimediaResource',action: 'list')
-			return
-		}
-		
-		def from = null
-		def to = null
-		
-		if (params.part)
-		{
-			try
-			{
-				from = params.from ? TimeFormat.getInstance().parse(params.from) : null
-			}
-			catch (NumberFormatException ex)
-			{
-				flash.error = "Check if From time is valid"
-				redirect(action: 'print', params: params)
-				return false
-			}
-			
-			try
-			{
-				to = params.to ? TimeFormat.getInstance().parse(params.to) + 999 : null
-			}
-			catch (NumberFormatException ex)
-			{
-				flash.error = "Check if To time is valid"
-				redirect(action: 'print', params: params)
-				return false
-			}
-		}
-		
-		def synmarkedUsers = null
-		if (params.synmarked)
-		{
-			synmarkedUsers = []
-			params.each {param ->
-				if (param.key.startsWith('synmarked-user-') && param.value)
-				synmarkedUsers << param.key.substring(15, param.key.size()).toLong()
-			}
-		}
-		
-		def synmarksUsers = []
-		if (params.synmarks)
-		{
-			params.each {param ->
-				if (param.key.startsWith('synmarks-user-') && param.value)
-				synmarksUsers << param.key.substring(14, param.key.size()).toLong()
-			}
-		}
-		
-		def synpoints = printService.getSynpoints(
-		recording, from, to, synmarkedUsers, params.transcript == 'on', params.presentation == 'on', synmarksUsers)
-
-		def ends = printService.getEnds(synpoints, to)
-		
-		def settings = [id: params.synmarkId, timing: params.synmarkTiming, title: params.synmarkTitle, note: params.synmarkNote,
-		tags: params.synmarkTags, owner: params.synmarkOwner, next: params.synmarkNext]
-		
-		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: params.slideHeight, settings: settings]
-	}
-	
-	/*
-	 *Provide snapshot page for google search. Return all the trasncripts, synmarks and images related to the time interval
-	 */
-	def snapshot = {
-		def recording = MultimediaResource.get(params.id?.toLong())
-		
-		if (!recording)
-		{
-			flash.error = "Cannot find recording with ID ${params.id}"
-			redirect(controller:'multimediaResource',action: 'list')
-			return false
-		}
-		
-		def perm = permService.getPerm(recording)
-		if(perm?.val <=0)
-		{
-			flash.error = "Access denied! You don't have permission to access this recording"
-			redirect(controller:'multimediaResource',action: 'list')
-			return
-		}
-		
-		
-		//after get the fragment information after _escaped_fragment_ param
-		if(!params._escaped_fragment_ )
-		{
-			response.sendError(404)
-			response.contentType="text/plain"
-			response.outputStream.flush()
-			return
-		}
-		
-		def fragStr = params._escaped_fragment_
-		def components = utilsService.parseTimeFragment(fragStr)
-		
-		def synpoints = printService.getAllSynpoints(recording, components.start, components.end)
-		def ends = printService.getEnds(synpoints, components.to)
-		
-		//println "ends:"+synpoints?.size()
-		boolean isVideo=true
-		if(!utilsService.isVideo(recording.url?.url))
-		{
-			isVideo = false
-		}
-		
-		String encodingFormat = utilsService.getEncodingFormat(recording.url?.url)
-		
-		def settings = [id: false, timing: true, title: params.true, note: true, tags: true, owner: true, next: false]
-		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
-			canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(), 
-			isVideo:isVideo, encodingFormat:encodingFormat]
-	}
-	
-	//Retrieve the transcript from database and make .srt file and send it back to the server
-	//Not used
-	def downloadTranscriptAsSRT = {
-		//Yunjia: check if the multimedia is private
-		def multimediaId = params.multimediaId
-		if(!multimediaId)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MMID_MISSING, description:"Cannot find multimedia id!")
-			}
-			return
-		}
-		def multimedia = MultimediaResource.get(multimediaId.toLong())
-		if(!multimedia)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MM_NOT_FOUND, description:"Cannot find the multimedia resource with id=${multimediaId}!")
-			}
-			return
-		}
-		
-		TranscriptData[] transList = playerService.getTranscripts(multimediaId)
-		if(transList == null || transList?.size() == 0)
-		{
-			render ""
-			return
-		}
-		
-		String responseStr = playerService.convertToSRT(transList[0])
-			
-		response.setHeader("Content-disposition", "attachment;filename=transcript.srt")
-		render(contentType:"text/plain", text:responseStr)
-		return 		
-		
-	}
-	
 	//Retrieve the transcript from database and make .webvtt file and send it back to the server
-	def downloadTranscriptAsWebVTT = {
+	def downloadTranscript = {
 		//Yunjia: check if the multimedia is private
 		def multimediaId = params.multimediaId
 		if(!multimediaId)
@@ -1082,16 +992,38 @@ class RecordingController {
 			}
 			return
 		}
+		
+		if(!params.type) //default type is text
+			params.type="text"
 		//Yunjia: if there are multiple transcripts...
 		WebVTTData[] transcripts = webVTTService.getTranscripts(multimedia)
 		//If there are multiple transcripts, we need to provide an id I think
 		if(transcripts.size()==1) 
 		{
-			String responseStr = webVTTService.convertToWebVTT(transcripts[0])
+			if(params.type?.toLowerCase() == "webvtt")
+			{
+				String responseStr = webVTTService.convertToWebVTT(transcripts[0])
+					
+				response.setHeader("Content-disposition", "attachment;filename=transcript.vtt")
+				render(contentType:"text/vtt", text:responseStr)
+				return
+			}
+			else if(params.type?.toLowerCase() == "srt")
+			{
+				String responseStr = webVTTService.convertToSRT(transcripts[0])
 				
-			response.setHeader("Content-disposition", "attachment;filename=transcript.vtt")
-			render(contentType:"text/vtt", text:responseStr)
-			return
+				response.setHeader("Content-disposition", "attachment;filename=transcript.srt")
+				render(contentType:"text/plain", text:responseStr)
+				return
+			}
+			else
+			{
+				String responseStr = webVTTService.convertToText(transcripts[0])
+				
+				response.setHeader("Content-disposition", "attachment;filename=transcript.txt")
+				render(contentType:"text/plain", text:responseStr)
+				return
+			}
 		}
 		else if(transcripts.size() >1)
 		{
@@ -1112,7 +1044,9 @@ class RecordingController {
 			return
 		}
 	}
-	
+	/*
+	 * Deprecated
+	 */
 	//Get the transcript draft
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def getTranscriptDraftAjax = {
@@ -1167,6 +1101,9 @@ class RecordingController {
 		}
 	}
 	//the draft will be saved at temp/userid/transcript/multimediaId.vtt
+	/*
+	 * Deprecated
+	 */
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def saveTranscriptDraftAjax = {
 		
@@ -1252,7 +1189,7 @@ class RecordingController {
 		
 		def user = securityService.getLoggedUser()
 		
-		if(!params.transcripts)
+		if(!params.cue)
 		{
 			render(contentType:"text/json"){
 				error(stat:APIStatusCode.TRANSCRIPT_TRANSCRIPTS_MISSING, description:"Cannot find updated transcripts")
@@ -1262,46 +1199,25 @@ class RecordingController {
 		def webVTTResource = webVTTService.getWebVTTResource(multimediaId,"")
 		try
 		{
-			//if incoming transcript is empty and the transcriptResource exists in the database,
-			//it means this transcript resource needs to be removed
-			if(params.transcripts=="null" && webVTTResource)
-			{
-				//Delete the transcript
-				webVTTService.deleteWebVTTResource(webVTTResource.id)
-				render(contentType:"text/json"){
-					success(stat:APIStatusCode.SUCCESS, description:"The transcript has been successfully deleted.")
-				}
-				return
-			}
 			
-			def transcriptsJSON = JSON.parse(params.transcripts)
-			if(transcriptsJSON.size() == 0 && webVTTResource) // there is transcript originally, but now there isn't, so we need to delete all of them
-			{
-				webVTTService.deleteWebVTTResource(webVTTResource.id)
-				render(contentType:"text/json"){
-					success(stat:APIStatusCode.SUCCESS, description:"The transcript has been successfully deleted.")
-				}
-				return
-			}
+			def cueJSON = JSON.parse(params.cue)
 			
-			if(webVTTService.validateWebVTTJSON(transcriptsJSON))
+			if(webVTTService.validateWebVTTCueJSON(cueJSON))
 			{	
-				if(!webVTTResource)
+				if(!webVTTResource || !cueJSON.id)
 				{
 					//Create new Transcript
-					webVTTService.createTranscriptFromJSON(multimedia,transcriptsJSON)
+					cueJSON.id = webVTTService.createCueFromJSON(multimedia,webVTTResource, cueJSON)
 				}
 				else
 				{
 					//update transcript
-					webVTTService.editTranscriptFromJSON(multimedia,webVTTResource.id,transcriptsJSON)
+					webVTTService.editCueFromJSON(multimedia,webVTTResource,cueJSON)
 					
 				}
-				//remove the saved draft if any
-				webVTTService.deleteWebVTTDraft(user,multimediaId)
 				
 				render(contentType:"text/json"){
-					success(stat:APIStatusCode.SUCCESS, description:"The transcript has been successfully saved.")
+					success(stat:APIStatusCode.SUCCESS, description:"The transcript has been successfully saved.",cueId:cueJSON.id)
 				}
 				return
 			}
@@ -1325,11 +1241,137 @@ class RecordingController {
 			render(contentType:"text/json"){
 				error(stat:e.hashCode(),description:e.getMessage())
 			}
-			println "##########################"
-			println e.cause.toString()
 			e.printStackTrace()
 			return
 		}
+	}
+	
+	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+	def deleteTranscriptAjax = {
+		def user = securityService.getLoggedUser()
+		if(!params.id)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.PARAMS_MISSING, description:"Resource id is missing.")
+			}
+			return
+		}
+		
+		def cue = WebVTTCue.get(params.id?.toLong())
+		if(!cue)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.TRANSCRIPT_WEBVTTCUE_NOT_FOUND, description:"Transcript block not found.")
+			}
+			return
+		}
+		
+		def webVTTResource = cue.webVTTFile
+		if(!securityService.isOwnerOrAdmin(cue.owner?.id))
+		{
+			
+			
+			if(permService.getPerm(webVTTResource)?.val< PermissionValue.findByName("WRITE").val)
+			{
+				render(contentType:"text/json"){
+					error(stat:APIStatusCode.TRANSCRIPT_PERMISSION_DENIED, description:"Cannot find the resource.")
+				}
+				return
+			}
+		}
+		
+		//only one cue left in the transcript, so we remove the whole transcript
+		try
+		{
+			if(webVTTResource.cues?.size() <=1)
+			{
+				webVTTService.deleteWebVTTResource(webVTTResource.id)
+			}
+			else
+			{
+				webVTTResource.removeFromCues(cue)
+				cue.delete(flush:true)
+			}
+			
+			render(contentType:"text/json"){
+				success(stat:APIStatusCode.SUCCESS, description:"The transcript block has been successfully deleted.")
+			}
+			return
+		}
+		catch(Exception ex)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.INTERNAL_ERROR, description:"Cannot delete the transcript block.")
+			}
+			return
+		}
+	}
+	
+	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+	def saveThumbnailAjax = {
+		def user = securityService.getLoggedUser()
+		if(!params.id)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.RESOURCE_ID_MISSING, description:"Resource id is missing.")
+			}
+			return
+		}
+		
+		if(!params.url)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.PARAMS_MISSING, description:"Parameter url is missing.")
+			}
+			return
+			
+		}
+		
+		if(!regExService.isUrl(params.url))
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.PARAMS_INVALID, description:"Parameter url is not a valid url.")
+			}
+			return
+		}
+		def resource = Resource.get(params.id.toLong())
+		if(!resource)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.RESOURCE_NOT_FOUND, description:"Resource not found.")
+			}
+			return
+		}
+		
+		
+		if(!securityService.isOwnerOrAdmin(resource.owner?.id))
+		{
+			def parent = resource;
+			if(resource.instanceOf(WebVTTCue))
+				parent = resource.webVTTFile
+			
+			if(permService.getPerm(parent)?.val< PermissionValue.findByName("WRITE").val)
+			{
+				render(contentType:"text/json"){
+					error(stat:APIStatusCode.RESOURCE_PERMISSION_DENIED, description:"Cannot find the resource.")
+				}
+				return
+			}
+		}
+		
+		resource.thumbnail = params.url
+		if(resource.hasErrors() || !resource.save())
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.RESOURCE_UNKNOWN_ERROR, description:"Cannot update the thumbnail.")
+			}
+			return
+		}
+		
+		render(contentType:"text/json"){
+			success(stat:APIStatusCode.SUCCESS, description:"The thumbnail has been successfully saved.")
+		}
+		return
 	}
 	
 }

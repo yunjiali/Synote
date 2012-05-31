@@ -6,12 +6,15 @@
 <meta name="layout" content="main" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:'synote-multimedia-service-client.js')}"></script>
 <script type="text/javascript">
 	var mmServiceURL = "${mmServiceURL}";
 	var client = new SynoteMultimediaServiceClient(mmServiceURL);
 	var recording = new Object();
 	recording.url = "${multimedia.url?.url}";
+	recording.isVideo = "${multimedia.isVideo}".toLowerCase();
+	recording.uuid = "${multimedia.uuid}";
 	
 	$(document).ready(function(){
 		$("#multimediaEditForm").validate(
@@ -26,7 +29,8 @@
 					url:true
 				},
 				duration:{
-					required:true
+					required:true,
+					digits:true
 				},
 				isVideo:{
 					required:true
@@ -43,7 +47,7 @@
 				if(duration != null)
 				{
 					$("#duration").val(duration);
-					$("#duration_span").text(duration);
+					$("#duration_span").text(milisecToString(duration));
 				}
 				else
 				{
@@ -55,6 +59,51 @@
 				$("#duration_button").button('reset');
 			});
 		});
+
+		$("#isVideo_button").click(function(){
+			$("#isVideo_button").button('loading');
+			client.isVideo(recording.url, function(isVideo, errMsg){
+				if(isVideo != null)
+				{
+					$("#isVideo").val(isVideo);
+					$("#isVideo_span").text(isVideo);
+				}
+				else
+				{
+					$("#error_msg_div").html(
+						"<div class='alert alert-error'><button class='close' data-dismiss='alert'>×</button>"+
+						errMsg+"</div>"
+					);
+				}
+				$("#isVideo_button").button('reset');
+			});
+		});
+
+		if(recording.isVideo == 'true')
+		{
+			$("#thumbnail_button").click(function(){
+				$("#thumbnail_button").button('loading');
+				client.generateThumbnail(recording.url, recording.uuid, null, null, function(thumbnail_url, errMsg){
+					if(thumbnail_url != null)
+					{
+						//$("#thumbnail_img").attr('src',thumbnail_url); //This will cause 404 not found as the picture is note ready yet
+						$("#thumbnail").val(thumbnail_url);
+						$("#error_msg_div").html(
+								"<div class='alert alert-success'><button class='close' data-dismiss='alert'>×</button>"+
+								"Thumbnail picture is being generated. It may take several miniutes before it is available.</div>"
+							);
+					}
+					else
+					{
+						$("#error_msg_div").html(
+							"<div class='alert alert-error'><button class='close' data-dismiss='alert'>×</button>"+
+							errMsg+"</div>"
+						);
+					}
+					$("#thumbnail_button").button('reset');
+				});
+			});
+		}
 	});
 </script>
 </head>
@@ -149,7 +198,7 @@
 								<label for="duration" class="control-label"><b>Duration</b></label>
 						      	<div class="controls">
 						      		<div class="input-append">
-						      			<span class="span2 uneditable-input" id="duration_span">${duration}</span>
+						      			<span class="span2 uneditable-input" id="duration_span"><g:printTime time="${duration}"/></span>
 						      			<button class="btn btn-info" type="button" id="duration_button" data-loading-text="Loading...">Get duration</button>
 						      		</div>
 						      		<input type='hidden' class="required" name='duration' id='duration' value="${multimedia.duration}" />
@@ -169,7 +218,7 @@
 					      	<div class="control-group">
 								<label class="control-label"><b>Thumbnail Picture</b></label>
 						      	<div class="controls">
-						        	<img src="${thumbnail_src}" class="thumbnail-img"/><br/><br/>
+						        	<img src="${thumbnail_src}" class="thumbnail-img" id="thumbnail_img"/><br/><br/>
 						        	<g:if test="${multimedia.isVideo == true}">
 						        	<button class="btn btn-info" type="button" id="thumbnail_button">Generate thumbnail</button>
 						        	</g:if>
@@ -183,7 +232,9 @@
 			            	<input class="btn btn-primary" id="multimediaEditForm_submit" type="submit" value="Save" />
 			            	<input class="btn" id="multimediaEditForm_reset" type="reset" value="Reset"/>
 			            </div>
-			          	<div class="pull-right"><input class="btn btn-danger" id="multimediaEditForm_reset" type="reset" value="Delete"/></div>
+			          	<div class="pull-right">
+			          		<g:link class="btn btn-danger" onclick="alert('Are you sure?');" controller="multimediaResource" action="delete" elementId="multimediaEditForm_delete" id="${multimedia.id}" >Delete</g:link>
+			          	</div>
 			        </div>
 				</g:form>
 			</div>

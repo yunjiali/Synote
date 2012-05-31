@@ -34,7 +34,34 @@
 
 /*###############transcript########################*/
 /*when mouseover a transcript div*/
-.transcript_highlight
+#transcripts_content_div
+{
+	width:100%;
+	overflow:scroll;
+	margin-top:20px;
+}
+#transcript_edit_div, #transcript_msg_div
+{
+	width:91.5%;
+	margin-top:20px;
+}
+#transcripts_content_div ol
+{
+	margin:0px;
+	list-style:none;
+}
+
+.transcript-line-time {
+    color: #97A500;
+}
+
+.transcript-line-speaker {
+	font-weight:bold;
+	display:inline;
+	float left;
+	padding:0;	
+}
+.transcript-highlight
 {
 	background-color:#d1e1fa !important;
 	background-image:url(../images/skin/play_16.png);
@@ -43,18 +70,18 @@
 	cursor:pointer;
 }
 /*when a transcript is selected and playing*/
-.transcript_selected
+.transcript-selected
 {
 	background-color:#d1e1fa !important;
 	cursor:pointer;
 }
 /*when a transcript has just been added*/
-.transcript_edited
+.transcript-edited
 {
 	background-color:#c8ffbf;
 }
 /*when a transcript has something wrong*/
-.transcript_error
+.transcript-error
 {
 	background-color:#ffdfdf;
 }

@@ -41,14 +41,10 @@ var Transcript = Base.extend({
 	{
 		
 		//Start loading transcript
-		//this.refresh(this.outer_container,this.inner_container);
-		//Yunjia: we need to download srt or webvtt. Not every player supports webvtt now.
-		$("#edit_transcript_export_img").click(function(){
-			var url = g.createLink({controller:"recording",action:"downloadTranscriptAsWebVTT",params:{multimediaId:recording.id}});
-			//transcript.downloadTranscriptAsSRT();
-			window.open(url,"Download Transcript");
-		});
-		
+		if(recording.canEdit)
+		{
+			transcript.initEditing();
+		}
 		$(document.body).mousedown(function() {
 		    if(transcript.selectionImage) { 
 		    	//transcript.selectionImage.unbind("click");
@@ -106,23 +102,6 @@ var Transcript = Base.extend({
 		});
 		return transcriptData;
 	},
-	//merge two transcriptData together
-	mergeTranscriptData:function(prevData,mainData)
-	{
-		if(prevData != null)
-		{
-			//cue.start = prevData.start;
-			prevData.end = mainData.end;
-			prevData.cueText = transcript.getAnnotatedTextFromCue(prevData.cueText)+" "+transcript.getAnnotatedTextFromCue(mainData.cueText);
-			var prevSpeaker = transcript.getSpeakerFromCue(prevData);
-			var mainSpeaker = transcript.getSpeakerFromCue(mainData);
-			prevData.cueText = "<v. "+prevSpeaker?prevSpeaker:(mainSpeaker?mainSpeaker:null)+">"+prevData.cueText;
-			this.removeFromTranscriptsData(mainData.index);
-			return prevData;
-		}
-		else
-			return null;
-	},
 	//remove a cue with certain index from the transcriptsData
 	removeFromTranscriptsData:function(transcript_id)
 	{
@@ -148,9 +127,9 @@ var Transcript = Base.extend({
 		if(currentTranscript != null)
 		{
 			if(this.selectedTranscript != null)
-				this.selectedTranscript.removeClass("transcript_selected");
+				this.selectedTranscript.removeClass("transcript-selected");
 			this.selectedTranscript = currentTranscript;
-			currentTranscript.addClass("transcript_selected");
+			currentTranscript.addClass("transcript-selected");
 			if(this.autoScroll)
 				this.inner_container.scrollTo(currentTranscript,400, {offset:this.scrollOffset});
 		}
@@ -158,7 +137,7 @@ var Transcript = Base.extend({
 	//set the currentTranscript_div as edited transcript
 	setTranscriptEdited:function(currentTranscript)
 	{
-		currentTranscript.addClass("transcript_edited");
+		currentTranscript.addClass("transcript-edited");
 	},
 	clickTranscript:function(currentTranscript) //Define what things should happen after clicking on a transcript line
 	{
@@ -173,8 +152,8 @@ var Transcript = Base.extend({
 		var transcript_line_li = $("<li/>").attr("id","li_"+cue.index);
    		var transcript_line = $("<div/>",{
 	   		id:"transcript_"+cue.index,
-	   		mouseover:function(){$(this).addClass("transcript_highlight");},
-			mouseout:function(){$(this).removeClass("transcript_highlight");},
+	   		mouseover:function(){$(this).addClass("transcript-highlight");},
+			mouseout:function(){$(this).removeClass("transcript-highlight");},
 			click:function(){
 				transcript.clickTranscript($(this));
 			}
@@ -188,7 +167,7 @@ var Transcript = Base.extend({
    		
    		var transcript_line_time = $("<div/>",{
 	   		text:milisecToString(cue.start)+" to "+milisecToString(cue.end)
-	   	}).addClass("transcript_line_time").appendTo(transcript_line);
+	   	}).addClass("transcript-line-time").appendTo(transcript_line);
 	   	
    		//find the speaker from cue, use name=v, type=object
 	   	if(cue.cueText)
@@ -198,7 +177,7 @@ var Transcript = Base.extend({
 	   		{
 	   			var transcript_line_speaker = $("<div/>",{
 			   		text:speaker+":"
-			   	}).addClass("transcript_line_speaker").appendTo(transcript_line);
+			   	}).addClass("transcript-line-speaker").appendTo(transcript_line);
 	   		}
 	   	}
 	   	else
@@ -255,117 +234,71 @@ var Transcript = Base.extend({
 	initEditing:function()
 	{
 		//Init img buttons
-		$("#edit_transcript_help_img").click(function(){
+		$("#edit_transcript_help_btn").click(function(){
 			var url = g.createLink({controller:"recording",action:"help"});
 			window.open(url+"#transcript_editing_help","synote player help");
 		});
-		$("#edit_transcript_quit_img").click(function(){
-			if(confirm("All the changes will be discared?"))
-			{
-				transcript.exitEditing();
-			}
-		});
-		$("#edit_transcript_save_exit_img").click(function(){
-			//pass the cue json objects to server and save it to database
-			//I can't put it in a separate method as transcript.exitEditing() must be done when the response is success!
-			if(confirm("Are you sure you want to save all the changes? The old transcript will not be available and the saved draft will also" +
-					"be removed."))
-			{
-				var url = g.createLink({controller:"recording",action:"saveTranscriptAjax"});
-				$.ajax({
-					url:url,
-					type:"post",
-					data:{transcripts:JSON.stringify(transcript.transcriptsData),multimediaId:recording.id},
-					dataType:"text",
-					beforeSend:function(x){
-						if (x && x.overrideMimeType) {
-							x.overrideMimeType("application/json;charset=UTF-8");
-				        }
-						$("#transcript_edit_errorMsg").hide();
-					},
-					success:function(responseText)
-					{
-						var respJson = $.parseJSON(responseText);
-						//console.log("status:"+status);
-						if(respJson.success) //status == 200
-						{
-							transcript.showDialog(respJson.success.description);
-							transcript.exitEditing();
-						}
-						else if(respJson.error)
-						{
-							//console.log("error save transcript");
-							var errMsg = respJson.error.description
-							if(errMsg && errMsg.length > 50)
-								errMsg = errMsg.substring(0,49)+"...";
-							$("#transcript_edit_errorMsg").text(errMsg);
-							$("#transcript_edit_errorMsg").show();
-						}
-					}
-				})
-			}
-		});
-		$("#edit_transcript_save_draft_img").click(function(){
-			transcript.saveTranscriptDraft();
-		});
-		$("#edit_transcript_clear_img").click(function(){
-			if(confirm("Remove all the current transcript?"))
-			{
-				transcript.empty();
-			}
-		});
 		
-		$("#edit_transcript_revert_img").click(function(){
-			if(confirm("Are you sure you want to discard any change and restore the transcript from the draft?"))
+		$("#edit_transcript_delete_btn").click(function(){
+			if(transcript.selectedTranscript == null)
 			{
-				var url = g.createLink({controller:"recording",action:"getTranscriptDraftAjax"});
-				$.ajax({
-					url:url,
-					type:"post",
-					data:{multimediaId:recording.id},
-					dataType:"json",
-					success:function(data)
+				alert('Please select a transcript block.');
+				return;
+			}
+			
+			if(confirm("Delete this transcript block?"))
+			{
+				transcript.deleteTranscript(transcript.selectedTranscript.attr("transcript_id"),function(msg,error){	
+					if(error != null)
 					{
-						//var respJson = $.parseJSON(responseText);
-						//console.log("status:"+status);
-						if(data.error)
-						{
-							transcript.showDialog(data.error.description);
-						}
-						else
-						{
-							transcript.refreshTranscripts(data);
-							transcript.showDialog("The transcript has been reverted.");
-						}
+						transcript.showMsg(msg,error);
+					}
+					else
+					{
+						transcript.showMsg(msg);
 					}
 				});
 			}
 		});
-		$("#edit_transcript_import_img").click(function(){
-			if($("#transcript_edit_div").is(":visible"))
-			{
-				$("#transcript_edit_form").resetForm();
-				$("#transcript_edit_div").hide();
-			}
-			$("#transcript_upload_div").show(400);
-			$("#transcript_upload_errorMsg").hide();
-		});
-		$("#edit_transcript_add_img").click(function(){
-			if($("#transcript_upload_div").is(":visible"))
-			{
-				$("#transcript_upload_form").resetForm();
-				$("#transcript_upload_div").hide();
-			}
+		
+		$("#edit_transcript_add_btn").click(function(){
+			
 			var newTime = multimedia.getPosition();
 			$("#transcript_st").val(milisecToString(newTime));
 			$("#transcript_edit_div").show(400);
-			$("#transcript_edit_errorMsg").hide();
 			$("#transcript_id").val("");
 		});
 		
+		$("#edit_transcript_edit_btn").click(function(){
+			
+			if(transcript.selectedTranscript == null)
+			{
+				alert('Please select a transcript block.');
+				return;
+			}
+			
+			var transcriptData = transcript.getTranscriptData(transcript.selectedTranscript.attr("transcript_id"));
+			if(transcriptData != null)
+			{
+				$("#transcript_st").val(milisecToString(transcriptData.start));
+				$("#transcript_et").val(milisecToString(transcriptData.end));
+				
+				var speaker = transcript.getSpeakerFromCue(transcriptData);
+				if(speaker)
+					$("#transcript_speaker").val(speaker);
+				
+				$("#transcript_content").val(transcript.getAnnotatedTextFromCue(transcriptData.cueText));
+				$("#transcript_id").val(transcriptData.index); //This is the id of srt index, not the id of transcript div
+				
+				$("#transcript_edit_errorMsg").hide();
+				$("html,body").animate({scrollTop:$("#transcripts_div").offset().top},200);
+				$("#transcript_edit_div").show(200);	
+
+			}
+		});
+		
 		//init transcript editing and creating form
-		$("#transcripts_div .uniForm").uniform();
-		$("#transcripts_div .uniForm input[type=text]").wijtextbox();
+		
 		
 		$("#transcript_st").mask("?99:99:99");
 		$("#transcript_et").mask("?99:99:99");
@@ -413,168 +346,57 @@ var Transcript = Base.extend({
 			{
 				return false;
 			}
-			//If editing or splitting transcript
+			//If editing transcript
 			if($("#transcript_id").val() != null && $.trim($("#transcript_id").val()).length>0)
 			{
-				var split_text = $("#transcript_split_content").val();
-				var original_text = $("#transcript_content").val();
-				if(split_text !=null && $.trim(split_text).length>0)
-				{
-					transcript.createSplitTranscript();
-					var range = $("#transcript_content").getSelection();
-					//remove the selected text from the original transcript_content
-					var splitted_content = original_text.substring(0,range.start)+original_text.substring(range.end);
-					//reset the transcript_content
-					$("#transcript_content").val(splitted_content);
-					$("#transcript_split_content").val("");
-					//Set the start time equals the end time of the splitted transcript block, so that the transcript_content is ready
-					//to be splitted again.
-					$("#transcript_st").val($("#transcript_et").val());
-					var transcript_id = $("#transcript_id").val();
-					transcript.updateTranscript(transcript_id);
-					transcript.showDialog("The transcript has been successfully split.");
-					//We will not reset tht form unless you click exit
-				}
-				else
-				{
-					var transcript_id = $("#transcript_id").val();
-					transcript.updateTranscript(transcript_id);
-					transcript.showDialog("The transcript has been successfully updated.");
-					$("#transcript_edit_form").resetForm();
-					$("#transcript_edit_div").hide(400);
-				}
+				var transcript_id = $("#transcript_id").val();
+				transcript.updateTranscript(transcript_id,function(msg,error){
+					if(error != null)
+					{
+						transcript.showMsg(msg,error);
+					}
+					else
+					{
+						transcript.showMsg(msg);
+						transcript.exitEditing();
+					}
+				});
 			}
 			else //if creating a new transcript
 			{
-				transcript.createTranscript();
-				transcript.showDialog("The transcript has been successfully added.");
-				$("#transcript_edit_form").resetForm();
-				//Do not hide the form, as users may want to add transcript again
-				//Reset the start time to the current time
-				var newTime = multimedia.getPosition();
-				$("#transcript_st").val(milisecToString(newTime));
+				transcript.createTranscript(function(msg,error){
+					if(error != null)
+					{
+						transcript.showMsg(msg,error);
+					}
+					else
+					{
+						$("#transcript_edit_form").resetForm();
+						transcript.showMsg(msg);
+						//Do not hide the form, as users may want to add transcript again
+						//Reset the start time to the current time
+						var newTime = multimedia.getPosition();
+						$("#transcript_st").val(milisecToString(newTime));
+					}
+				});
 			}
 		});
 		$("#transcript_cancel").button().click(function(){
 			$("#transcript_edit_form").resetForm();
 			$("#transcript_edit_div").hide(400);
-			if($("#transcript_split_div").is(':visible'))
-			{
-				transcript.exitTranscriptSpliting();
-			}
-		});
-		
-		//init file upload form
-		$("#transcript_file_submit").button().click(function(){
-			
-		});
-		$("#transcript_file_cancel").button().click(function(){
-			$("#transcript_edit_div").hide(400);
 		});
 	},
-	showDialog:function(msg) //Show the transcript_edit_dialog with the msg content
+	showMsg:function(msg,type) //display the message, could be error, or success
 	{
-		$("#transcript_edit_dialog").text(msg);
-		$("#transcript_edit_dialog").wijdialog({
-            autoOpen: true,
-            height: 180,
-            width: 400,
-            modal: true,
-            buttons: {
-                Ok: function () {
-                    $(this).wijdialog("close");
-                }
-            },
-            captionButtons: {
-                pin: { visible: false },
-                refresh: { visible: false },
-                toggle: { visible: false },
-                minimize: { visible: false },
-                maximize: { visible: false }
-            }
-        });
-	},
-	//Things should been done when you start editing
-	startEditing:function()
-	{
-		//show the tooltip to tell users there are right click menus availabel
-		$("#transcript_edit_wrapper_div").wijtooltip("show");
-		setTimeout(function(){$("#transcript_edit_wrapper_div").wijtooltip("hide");},5000);
-		initTranscriptClickMenu(".transcript_line"); //method in player.transcript.click.menu.js
-		transcript.editingEnabled=true;
-		transcript.synchronised=false; //Disable the auto synchronisation display when editing, as the transcript divs are changing
-		$("#transcript_sync_cb").prop('disabled',true);
-	},
-	exitEditing:function() //execute code when exit editing mode
-	{
-		disableTranscriptClickMenu(".transcript_line");
-		$("#transcript_edit_menu_div").hide();
-		if($("#transcript_edit_div").is(":visible"))
-			$("#transcript_edit_div").hide();
-		if($("#transcript_upload_div").is(":visible"))
-			$("#transcript_upload_div").hide();
-		$("#transcript_edit_enter_div").show(400);
-		transcript.editingEnabled = false;
-		//refresh to get the saved transcript
-		transcript.refresh();
-	},
-	//init the editing form for transcript spliting
-	initTranscriptSpliting:function()
-	{
-		$("#transcript_split_div").show();
-		//clear the text in transcript_split_content
-		$("#transcript_split_content").val("");
-		//$("#transcript_content").attr("disabled","disabled");
-		$("html,body").animate({scrollTop:$("#transcripts_div").offset().top},400);
-		$("#transcript_edit_div").show(200);
-		
-		//init the fieldselector
-		$("#transcript_content").bind("keydown keyup mousedown mousemove mouseup", function(event){
-			//change the split textarea everytime the transcript_content textarea selection is changed
-			//console.log("update");
-			var range = $("#transcript_content").getSelection();
-			$("#transcript_split_content").val(range.text);
-		});
-	},
-	exitTranscriptSpliting:function()
-	{
-		//unbind events for transcript_content
-		$("#transcript_content").unbind("keydown keyup mousedown mouseup mousemove");
-		//$("#transcript_content").removeAttr("disabled");
-		$("#transcript_split_div").hide();
-	},
-	//pass the cue json objects to server and save it as a draft
-	saveTranscriptDraft:function() 
-	{
-		//the json is in cue format, i.e. cue.index, cue.start, cue.end, etc. So on the server side, you can easily change the json to real
-		//.vtt file. Then you can download it.
-		var url = g.createLink({controller:"recording",action:"saveTranscriptDraftAjax"});
-		$.ajax({
-			url:url,
-			type:"post",
-			data:{transcripts:JSON.stringify(transcript.transcriptsData),multimediaId:recording.id},
-			dataType:"text",
-			beforeSend:function(x){
-				if (x && x.overrideMimeType) {
-					x.overrideMimeType("application/json;charset=UTF-8");
-		        }
-				$("#transcript_edit_errorMsg").hide();
-			},
-			success:function(responseText)
-			{
-				var respJson = $.parseJSON(responseText);
-				//console.log("status:"+status);
-				if(respJson.success) //status == 200
-				{
-					transcript.showDialog(respJson.success.description);
-				}
-				else if(respJson.error)
-				{
-					$("#transcript_edit_errorMsg").text(respJson.error.description);
-					$("#transcript_edit_errorMsg").show();
-				}
-			}
-		});
+		var msg_div = $("#transcript_msg_div");
+		if(type == "error")
+		{
+			msg_div.html("<div class='alert alert-error'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
+		else
+		{
+			msg_div.html("<div class='alert alert-success'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
 	},
 	empty:function()
 	{
@@ -586,8 +408,14 @@ var Transcript = Base.extend({
 		$("#transcript_ol").empty();
 		
 	},
-	//Create a new transcript block according to the values in transcript_edit_form. Both transcript.transcripts and transcript.transcriptData will be updated
-	createTranscript:function()
+	exitEditing:function() //execute code when exit editing mode
+	{
+		$("#transcript_edit_form").resetForm();
+		$("#transcript_edit_div").hide(400);
+	},
+	//Create a new transcript block according to the values in transcript_edit_form. 
+	//Both transcript.transcripts and transcript.transcriptData will be updated
+	createTranscript:function(callback)
 	{
 		//console.log("new");
 		var cue = new Object();
@@ -598,101 +426,233 @@ var Transcript = Base.extend({
 			cue.cueText = "<v. "+$("#transcript_speaker").val()+">";
 		cue.cueText += $("#transcript_content").val();
 		cue.index = transcript.newId++;
-		//Add it to the data source
-		if(transcript.transcriptsData == null)
+		
+		//Generate thumbnail picture
+		if(recording.isVideo == 'true' && recording.thumbnail != 'null')
 		{
-			//console.log("create new trans");
-			transcript.transcriptsData = new Array();
-		}
-		transcript.transcriptsData.push(cue);
-		//find the previous div and insert the newly created div after it
-		var transcript_line_li = transcript.createTranscriptLine(cue);
-		var previous_div = transcript.getTranscript(cue.start);
-		if(previous_div != null) //the newly created transcript can be inserted into somewhere
-		{
-			var previous_li = previous_div.parent();
-			transcript_line_li.insertAfter(previous_li);
-		}
-		else //the newly created transcript is the first one on the transcript list
-		{
-			//console.log("add li");
-			var transcript_ol = $("#transcript_ol");
-			transcript_line_li.prependTo(transcript_ol);
-		}
-		transcript.setTranscriptEdited(transcript_line_li.children(":first"));
-		//renew the transcripts divs
-		transcript.transcripts = $(".transcript_line");
-	},
-	//Update a transcript block according to the values in transcript_edit_form. Both transcript.transcripts and transcript.transcriptData will be updated
-	updateTranscript:function(transcript_id)
-	{
-		//console.log("replace");
-		// this is the cue.index, not the transcript div id
-		var cue = transcript.getTranscriptData(transcript_id);
-		if(cue != null)
-		{
-			cue.start= stringToMilisec($("#transcript_st").val());
-			cue.end = stringToMilisec($("#transcript_et").val());
-			cue.cueText="";
-			if($("#transcript_speaker").val() !== undefined && $("#transcript_speaker").val() !== "" && $.trim($("#transcript_speaker").val()).length>0)
-				cue.cueText = "<v. "+$("#transcript_speaker").val()+">";
-			cue.cueText += $("#transcript_content").val();
-			var transcript_line_div_old = $("#transcript_"+transcript_id);
-			var transcript_line_li_old = transcript_line_div_old.parent();
-			var transcript_line_li_new = transcript.createTranscriptLine(cue);
-			//console.log("firstchild:"+transcript_line_li_new.children(":first").length);
-			transcript.setTranscriptEdited(transcript_line_li_new.children(":first"));
-			transcript_line_li_old.replaceWith(transcript_line_li_new);
-			
-			//renew the transcripts divs
-			transcript.transcripts = $(".transcript_line");
+			mmServiceClient.generateThumbnail(recording.url,recording.uuid, cue.start, cue.end, function(thumbnail_url, error){
+				//We are not going to print out any error message here
+				if(error == null)
+				{
+					cue.thumbnail = thumbnail_url;
+					transcript.createTranscriptAjax(cue, callback)
+				}
+			});
 		}
 		else
 		{
-			//Yunjia: do something if cue is not found?
+			transcript.createTranscriptAjax(cue,callback)
 		}
+	},
+	/*The create transcript ajax function shared by both creating thumbnail picture and not creating thumbnail picture*/
+	createTranscriptAjax:function(cue, callback)
+	{
+		var url = g.createLink({controller:"recording",action:"saveTranscriptAjax"});
+		$.ajax({
+			url:url,
+			type:"post",
+			data:{cue:JSON.stringify(cue),multimediaId:recording.id},
+			dataType:"json",
+			success:function(data,textStatus, jqXHR)
+			{
+				//console.log("status:"+status);
+				if(data.success) //status == 200
+				{
+					//Add it to the data source
+					if(data.success.cueId != null)
+					{
+						cue.id = parseInt(data.success.cueId);
+					}
+						
+					if(transcript.transcriptsData == null)
+					{
+						//console.log("create new trans");
+						$("#transcript_ol").empty();
+						transcript.transcriptsData = new Array();
+					}
+					transcript.transcriptsData.push(cue);
+					//find the previous div and insert the newly created div after it
+					var transcript_line_li = transcript.createTranscriptLine(cue);
+					var previous_div = transcript.getTranscript(cue.start);
+					if(previous_div != null) //the newly created transcript can be inserted into somewhere
+					{
+						var previous_li = previous_div.parent();
+						transcript_line_li.insertAfter(previous_li);
+					}
+					else //the newly created transcript is the first one on the transcript list
+					{
+						//console.log("add li");
+						var transcript_ol = $("#transcript_ol");
+						transcript_line_li.prependTo(transcript_ol);
+					}
+					transcript.setTranscriptEdited(transcript_line_li.children(":first"));
+					//renew the transcripts divs
+					transcript.transcripts = $(".transcript_line");
+					callback(data.success.description,null);
+					return;
+				}
+				else if(data.error)
+				{
+					//console.log("error save transcript");
+					callback(data.error.description,"error");
+					return;
+				}	
+			},
+			error:function(jqXHR,textStatus,errorThrown)
+			{
+				var resp =$.parseJSON(jqXHR.responseText);
+				callback(resp.error.description,"error");
+				return;
+			}
+		});
+	},
+	//Update a transcript block according to the values in transcript_edit_form. Both transcript.transcripts and transcript.transcriptData will be updated
+	updateTranscript:function(transcript_id,callback)
+	{
+		//console.log("replace");
+		// this is the cue.index, not the transcript div id
+		var url = g.createLink({controller:"recording",action:"saveTranscriptAjax"});
+		var cue = transcript.getTranscriptData(transcript_id);
+		if(cue == null)
+		{
+			callback("Cannot find the the transcript block.","error");
+			return;
+		}
+		var newCue = new Object();
+		newCue.start = stringToMilisec($("#transcript_st").val());
+		newCue.end = stringToMilisec($("#transcript_et").val());
+		newCue.cueText = "";
+		newCue.index = cue.index;
+		newCue.id = cue.id;
+		if($("#transcript_speaker").val() !== undefined && $("#transcript_speaker").val() !== "" && $.trim($("#transcript_speaker").val()).length>0)
+			newCue.cueText = "<v. "+$("#transcript_speaker").val()+">";
+		newCue.cueText += $("#transcript_content").val();
+		//if the time has changed a lot, we need a new thumbnail picture
+		var oldMiddle = (cue.start+cue.end)/2;
+		//recording.thumbnail == null means the synote multimedia service cannot generate the thumbnail picture, so we give up
+		//Here is a bug, if the user change the newly created transcript's time greatly, we would not be able to generate the thumbnail picture again, because
+		//the cue.id is not available.
+		if(cue.id != null && recording.thumbnail != 'null' && recording.isVideo == 'true' && (cue.thumbnail == null || (oldMiddle<newCue.start || oldMiddle > newCue.end))) //need to regenerate the thumbnail
+		{
+			var cueId = cue.id
+			mmServiceClient.generateThumbnail(recording.url,recording.uuid, newCue.start, newCue.end, function(thumbnail_url, error){
+				//We are not going to print out any error message here
+				if(error == null)
+				{
+					var saveThumbnailURL = g.createLink({controller:'recording', action:'saveThumbnailAjax'});
+					$.ajax({
+						url:saveThumbnailURL,
+						type:"post",
+						data:{url:thumbnail_url,id:cueId},
+						dataType:"json",
+						success:function(data,textStatus,jqXHR)
+						{
+							//Do nothing
+						},
+						error:function(jqXHR,textStatus,errorThrown)
+						{
+							//Do nothing
+						}
+					});
+				}
+			});
+		}
+		
+		$.ajax({
+			url:url,
+			type:"post",
+			data:{cue:JSON.stringify(newCue),multimediaId:recording.id},
+			dataType:"json",
+			success:function(data,textStatus, jqXHR)
+			{
+				//console.log("status:"+status);
+				if(data.success) //status == 200
+				{
+					var transcript_line_div_old = $("#transcript_"+transcript_id);
+					var transcript_line_li_old = transcript_line_div_old.parent();
+					var transcript_line_li_new = transcript.createTranscriptLine(newCue);
+					transcript.setTranscriptEdited(transcript_line_li_new.children(":first"));
+					//If the time doesn't change, replace the old li with the new one
+					if(cue.start == newCue.start)
+					{
+						transcript_line_li_old.replaceWith(transcript_line_li_new);
+					}
+					else //find the right place to insert
+					{
+						
+						var previous_div = transcript.getTranscript(newCue.start);
+						if(previous_div != null) //the newly created transcript can be inserted into somewhere
+						{
+							var previous_li = previous_div.parent();
+							transcript_line_li_new.insertAfter(previous_li);
+						}
+						else //the newly created transcript is the first one on the transcript list
+						{
+							var transcript_ol = $("#transcript_ol");
+							transcript_line_li_new.prependTo(transcript_ol);
+						}
+						transcript.setTranscriptEdited(transcript_line_li_new.children(":first"));
+						transcript_line_li_old.remove();
+					}
+					
+					cue=newCue;
+					//renew the transcripts divs
+					transcript.transcripts = $(".transcript_line");
+					callback(data.success.description,null);
+					return;
+				}
+				else if(data.error)
+				{
+					//console.log("error save transcript");
+					callback(data.error.description,"error");
+					return;
+				}	
+			},
+			error:function(jqXHR,textStatus,errorThrown)
+			{
+				var resp =$.parseJSON(jqXHR.responseText);
+				callback(resp.error.description,"error");
+				return;
+			}
+		});
 	},
 	//delete a transcript block.  Both transcript.transcripts and transcript.transcriptData will be updated
-	deleteTranscript:function(transcript_id)
+	deleteTranscript:function(transcript_id, callback)
 	{
-		this.removeFromTranscriptsData(transcript_id);
-		var transcript_line_div = $("#transcript_"+transcript_id);
-		//remove the parent li from transcript_ol
-		transcript_line_div.parent().remove();
-		transcript.transcripts = $(".transcript_line");
-	},
-	//create a new transcript block from spliting action. The difference between this method and createTranscript is that
-	//this method use transcript_split_content textarea instead of transcript_content textarea to create a new transcript block
-	createSplitTranscript:function()
-	{
-		//console.log("new split");
-		var cue = new Object();
-		cue.start= stringToMilisec($("#transcript_st").val());
-		cue.end = stringToMilisec($("#transcript_et").val());
-		if($("#transcript_speaker").val() != null && $.trim($("#transcript_speaker").val()).length>0)
-			cue.cueText = "<v. "+$("#transcript_speaker").val()+">";
-		cue.cueText += $("#transcript_split_content").val();
-		cue.index = transcript.newId++;
-		//Add it to the data source
-		if(transcript.transcriptsData == null)
-			transcript.transcriptsData = new Array();
-		transcript.transcriptsData.push(cue);
-		//find the previous div and insert the newly created div after it
-		var transcript_line_li = transcript.createTranscriptLine(cue);
-		var previous_div = transcript.getTranscript(cue.start);
-		if(previous_div != null) //the newly created transcript can be inserted into somewhere
+		var cue = transcript.getTranscriptData(transcript_id);
+		if(cue == null)
 		{
-			var previous_li = previous_div.parent();
-			transcript_line_li.insertAfter(previous_li);
+			callback("Cannot find the the transcript block.","error");
+			return;
 		}
-		else //the newly created transcript is the first one on the transcript list
-		{
-			var transcript_ol = $("#transcript_ol");
-			transcript_line_li.prependTo(transcript_ol);
-		}
-		transcript.setTranscriptEdited(transcript_line_li.children(":first"));
-		//renew the transcripts divs
-		transcript.transcripts = $(".transcript_line");
+		var deleteTranscriptURL = g.createLink({controller:'recording', action:'deleteTranscriptAjax'});
+		$.ajax({
+			url:deleteTranscriptURL,
+			type:"post",
+			data:{id:cue.id},
+			dataType:"json",
+			success:function(data,textStatus,jqXHR)
+			{
+				if(data.success)
+				{
+					transcript.removeFromTranscriptsData(transcript_id);
+					var transcript_line_div = $("#transcript_"+transcript_id);
+					//remove the parent li from transcript_ol
+					transcript_line_div.parent().remove();
+					transcript.transcripts = $(".transcript_line");
+					callback("The transcript block has been successfully deleted.");
+					return;
+				}
+			},
+			error:function(jqXHR,textStatus,errorThrown)
+			{
+				var resp =$.parseJSON(jqXHR.responseText);
+				callback(resp.error.description,"error");
+				return;
+			}
+		});
+		
+		
 	},
 	//fill the transcript widget with data
 	refreshTranscripts:function(data)
@@ -708,6 +668,8 @@ var Transcript = Base.extend({
 		transcript.transcriptsData = data;
 		//console.log("cue length:"+data.length);
 		var transcript_ol = $("#transcript_ol");
+		//sort by start time
+		data = $(data).sort(sortCueByStartTime);
 		$.each(data,function(i,cue){
 			//console.log("cue");
 			if(cue.cueText != null && $.trim(cue.cueText).length > 0)
@@ -777,8 +739,13 @@ var Transcript = Base.extend({
 	}
 });
 
+var sortCueByStartTime = function(a,b)
+{
+	return a.start > b.start?1:-1;
+}
 //This function is used for webvtt.parser.js
 var errorHandler = function(message,pos)
 {
 	//console.log("position:"+pos+",error:"+message);
 }
+

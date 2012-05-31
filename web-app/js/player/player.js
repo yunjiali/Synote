@@ -18,6 +18,18 @@ function initSynotePlayer(recording)
 	//	window.open(url,"Synote Player Help");
 	//});
 	
+	$("#description_show_btn").click(function(){
+		if($(this).text() == "more")
+		{
+			$("#tags_description_div").removeClass("description-brief").addClass("description-full");
+			$(this).text("less");
+		}
+		else if($(this).text() == "less")
+		{
+			$("#tags_description_div").removeClass("description-full").addClass("description-brief");
+			$(this).text("more");
+		}
+	});
 	//alert("1");
 	factory = new MultimediaFactory(recording);
 	//alert("1.1");
@@ -43,14 +55,14 @@ function initSynotePlayer(recording)
 		$("multimedia_player_error_div").append(message_div);
 	}
 
-	//transcript = new Transcript(recording,$("transcripts_div"),$("#transcripts_content_div"));
-	//transcript.initTranscript();
+	transcript = new Transcript(recording,$("transcripts_div"),$("#transcripts_content_div"));
+	transcript.initTranscript();
 	//synmark = new Synmark(recording,$("#synmarks_div"),$("#synmark_list_div"));
 	//synmark.initSynmark();
 	//presentation = new Presentation(recording,$("#slides_div"),$("#image_container_div"));
 	//presentation.initPresentation();
 	//synmark.refresh();
-	//transcript.refresh();
+	transcript.refresh();
 	//presentation.refresh();
 	
 	//timer = new SynoteTimer();
