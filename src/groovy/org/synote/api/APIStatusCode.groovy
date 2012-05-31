@@ -33,6 +33,11 @@ class APIStatusCode {
    private final static int TRANSCRIPT_DRAFT_INVALID = 47 //The format of saved transcript draft is invalid
    private final static int TRANSCRIPT_SRT_JSON_INVALID = 48
    private final static int TRANSCRIPT_SRT_INVALID = 49
+   
+   /*WebVTT Cue*/
+   private final static int TRANSCRIPT_WEBVTTCUE_NOT_FOUND = 50
+   private final static int TRANSCRIPT_WEBVTTCUE_INVALID = 51
+   private final static int TRANSCRIPT_WEBVTTCUE_SYNPOINT_NOT_FOUND = 52
   
    private final static int PRESENTATION_ID_MISSING = 60
    private final static int PRESENTATION_NOT_FOUND = 61
@@ -46,20 +51,27 @@ class APIStatusCode {
    private final static int SLIDE_ET_INVALID = 69 //end time is bigger than the start time
    private final static int SLIDE_UNKNOWN_ERROR =79
    
-   
-   private final static int RESOURCEANNOTATION_CREATEION_ERROR = 80 //cannot create annotation
-   private final static int RESOURCEANNOTATION_NOT_FOUND = 81
+   private final static int RESOURCE_ID_MISSING = 90
+   private final static int RESOURCE_NOT_FOUND = 91
+   private final static int RESOURCE_PERMISSION_DENIED = 92
+   private final static int RESOURCE_UNKNOWN_ERROR =98
    
    private final static int INTERNAL_ERROR = 99
    
+   private final static int RESOURCEANNOTATION_CREATEION_ERROR = 210 //cannot create annotation
+   private final static int RESOURCEANNOTATION_NOT_FOUND = 211
+   
    /*for external integration errors*/
-   private final static int NERD_TEXT_NOT_FOUND = 110
-   private final static int NERD_EXTRACTOR_NOT_FOUND = 111
-   private final static int NERD_ID_MiSSING = 112
-   private final static int NERD_RESOURCE_NOT_FOUND = 113
-   private final static int NERD_EXTRACTOR_INTERAL_ERROR = 119
+   private final static int NERD_TEXT_NOT_FOUND = 810
+   private final static int NERD_EXTRACTOR_NOT_FOUND = 811
+   private final static int NERD_ID_MiSSING = 812
+   private final static int NERD_RESOURCE_NOT_FOUND = 813
+   private final static int NERD_EXTRACTOR_INTERAL_ERROR = 819
    
-   
+   /*other errors*/
+   private final static int PARAMS_MISSING = 990
+   private final static int PARAMS_INVALID = 991
+  
    /**
     * Ussed to get the last exception in the session
     */

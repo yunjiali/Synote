@@ -90,6 +90,18 @@ class SynoteTagLib {
 		out << formatTime(attrs.startTime, attrs.endTime)
 	}
 	
+	def printTime = { attrs ->
+		try
+		{
+			int time = Integer.parseInt(attrs.time.toString())
+			out << formatTime(time)
+		}
+		catch(NumberFormatException nex)
+		{
+			out << attrs.time	
+		}	
+	}
+	
 	def printEndTime = {attrs ->
 		def synpoint = attrs.synpoint
 		def synpoints = attrs.synpoints
@@ -253,9 +265,9 @@ class SynoteTagLib {
 		seconds -= minutes * 60;
 		
 		if (hours == 0 && minutes == 0)
-		return "0:" + formatNumber(seconds);
+		return "00:00:" + formatNumber(seconds);
 		else if (hours == 0)
-		return minutes + ":" + formatNumber(seconds);
+		return "00:"+formatNumber(minutes) + ":" + formatNumber(seconds);
 		else
 		return hours + ":" + formatNumber(minutes) + ":" + formatNumber(seconds);
 	}

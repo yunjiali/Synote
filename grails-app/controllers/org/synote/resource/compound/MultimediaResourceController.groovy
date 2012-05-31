@@ -602,7 +602,7 @@ class MultimediaResourceController {
 	
 	def edit = {
 		
-		def multimediaResource = MultimediaResource.get(params.id)
+		def multimediaResource = MultimediaResource.get(params.id?.toLong())
 
 		if (!multimediaResource)
 		{
@@ -757,7 +757,7 @@ class MultimediaResourceController {
 		multimediaResource.delete()
 		flash.message = "Multimedia ${title} was successfully deleted"
 		//redirect to user resource list page
-		redirect(controller:'user',action:'listSynmarks')
+		redirect(controller:'user',action:'listRecordings')
 		return
 	}
 	

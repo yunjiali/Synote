@@ -39,7 +39,7 @@
 			<g:link controller='recording' action='replay_old' id="${row.id}" title="play ${row.title}">				
 			<img class="thumbnail-img" src="${thumbnail_src}"/>
 			<div style="position:absolute;z-index:1;left:0;bottom:0">
-				<span class="label label-inverse label-duration">${duration}</span>
+				<span class="label label-inverse label-duration"><g:printTime time="${duration}"/></span>
 			</div>
 			</g:link>
 		</div>
@@ -51,7 +51,7 @@
 	  			<img src="${resource(dir: 'images/skin', file: 'video_16.png')}" alt="This is a video" title="This is a video"/>
 	  		</g:if>
 	  		<g:else>
-	  			<img src="${resource(dir: 'images/skin', file: 'video_16.png')}" alt="This is an audio" title="This is an audio"/>
+	  			<img src="${resource(dir: 'images/skin', file: 'audio_16.png')}" alt="This is an audio" title="This is an audio"/>
 	  		</g:else>
 	  	</div>
 	  	<div class="pull-right">

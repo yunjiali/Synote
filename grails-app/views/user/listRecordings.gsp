@@ -13,6 +13,8 @@
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline"><g:message code="org.synote.user.listRecordings.title" /></h2>
 			<span id="recording_count_span" style="padding:5px" class="pull-right label label-info">${multimediaList.records} recordings</span>
+			<br/>
+			<g:render template="/common/message"/>
 			<div class="row">
 				<div>
 					<div class="pull-right span7">
