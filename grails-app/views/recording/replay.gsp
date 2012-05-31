@@ -366,7 +366,7 @@
 								</div>
 								<div class="control-group">
 									<label for="transcript_content" class="control-label"><b><em>*</em>Transcript:</b></label>
-									<textarea name='transcript_content' id='transcript_content' value='' rows="5" style="width:100%;"></textarea>
+									<textarea class="required" name='transcript_content' id='transcript_content' value='' rows="5" style="width:100%;"></textarea>
 								</div>
 								<div class="form-actions">
 									<input class="btn btn-primary" id="transcript_submit" type="button" value="Submit"/><!-- This is not a submit button, because nothing will be submitted to the server -->

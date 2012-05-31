@@ -15,7 +15,7 @@
 			 },
 			highlight: function(label) {
 				$(label).closest('.control-group').addClass('error');
-			},
+			}
 		});
 	});
 </script>

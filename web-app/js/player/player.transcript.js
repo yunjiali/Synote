@@ -336,6 +336,13 @@ var Transcript = Base.extend({
 		
 		$("#transcript_submit").button().click(function(){
 			//Yunjia: valid transcript form first
+			
+			if(!$("#transcript_edit_form").valid())
+			{
+				transcript.showMsg("There are errors in the form","error");
+				return;
+			}
+			
 			if($("#transcript_et").val() == null || $.trim($("#transcript_et").val()).length == 0)
 			{
 				//console.log("abc");
@@ -384,6 +391,31 @@ var Transcript = Base.extend({
 		$("#transcript_cancel").button().click(function(){
 			$("#transcript_edit_form").resetForm();
 			$("#transcript_edit_div").hide(400);
+		});
+		
+		//validation for transcript_edit_form
+		$("#transcript_edit_form").validate(
+		{
+			rules: {
+			    transcript_st: {
+				    required:true
+			    },
+			    transcript_et:{
+					required:true
+				},
+				transcript_speaker:{
+					required:false,
+					maxlength:255
+				},
+				transcript_content:{
+					required:true,
+					maxlength:65535 //mysql text field, max length 65535
+				}
+			 },
+			highlight: function(label) {
+				console.log("hightlight");
+				$(label).closest('.control-group').addClass('error');
+			},
 		});
 	},
 	showMsg:function(msg,type) //display the message, could be error, or success
