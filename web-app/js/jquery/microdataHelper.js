@@ -62,11 +62,11 @@ var MicrodataHelper = Base.extend({
 	},
 	
 	//set VideoObject or AudioObject based on the type of the media
-	setMediaObject:function(elem, isAuido)
+	setMediaObject:function(elem, isVideo)
 	{
 		if($.isEmptyObject(elem))
 			return null;
-		if(isAuido)
+		if(!isVideo)
 		{
 			return elem.attr("itemscope","itemscope").attr("itemtype","http://schema.org/AudioObject");
 		}

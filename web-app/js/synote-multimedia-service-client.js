@@ -128,3 +128,27 @@ SynoteMultimediaServiceClient.prototype.isVideo = function(videourl,callback)
 		   }
 	});		
 }
+
+/*Use these information to decide if it is a video*/
+
+SynoteMultimediaServiceClient.prototype.flash_audio_list = new Array("mp3","aac","m4a","ogg","wav");
+SynoteMultimediaServiceClient.prototype.flash_video_list = new Array("mp4","mov","f4v","flv","3gp","3g2","ogv","webm");
+SynoteMultimediaServiceClient.prototype.flash_youtube_list = new Array("www.youtube.com","youtube.be","youtu.be");
+SynoteMultimediaServiceClient.prototype.flash_protocol_list = new Array("rtmp");
+
+//For silverlight player
+SynoteMultimediaServiceClient.prototype.sl_audio_list=new Array("wma","mp3");
+SynoteMultimediaServiceClient.prototype.sl_video_list=new Array("wmv");
+SynoteMultimediaServiceClient.prototype.sl_protocol_list = new Array("mms","rtsp","rstpt");
+
+//For windows media player
+SynoteMultimediaServiceClient.prototype.wmp_audio_list = new Array("wma","mp3","wav","mid","midi");
+SynoteMultimediaServiceClient.prototype.wmp_video_list = new Array("avi","wmv","mpg","mpeg","m1v","mp2","mpa");
+SynoteMultimediaServiceClient.prototype.wmp_protocol_list = new Array("mms","rtsp","rstpt");
+
+//For all accepted common things
+SynoteMultimediaServiceClient.prototype.all_protocol_list = new Array("http","https");
+
+SynoteMultimediaServiceClient.prototype.playerType = {"flash":0,"silverlight":1,"wmp":2,"html5native":3,"Unknown":99};
+SynoteMultimediaServiceClient.prototype.browserType = {"ie":0,"firefox":10,"safari":20,"googlechrome":30,"opera":40,"unknown":99};
+SynoteMultimediaServiceClient.prototype.platformType = {"windows":0,"linux":10,"mac":20,"unknown":99};

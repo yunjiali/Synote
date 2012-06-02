@@ -85,7 +85,6 @@ var MediaFragmentController = Base.extend({
 		}
 		else if(st > 0 && et > st)
 		{
-			//console.log("middle");
 			this.playback_middle(st,et);
 			return;
 		}

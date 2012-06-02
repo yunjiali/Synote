@@ -32,12 +32,26 @@
 	overflow:hidden;
 }
 
+/* mf-info-video and mf-info-audio is specifically designed for mediaElementJS
+   for audio, the player will overlap on mediafragment button, so we need to set the margin-bottom larger	
+*/
+.mf-info-video
+{
+	margin-bottom:30px;
+}
+
+.mf-info-audio
+{
+	margin-bottom:60px;
+}
 /*###############transcript########################*/
 /*when mouseover a transcript div*/
 #transcripts_content_div
 {
 	width:100%;
-	overflow:scroll;
+	overflow-y:scroll;
+	overflow-x:hidden;
+	min-height:100px;
 	margin-top:20px;
 }
 #transcript_edit_div, #transcript_msg_div
@@ -87,6 +101,109 @@
 }
 
 /*###############synmarks########################*/
+#synmark_list_div
+{
+	overflow-x:hidden;
+	overflow-y:scroll;
+	width:100%;
+	min-height:100px;
+	margin-top:50px;
+}
+
+#synmark_create_div,#synmark_msg_div
+{
+	margin-top:50px;
+}
+.single_synmark_div
+{
+	margin:2px;
+	padding:5px;
+}
+
+/*when mouseover a synmark*/
+.synmark_highlight
+{
+	background-color:#d1e1fa;
+	background-image:url(../images/skin/play_32.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	cursor:pointer;
+}
+
+/*when a synmark is selected and playing*/
+.synmark_selected
+{
+	background-color:#d1e1fa;
+	cursor:pointer;
+}
+
+.synmark_title
+{
+	color:#1259c7;
+	font-weight:bold;
+}
+.synmark_owner
+{
+	font-size:1em;
+	font-style:italic;
+	padding-left:5px;
+}
+.synmark_time
+{
+	color:#97a500;
+	font-size:1em;
+}
+.synmark_note
+{
+	font-size:1em;
+	margin:0.2em !important;
+}
+
+.synmark_title_span
+{
+	display:inline-block;
+}
+.synmark_tags_div
+{
+	margin:2px 0px !important;
+	padding-left:2px;
+	display:block;
+	text-align:right;
+}
+
+.synmark_tag_title_span
+{
+	font-size:1em;
+	padding-right:5px;
+	display:inline-block;
+	padding:3px;
+}
+
+.synmark_tags_div .tag
+{
+	display:inline-block;
+	padding:2px;
+	border: 1px solid #A5D24A;
+	background: #CDE69C;
+	color: #638421;
+	font-size:1em;
+	-moz-border-radius:2px;
+	-webkit-border-radius: 2px;
+	border-radius:2px;
+	float:right;
+}
+
+
+.synmark_mine
+{
+	/*empty*/
+}
+
+.synmark_other
+{
+	/*empty*/
+}
+
 /*###############slides########################*/
 @media (min-width: 1200px) /* span-fluid-right + 480px = 1140px*/
 {
@@ -196,6 +313,10 @@
 }
 @media (min-width: 480px) and (max-width: 767px) /* span-fluid-right width auto*/
 {
+	fieldset
+	{
+		width:100%;
+	}
 	.player-fixed-width
 	{
 		display:block;
@@ -225,4 +346,38 @@
     	width:auto;
     	display:inline;
     }
+    
+    /*hide all h2 in smaller screen*/
+    h2
+    {
+    	position: absolute;
+   		left: -9999px;
+    }
+    
+    #synmark_list_div
+	{
+		margin-top:20px;
+	}
+	
+	#synmark_create_div,#synmark_msg_div
+	{
+		margin-top:20px;
+	}
+	
+	/*On a narrower tablet, it's not a good idea to have div scrollable, because it will be overlapped by the screen scroll*/
+	#transcripts_content_div
+	{
+		width:100%;
+		height:auto !important;
+		min-height:100px;
+		margin-top:20px;
+	}
+	
+	#synmark_list_div
+	{
+		height:auto !important;
+		width:100%;
+		min-height:100px;
+		margin-top:50px;
+	}
 }

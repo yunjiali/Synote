@@ -1,3 +1,6 @@
+/*
+ * Depends on JQuery and Bootstrap.js
+ */
 $(document).ready(function(){
 	//If the initial screen size is small, move transcript div into tabs
 	if($(window).width() <=767)
@@ -25,6 +28,7 @@ $(window).bind('resize',function() {
 function moveLeftSpanToTabs()
 {
 	var transcripts_div = $("#col_left_div .span-left").detach();
+	$('#tab_right a:first').tab('show');
 	//transcripts_div.addClass("tab-pane").addClass("span-left");
 	$("#tab_content_div").append(transcripts_div);
 }
@@ -32,6 +36,7 @@ function moveLeftSpanToTabs()
 function detachLeftSpanFromTabs()
 {
 	var transcripts_div = $("#tab_content_div .span-left").detach();
+	$('#tab_right a:first').tab('show');
 	//transcripts_div.removeClass("tab-pane").removeClass("span-transcripts");
 	$("#col_left_div").append(transcripts_div);
 }

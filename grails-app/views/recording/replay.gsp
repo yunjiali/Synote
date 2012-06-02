@@ -11,10 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" href="${resource(dir: 'css', file: 'player.css')}" />
 	<style type="text/css">
-		#synmarks_div
-		{
-			background-color:#666666;
-		}
 		#slides_div
 		{
 			background-color:#999999;
@@ -25,7 +21,9 @@
 	</style>
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap-responsive.min.css')}" />
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'main.css')}" />
+	<link rel="stylesheet" type="text/css" href="${resource(dir: 'mediaelement', file: 'mediaelementplayer.min.css')}" />
 	<link rel="shortcut icon" href="${resource(dir: 'images', file: 'synote_icon.ico')}" type="image/x-icon" />
+	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
 	<script type="text/javascript" src="${resource(dir: 'js', file: 'player/player.responsive.js')}"></script>
@@ -46,17 +44,14 @@
 	<script type="text/javascript" src="${resource(dir:'js/tiny_mce',file:"jquery.tinymce.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"webvtt.parser.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.settings.js")}"></script>
 	<!-- For player -->
-	<script type="text/javascript" src="${resource(dir:'js/jwplayer',file:"jwplayer.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/wmvplayer',file:"silverlight.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/wmvplayer',file:"wmvplayer.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js',file:"swfobject.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.media.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'mediaelement',file:"mediaelement-and-player.min.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia_factory.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.mediafragment.controller.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.transcript.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.synmark.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.synmark.click.menu.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.textselector.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js',file:"synote-multimedia-service-client.js")}"></script>
 	<!--  -->
@@ -254,9 +249,9 @@
 		<div class="container">
 		<div class="row">
 			<div id="col_left_div" class="player-fixed-width">
-				<div style="margin-bottom:30px;">
+				<div id="mf_info_div" class="mf-info-video">
 					<div class="pull-left">
-						<button style="" class="btn btn-success" id="control_mf" title="Play this fragment"><i class="icon-play-circle icon-white"></i>Play from</button>
+						<button class="btn btn-success" id="control_mf" title="Play this fragment" style="display:none;"><i class="icon-play-circle icon-white"></i>Play from</button>
 					</div>
 					<div id="control_time_div" class="pull-right">
 						<span id="time_current_position">00:00</span> / <span id="time_duration_span">${TimeFormat.getInstance().toString(recording.duration)}</span>
@@ -265,12 +260,26 @@
 				<div id="multimedia_player_error_div">
 					<!-- attach error messages as another span class="error" here -->
 				</div>
-				<div id="recording_content_div" itemscope="itemscope" itemtype="http://schema.org/AuidoObject" 
-				itemref="recording_title_div recording_owner_div created_time_span"> <!-- player -->
+				<g:if test="${recording.isVideo}">
+				<div id="recording_content_div" itemscope="itemscope" itemtype="http://schema.org/AuidoObject" itemref="recording_title_div recording_owner_div created_time_span"> <!-- player -->
+				</g:if>
+				<g:else>
+				<div id="recording_content_div" itemscope="itemscope" itemtype="http://schema.org/VideoObject" itemref="recording_title_div recording_owner_div created_time_span"> <!-- player -->
+				</g:else>
 					<meta itemprop="contentURL" content="${recording.url.url}"/>
 					<meta itemprop="dateModified" content="${new SimpleDateFormat("dd/MM/yyyy").format(recording.lastUpdated)}"/>
 					
 					<div id="multimedia_player_div">
+						<g:if test="${recording.isVideo}">
+							<video id="multimedia_player" width="480" height="320" poster="${recording.thumbnail}">
+								<source src=""/>
+							</video>
+						</g:if>
+						<g:else>
+							<audio id="multimedia_player" width="100%" height="auto" controls="controls">
+								<source src=""/>
+							</audio>
+						</g:else>
 					</div>
 				</div><!-- end player -->
 				<div id="recording_control_div" class="hidden-phone">
@@ -299,6 +308,7 @@
 				<div id="transcripts_div" class="tab-pane span-left">
 					<div>
 						<h3 class="heading-inline">Transcript</h3>
+						<div class="pull-left" id="synmark_count_div"></div>
 						<div class="pull-right btn-toolbar" style="display:inline">
 							<g:if test="${canEdit}">
 							<div class="btn-group" id="transcript_edit_enter_div">
@@ -376,6 +386,7 @@
 						</form>
 					</div>
 					</g:if>
+					<div id="transcript_laoding_div" style="display:none;"><img id="transcript_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
 					<div id="transcripts_inner_div">
 						<div id="transcripts_content_div">
 							<ol id="transcript_ol"></ol>
@@ -383,9 +394,8 @@
 					</div>
 				</div><!-- end transcript -->
 			</div>
-			
 		
-			<!-- synmarks and transcript -->
+			<!-- synmarks and slide -->
 			<div id="col_right_div" class="span-fluid-right tabbable">
 				<div class="container-fluid">
 					<div class="row-fluid">
@@ -417,22 +427,110 @@
 						</div>
 						<!-- Synmarks -->
 						<ul class="nav nav-tabs" id="tab_right">
-							<li class="active"><a href="#synmarks_div" data-toggle="tab">Synmarks</a></li>
+							<li class="active dropdown"><a href="#synmarks_div" data-toggle="tab">Synmarks</a></li>
 							<li><a href="#slides_div" data-toggle="tab">Slides</a></li>
 							<li class="visible-phone"><a href="#transcripts_div" data-toggle="tab">Transcripts</a></li>
 						</ul>
 						<div class="tab-content" id="tab_content_div">
-							<div id="synmarks_div" class="tab-pane active span-middle" style="height:600px;">
-								<h3>Synmarks</h3>
+							<div id="synmarks_div" class="tab-pane active span-middle">
+								<h3 class="hiding">Synmarks</h3>
+								<div class="pull-right btn-toolbar" style="display:inline">
+									<g:if test="${canCreateSynmark}">
+									<div class="btn-group" id="synmark_edit_enter_div">
+										<button class="btn" title="Add a new synmark block" id="add_synmark_btn">
+											<img src="${resource(dir:'images/player',file:"bookmark_add_22.png")}"  id="add_synmark_img" title="Add a new synmark"/>
+										</button>
+									</div>
+									</g:if>
+									<div class="btn-group">
+										<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" >
+											<img src="${resource(dir:'images/player',file:"bookmark_show_22.png")}"  id="show_synmark_img" title="Synmark menu"/>
+											<span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu">
+											<g:if test="${canCreateSynmark}">
+											<li>
+												<a href="#">All Synmarks</a>
+											</li>
+											<li>
+												<a href="#">My Synmarks</a>
+											</li>
+											<li class="divider"></li>
+											</g:if>
+											<li>
+												<g:link controller="recording" action="exportSynmarks">Export Synmarks</g:link>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div id="synmark_msg_div"></div><!-- displaying info, error messages -->
+								<div id="synmark_url_dialog" class="modal hide">
+									<div class='modal-header'>
+									    <button type='button' class='close' data-dismiss='modal'>×</button>
+									    <h4>Synmark URL</h4>
+									</div>
+									<div class='modal-body'>
+									    
+									</div>
+									<div class='modal-footer'>
+									    <a href='#' class='btn' data-dismiss='modal'>Close</a>
+									    <!--  
+									    <a href='#' class='btn btn-primary'>Copy to Clipboard</a>-->
+									</div>
+								</div>
+								<!-- synmark editing form -->
+								<g:if test="${canCreateSynmark}">
+								<div id="synmark_create_div" class="well" style="display:none;">
+									<form id="synmark_form" method="post" class="form-vertical">
+										<fieldset>
+											<input type="hidden" name="synmark_id" id="synmark_id"/> 
+											<div class="control-group">
+												<label for="synmark_st" class="control-label"><b><em>*</em>Start:</b></label>
+												<div class="input-append">
+													<input type='text' size="10" class="required span6" name='synmark_st' id='synmark_st'/>
+													<button class="btn" id="synmark_st_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+													<button class="btn" id="synmark_st_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+													<button class="btn" id="synmark_st_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+												</div>
+											</div>
+											<div class="control-group">
+												<label for="synmark_et" class="control-label"><b><em>*</em>End:</b></label>
+												<div class="input-append">
+													<input type='text' size="10" class="required span6" name='synmark_et' id='synmark_et'/>
+													<button class="btn" id="synmark_et_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+													<button class="btn" id="synmark_et_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+													<button class="btn" id="synmark_et_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+												</div>
+											</div>
+											<div class="control-group">
+											    <label for="synmark_title">Title</label>
+												<input type='text' class="span6" autocomplete="off" name='synmark_title' id='synmark_title' value='' />
+											</div>
+											<div class="control-group">
+											    <label for="synmark_tags">Tags:</label>
+												<input type='text' autocomplete="off" name='synmark_tags' id='synmark_tags' value='' class="span11" />
+												<p class="help-block">Please separate tags by comma ','</p>
+											</div>
+											<div class="control-group">
+												<label for="synmark_note" class="control-label"><b>Note:</b></label>
+												<textarea class="tinymce" name='synmark_note' id='synmark_note' value='' rows="10" style="width:100%"></textarea>
+											</div>
+											<div class="form-actions">
+												<input class="btn btn-primary" id="synmark_submit" type="submit" value="Submit"/><!-- This is not a submit button, because nothing will be submitted to the server -->
+												<input class="btn" id="synmark_cancel" type="reset" value="Exit" />
+											</div>
+										</fieldset>
+									</form>
+								</div>
+								</g:if>
+								<div id="synmark_laoding_div" style="display:none;"><img id="synmark_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
 								<div id="synmarks_inner_div">
-								<!-- Yunjia: Add tooltip to explain what is synmark, maybe add a picture to explain -->
-								<!-- Yunjia: if I remove the hr all synmarks won't display correctly. I don't know why -->
 									<div id="synmark_list_div"></div>
 								</div>
 							</div>
 							<!-- Slides  -->
 							<div id="slides_div" class="tab-pane span-right" style="height:600px;">
-								<h3>Slides</h3>
+								<h3 class="hiding">Slides</h3>
 								<div id="image_container_div">
 								</div>	
 							</div>

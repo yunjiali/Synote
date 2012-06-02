@@ -25,7 +25,7 @@ MultimediaFactory.prototype.getPlayerType = function(recording)
 		if($.inArray(protocol,jw_protocol_list))
 		{
 			//console.log("jw protocol");
-			return PlayerType.jwplayer;
+			return PlayerType.flash;
 		}
 		else if ($.inArray(protocol,sl_protocol_list))
 		{	

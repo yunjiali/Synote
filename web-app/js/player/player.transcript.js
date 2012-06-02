@@ -162,7 +162,7 @@ var Transcript = Base.extend({
 	   	.attr("transcript_id", cue.index).addClass("transcript_line").appendTo(transcript_line_li);
 	   	
    		//MicroData: add Video or AudioObject to this transcript first and make the text as the http://schema.org/transcript
-   		mdHelper.setMediaObject(transcript_line,factory.isAudio);
+   		mdHelper.setMediaObject(transcript_line,recording.isVideo == 'true'?true:false);
    		mdHelper.setItemid(transcript_line,attachFragmentToURI(resourceBaseURI+recording.id,getFragmentString(cue.start,cue.end)));
    		
    		var transcript_line_time = $("<div/>",{
@@ -334,7 +334,7 @@ var Transcript = Base.extend({
 			$("#transcript_et").val(milisecToString(newTime));
 		});
 		
-		$("#transcript_submit").button().click(function(){
+		$("#transcript_submit").click(function(){
 			//Yunjia: valid transcript form first
 			
 			if(!$("#transcript_edit_form").valid())
@@ -388,7 +388,7 @@ var Transcript = Base.extend({
 				});
 			}
 		});
-		$("#transcript_cancel").button().click(function(){
+		$("#transcript_cancel").click(function(){
 			$("#transcript_edit_form").resetForm();
 			$("#transcript_edit_div").hide(400);
 		});
@@ -726,7 +726,7 @@ var Transcript = Base.extend({
 		//transcripts_content_div.empty();
 		
 		//Yunjia: it's difficult to caculate the height of transcript to be honest, so I will use fixed height for transcript_content_div
-		var transcript_content_div_height = window.screen.height - multimedia.height; 
+		var transcript_content_div_height = window.screen.height - multimedia.height +108; 
 		//(window.screen.height- multimedia.height-223)>0?window.screen.height- multimedia.height-223:windows.screen.height;
 		//console.log("window:"+ window.screen.height);
 		//console.log("player:"+ multimedia.height);
@@ -738,9 +738,17 @@ var Transcript = Base.extend({
 			   data:{multimediaId:multimediaId,type:"json"},
 			   dataType: "json",
 			   //Yunjia: Add a beforeSend function to display the loading message
+			   beforeSend:function(jqXHR, settings)
+			   {
+				   $("#transcript_loading_div").show();
+			   },
 			   success:function(data)
 			   {
 				   transcript.refreshTranscripts(data);
+			   },
+			   complete:function(jqXHR, textStatus)
+			   {
+				   $("#transcript_loading_div").hide();
 			   }
 		});
 	},

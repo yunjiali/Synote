@@ -36,7 +36,7 @@
 <div class="recording-row row">
 	<div class="span2">	
 		<div style="position:relative">	
-			<g:link controller='recording' action='replay_old' id="${row.id}" title="play ${row.title}">				
+			<g:link controller='recording' action='replay' id="${row.id}" title="play ${row.title}">				
 			<img class="thumbnail-img" src="${thumbnail_src}"/>
 			<div style="position:absolute;z-index:1;left:0;bottom:0">
 				<span class="label label-inverse label-duration"><g:printTime time="${duration}"/></span>
@@ -45,7 +45,7 @@
 		</div>
 	</div>
 	<div class="span8">
-	  	<h3 class="heading-inline">${title}</h3>
+	  	<h3 class="heading-inline"><g:link controller="recording" action="replay" id="${row.id}">${title}</g:link></h3>
 	  	<div style="display:inline">
 	  		<g:if test="${row.isVideo}">
 	  			<img src="${resource(dir: 'images/skin', file: 'video_16.png')}" alt="This is a video" title="This is a video"/>

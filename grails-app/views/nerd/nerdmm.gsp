@@ -45,7 +45,7 @@
 							<td>No entity yet</td>
 						</tr>
 						<!-- recording description row -->
-						<g:if test="${multimedia.note?.content?.trim().size()>0}">
+						<g:if test="${multimedia.note?.content?.trim()?.size()>0}">
 						<tr id="tr_${multimedia.note.id}">
 							<td><input id="cbx_${multimedia.note?.id}" name="fields" value="${multimedia.note?.id}" type="checkbox"/></td>
 							<td>Description</td>

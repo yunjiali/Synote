@@ -261,6 +261,14 @@ function attachFragmentToURI(uriStr, mfStr)
 	   		return uriStr
 }
 
+function isYouTubeURL(url,bool) {
+	
+    var pattern = /^https?:\/\/(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
+    if (url.match(pattern)) {
+        return (bool !== true) ? RegExp.$1 : true;
+    } else { return false; }
+};
+
 //get url variables
 $.extend({
 	  getUrlVars: function(){

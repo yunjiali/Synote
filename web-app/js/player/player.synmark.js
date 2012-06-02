@@ -21,13 +21,24 @@ var Synmark = Base.extend({
 		this.outer_container=outer_container;
 		this.inner_container=inner_container;
 	},
+	showMsg:function(msg,type) //display the message, could be error, or success
+	{
+		var msg_div = $("#synmark_msg_div");
+		if(type == "error")
+		{
+			msg_div.html("<div class='alert alert-error'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
+		else
+		{
+			msg_div.html("<div class='alert alert-success'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
+	},
 	initSynmark:function()
 	{
 		//Yunjia: don't need to do that if it's read only and we have to remove the form if it's readonly
 		if(recording.canCreateSynmark === "true")
 		{
-			$("#synmarks_div .uniForm").uniform();
-			$("#synmarks_div .uniForm input[type=text]").wijtextbox();
+			
 			//$("#synmark_create_div").hide();
 			$("#synmark_st").mask("?99:99:99");
 			$("#synmark_et").mask("?99:99:99");
@@ -62,7 +73,8 @@ var Synmark = Base.extend({
 				$("#synmark_et").val(milisecToString(newTime));
 			});
 			//#######Init autocomplete for synmark tags
-			$( "#synmark_tags" ).bind( "keydown", function( event ) {
+			/* Will be implemented later using bootstrap typeahead
+			 * $( "#synmark_tags" ).bind( "keydown", function( event ) {
 				if ( event.keyCode === $.ui.keyCode.TAB &&
 						$( this ).data( "autocomplete" ).menu.active ) {
 					event.preventDefault();
@@ -90,7 +102,7 @@ var Synmark = Base.extend({
 					this.value = terms.join( ", " );
 					return false;
 				}
-			});
+			});*/
 			
 			//Init tinyMCE
 			$('#synmark_note').tinymce({
@@ -110,12 +122,9 @@ var Synmark = Base.extend({
 		        theme_advanced_resizing : true,
 			});
 
-			//Init the CKeditor
-			//$("#synmark_note").ckeditor();
 			//Init the ajax submitting of forms
 			$('#synmark_form').submit(function(){
-				//copy the data from ckeditor to synmark textarea
-				//$("#synmark_note").val(CKEDITOR.instances.synmark_note.getData());
+				console.log("submit");
 				var url;
 				if($("#synmark_id").val() != null && $("#synmark_id").val() !== undefined && $.trim($("#synmark_id").val()).length>0) //if id is not null, it means synmark updates 
 				{
@@ -129,86 +138,47 @@ var Synmark = Base.extend({
 					url:url,
 					//resetForm:true,
 					type:'post',
-					dataType:'text',
-					target:"okMsg",
+					dataType:'json',
 					beforeSend:function(event)
 					{
-						$("#synmark_create_errorMsg").hide();
+						//Do nothing
 						
 					},
-					success:function(responseText, statusText, xhr, $form)
+					success:function(data,textStatus, jqXHR, $form) //
 					{
-						//var respText = ""; //this will be the string go to the dialog
-						var respJson = $.parseJSON(responseText);
 						//console.log("status:"+status);
-						if(respJson.success) //status == 200
+						if(data.success) //status == 200
 						{
-							$("#synmark_dialog").text(respJson.success.description);
-							//$(":wijmo-wijdialog").wijdialog("destroy").remove();
-							$("#synmark_dialog").wijdialog({
-				                autoOpen: true,
-				                height: 180,
-				                width: 400,
-				                modal: true,
-				                buttons: {
-				                    Ok: function () {
-				                        $(this).wijdialog("close");
-				                    }
-				                },
-				                captionButtons: {
-				                    pin: { visible: false },
-				                    refresh: { visible: false },
-				                    toggle: { visible: false },
-				                    minimize: { visible: false },
-				                    maximize: { visible: false }
-				                }
-				            });
-							synmark.resetSynmarkForm();
+							synmark.showMsg(data.success.description,null);
 							$("#synmark_create_div").hide(400);
 							synmark.refresh();
 						}
 						else if(respJson.error)
 						{
-							$("#synmark_create_errorMsg").text(respJson.error.description);
-							$("#synmark_create_errorMsg").show();
-							//$("#synmark_create_errorMsg").text(responseText);
+							synmark.showMsg(data.error.description,"error");
 						}
 						
+					},
+					error:function(jqXHR,textStatus,errorThrown)
+					{
+						var resp =$.parseJSON(jqXHR.responseText);
+						synmarks.showMsg(resp.error.description,"error");
 					}
 				});
 				
 				return false;
 			});
-			$("#synmark_cancel").button().click(function(){
+			$("#synmark_cancel").click(function(){
 				$("#synmark_create_div").hide(400);
 				//console.log("note:"+$("#synmark_note").val());
 			});
-			$("#synmark_submit").button();
 			
-			$("#add_synmark_img").click(function(){
-				$("#synmark_create_errorMsg").hide();
+			$("#add_synmark_btn").click(function(){
 				var newTime = multimedia.getPosition();
 				synmark.fillSynmarkForm(milisecToString(newTime),"","","","","");
 				$("#synmark_create_div").show(400);
 			});
 		}
-		$("#export_synmark_img").click(function(){
-			//Yunjia: We may later add some more export functions, such as my synmarks only, or whose synmark only, etc
-			//And a better solution will be to use server side code to generate csv instead of here
-			var cvs = synmark.exportAsCSV();
-			if (navigator.appName != 'Microsoft Internet Explorer')
-		    {
-		        window.open('data:text/csv;charset=utf-8,' + escape(cvs));
-		    }
-		    else
-		    {
-		        var popup = window.open('','csv','');
-		        popup.document.body.innerHTML = '<pre>' + cvs + '</pre>';
-		    }
-		});
-		
-		//Start loading synmarks
-		//this.refresh();
 	},
 	fillSynmarkForm:function(synmark_st, synmark_et, synmark_title,synmark_tags, synmark_note, synmark_id)
 	{
@@ -282,41 +252,18 @@ var Synmark = Base.extend({
 			type:"POST",
 			url:deleteSynmarkURL,
 			data:{synmark_id:synmark_id},
-			datatype:"text",
-			success:function(data)
+			datatype:"json",
+			success:function(data,textStatus,jqXHR)
 			{
-				//console.log("data:"+data);
-				var respJson = data;
-				//console.log("status:"+status);
-				if(respJson.success) //status == 200
+				if(data.success) //status == 200
 				{
-					//console.log("success"+respJson.success.description);
-					$("#synmark_dialog").text(respJson.success.description);
+					synmark.showMsg(data.success.description,null);
 				}
-				else if(respJson.error)
+				else
 				{
 					//console.log("not success");
-					$("#synmark_dialog").html("<span style='color:red'>"+respJson.error.description+"</span>");
+					synmark.showMsg(data.error.description,"error")
 				}
-				//$(":wijmo-wijdialog").wijdialog("destroy").remove();
-				$("#synmark_dialog").wijdialog({
-	                autoOpen: true,
-	                height: 180,
-	                width: 400,
-	                modal: true,
-	                buttons: {
-	                    Ok: function () {
-	                        $(this).wijdialog("close");
-	                    }
-	                },
-	                captionButtons: {
-	                    pin: { visible: false },
-	                    refresh: { visible: false },
-	                    toggle: { visible: false },
-	                    minimize: { visible: false },
-	                    maximize: { visible: false }
-	                }
-	            });
 				synmark.refresh();
 			}
 		})
@@ -328,30 +275,6 @@ var Synmark = Base.extend({
 		
 		//This is the playing URI, which could be shared easily.
 		return resourceBaseURI+synmark_id;
-	},
-	exportAsCSV:function()
-	{
-		var str = "";
-		for(var i=0;i<this.synmarksData.length;i++)
-		{
-			var line='';
-			var s = this.synmarksData[i];
-			//console.log("sid:"+s.id);
-			for(var key in s)
-			{
-				
-				if(key.toLowerCase() != "class" && key.toLowerCase() != "owner") //We don't need the "class" in the cvs
-				{
-					if(line != '')
-						line+=",";
-					
-					line +=s[key];
-					//console.log("key:"+s[key]);
-				}
-			}
-			str += line+'\r\n';
-		}
-		return str;
 	},
 	//reset synmark form
 	resetSynmarkForm:function()
@@ -381,8 +304,10 @@ var Synmark = Base.extend({
 			   url: getSynmarksURL,
 			   data:{multimediaId:this.recording.id},
 			   dataType: "json",
-			   //Yunjia: Add a beforeSend function to display the loading message
-			   //Yunjia: Also set the height before loading finished
+			   beforeSend:function(jqXHR, settings)
+			   {
+				   $("#synmark_loading_div").show();
+			   },
 			   success:function(data)
 			   {
 				   if(data == null || data.length == 0)
@@ -390,11 +315,13 @@ var Synmark = Base.extend({
 					   synmark_list_div.html("No Synmarks");
 					   return;
 				   }
+				   
+				   data = $(data).sort(sortSynmarkByStartTime);
 				   synmark.synmarksData = data;
 				   var synmark_list_div_height = window.screen.height; 
-					   //(window.screen.height-180)>0?window.screen.height-180:window.screen.height;
 				   synmark_list_div.css("max-height",synmark_list_div_height);
 				   $.each(data, function(i,s){ //cannot use synmark as variable name as it has been used for the global variable
+					   var isMySynmark = false;
 					   var single_synmark_div = $("<div/>",{
 						   mouseover:function(){$(this).addClass("synmark_highlight");},
 						   mouseout:function(){$(this).removeClass("synmark_highlight");},
@@ -405,11 +332,12 @@ var Synmark = Base.extend({
 					   }).attr("date-time-st",s.start).attr("date-time-et",s.end?s.end:"").attr("synmark_id",s.id)
 					   .addClass("single_synmark_div").appendTo(synmark_list_div);
 					   //MicroData: add microdata related to synmark
-					   mdHelper.setMediaObject(single_synmark_div,factory.isAudio);
+					   mdHelper.setMediaObject(single_synmark_div, recording.isVideo == 'true'?true:false);
 					   mdHelper.setItemid(single_synmark_div,attachFragmentToURI(resourceBaseURI+recording.id,getFragmentString(s.start,s.end)));
 					   if(user.id == s.owner.id)
 					   {
 						   single_synmark_div.addClass("synmark_mine");
+						   isMySynmark = true;
 					   }
 					   else
 						   single_synmark_div.addClass("synmark_other");
@@ -421,11 +349,11 @@ var Synmark = Base.extend({
 					   //MicroData: add synmark title
 					   if(s.title !== undefined)
 						   mdHelper.setItemprop(synmark_title_span,"name");
-					   
+					  
 					   var synmark_owner_span = $("<span/>",{
 						   //Yunjia: We have to update UserData and add userName instead of firstName and lastName
 						   text:"by "+s.owner.firstName
-					   }).addClass("synmark_owner").insertAfter(synmark_title_span);
+					   }).addClass("owner-info pull-right").insertAfter(synmark_title_span);
 					   
 					   //MicroData: set owner span
 					   mdHelper.setItemprop(synmark_owner_span,"creator");
@@ -436,8 +364,71 @@ var Synmark = Base.extend({
 					   
 					   var synmark_1_br = $("<br/>").insertAfter(synmark_owner_span);
 					   var synmark_time_span = $("<span/>",{
-						   text: "position: "+milisecToString(s.start)+(s.end?(" to "+milisecToString(s.end)):"")
+						   text: milisecToString(s.start)+(s.end?(" to "+milisecToString(s.end)):"")
 					   }).addClass("synmark_time").insertAfter(synmark_1_br);
+					   
+					   var synmark_btn_span = $("<span/>").insertAfter(synmark_time_span);
+					   //Get synmark link button
+					   var link_synmark_btn = $("<button/>",{
+							  html: "<i class='icon-share'></i>"
+						   }).attr("title","Share the URL of this synmark").attr("type","button").addClass("btn btn-mini");
+					   link_synmark_btn.bind("click",{synmark_id:s.id},function(event){
+						   $("#synmark_url_dialog .modal-body").html("<p>"+synmark.getURI(event.data.synmark_id)+"</p>");
+						   $("#synmark_url_dialog").modal();
+					   });
+					   link_synmark_btn.appendTo(synmark_btn_span);
+					   
+					   //Edit and Delete synmark button
+					   if(isMySynmark == true)
+					   {
+						   var edit_synmark_btn = $("<button/>",{
+							  html: "<i class='icon-edit'></i>"
+						   }).attr("title","Edit this synmark").attr("type","button").addClass("btn btn-mini");
+						   edit_synmark_btn.bind("click",{synmark_id:s.id},function(event){
+							   var synmark_id = event.data.synmark_id;
+							   var synmarkData = null;
+							   $.each(synmark.synmarksData,function(i,s){
+									if(s.id == synmark_id)
+									{
+										synmarkData = s;
+										return;
+									}
+								})
+								
+								//Open the edit widget
+								if(synmarkData!=null)
+								{
+									var tags = "";
+									if(synmarkData.tags && synmarkData.tags.length >0)
+									{
+										
+										var separator ="";
+										$.each(synmarkData.tags,function(j,t){
+											tags+=separator+$.trim(t);
+											separator=",";
+										});
+									}
+									synmark.fillSynmarkForm(milisecToString(synmarkData.start),
+											milisecToString(synmarkData.end),synmarkData.title,tags,synmarkData.note,synmarkData.id);
+									
+									$("html,body").animate({scrollTop:$("#synmarks_div").offset().top},200);
+									$("#synmark_create_div").show(200);
+								}
+						   });
+						   edit_synmark_btn.appendTo(synmark_btn_span);
+						   
+						   var delete_synmark_btn = $("<button/>",{
+								  html: "<i class='icon-trash'></i>"
+						   }).attr("title","Delete this synmark").attr("type","button").addClass("btn btn-mini");
+						   delete_synmark_btn.bind("click",{synmark_id:s.id},function(event){
+							   var synmark_id = event.data.synmark_id;
+							   if(confirm("Do you want to delete this synmark?"))
+							   {
+								   synmark.deleteSynmark(synmark_id);
+							   }
+						   });
+						   delete_synmark_btn.appendTo(synmark_btn_span);
+					   } 
 					   
 					   if(s.note)
 					   {
@@ -458,8 +449,8 @@ var Synmark = Base.extend({
 						   
 						   $.each(s.tags, function(j,tag){
 							  var synmark_tag_span = $("<span/>",{
-								  text:tag
-							  }).addClass("tag").appendTo(synmark_tags_div);
+								  html:"<i class='icon-tag tag-item icon-white'></i>"+tag
+							  }).addClass("badge badge-tag").appendTo(synmark_tags_div);
 							  //MicroData: add keyword
 							  mdHelper.setItemprop(synmark_tag_span,"keywords");
 						   });
@@ -473,35 +464,29 @@ var Synmark = Base.extend({
 							   });
 						   }
 						   synmark.synmarkTags.sort();
-						   
-						   var synmark_tag_title_span = $("<span/>",{
-								  text:"tags: "
-							  }).addClass("synmark_tag_title_span").appendTo(synmark_tags_div);
-						   
 					   }
 				   });
 				   //Yunjia: we can setup a mode to float display the slides
 				   //$("#slides_div").aqFloater({attach:"s", duration:0, opacity:.9,offsetX:0,offsetY:0});
 				   //Init click menu
-				   initSynmarkOwnerClickMenu(".synmark_mine");//method in method in player.synmark.click.menu.js
-				   initSynmarkOtherClickMenu(".synmark_other");
+				  
 				   synmark.synmarks = $(".single_synmark_div");
-					   //Yunjia: Well, I don't think we need to sort, currently I didn't find any problem
-				   //var unsortedSynmarks = $(".single_synmark_div");
-				   /*unsortedSynmarks.sort(function(a,b)
-				   {
-					   var sta = parseInt($(a).attr("date-time-st"));
-					   var stb = parseInt($(b).attr("data-time-st"));
-					   return (sta<stb)?-1:(sta>stb)?1:0;
-				   });*/
-				   
 				   
 				   //synmark.synmarks = new Array();
 				   /*$.each(unsortedSynmarks,function(idx,itm)
 				   {
 					   synmark.synmarks.push(itm);
 				   });*/
+			   },
+			   complete:function(jqXHR, textStatus)
+			   {
+				   $("#synmark_loading_div").hide();
 			   }
 		});
 	}
 });
+
+var sortSynmarkByStartTime = function(a,b)
+{
+	return a.start > b.start?1:-1;
+}
