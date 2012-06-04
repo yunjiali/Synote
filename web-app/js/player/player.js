@@ -44,6 +44,23 @@ function initSynotePlayer(recording)
     		//	ctrler.start_playback();
     		//MicroData:Change MediaObject type to VideoObject
     		mdHelper.setMediaObject($("#recording_content_div"),recording.isVideo == 'true'?true:false);
+    		
+    		//Init the control buttons on slides bar
+    		$("#nav_play_btn").bind('click',{},function(){
+    			multimedia.play();
+    		});
+    		$("#nav_pause_btn").bind('click',{},function(){
+    			multimedia.pause();
+    		});
+    		$("#nav_stop_btn").bind('click',{},function(){
+    			multimedia.stop();
+    		});
+    		$("#nav_rewind_btn").bind('click',{},function(){
+    			multimedia.rewind();
+    		});
+    		$("#nav_forward_btn").bind('click',{},function(){
+    			multimedia.forward();
+    		});
     	}
     });
 
@@ -51,11 +68,11 @@ function initSynotePlayer(recording)
 	transcript.initTranscript();
 	synmark = new Synmark(recording,$("#synmarks_div"),$("#synmark_list_div"));
 	synmark.initSynmark();
-	//presentation = new Presentation(recording,$("#slides_div"),$("#image_container_div"));
-	//presentation.initPresentation();
+	presentation = new Presentation(recording,$("#slides_div"),$("#image_container_div"));
+	presentation.initPresentation();
 	synmark.refresh();
 	transcript.refresh();
-	//presentation.refresh();
+	presentation.refresh();
 	
 	//timer = new SynoteTimer();
 	//timer.run();

@@ -178,6 +178,33 @@ var Synmark = Base.extend({
 				synmark.fillSynmarkForm(milisecToString(newTime),"","","","","");
 				$("#synmark_create_div").show(400);
 			});
+			
+			$("#synmark_form").validate(
+			{
+				rules: {
+				    synmark_st: {
+					    required:true
+				    },
+				    synmark_et:{
+						required:true
+					},
+					synmark_title:{
+						required:false,
+						maxlength:255
+					},
+					synmark_tags:{
+						required:false,
+						maxlength:255 //mysql text field, max length 65535
+					},
+					synmark_note:{
+						required:false,
+						maxlength:65535
+					}
+				 },
+				highlight: function(label) {
+					$(label).closest('.control-group').addClass('error');
+				},
+			});
 		}
 	},
 	fillSynmarkForm:function(synmark_st, synmark_et, synmark_title,synmark_tags, synmark_note, synmark_id)
@@ -317,9 +344,8 @@ var Synmark = Base.extend({
 				   }
 				   
 				   data = $(data).sort(sortSynmarkByStartTime);
+				   $("#synmark_count_span").text("("+data.length+")");
 				   synmark.synmarksData = data;
-				   var synmark_list_div_height = window.screen.height; 
-				   synmark_list_div.css("max-height",synmark_list_div_height);
 				   $.each(data, function(i,s){ //cannot use synmark as variable name as it has been used for the global variable
 					   var isMySynmark = false;
 					   var single_synmark_div = $("<div/>",{

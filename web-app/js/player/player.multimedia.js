@@ -206,28 +206,53 @@ var MediaElementJSPlayer = MultimediaBase.extend({
 				}
 			}
 		}
-		player_tag.mediaelementplayer({
-			audioWidth: this.width_default,
-			//enablePluginDebug: true,
-            //plugins: ['flash','silverlight'],
-			success:function(mediaElement,domObject)
-			{
-				multimedia.player = mediaElement;
-				mediaElement.addEventListener('timeupdate',function(e){
-					multimedia.setCurrentTimeSpan();
-				},false);
-				callback("success",null);
-				return;
-			},
-			error:function(){
-				callback("Cannot initialise the player.","error");
-				return;
-			}
-		});
+		if(recording.hasCC == 'true')
+		{
+			multimedia.refresh("en","None",callback);
+		}
+		else
+		{
+			multimedia.refresh(null,"None", callback);
+		}
 		this.initListeners();
 		//console.log("state:"+this.player.getState());
 	},
-	refresh:function(){},
+	refresh:function(lang,startLang,callback){
+		//Yunjia: Later, when we have multiple transcript, we will embed multiple tracks
+		var player_tag = multimedia.inner_container.find("#multimedia_player");
+		var opts = {
+				audioWidth: this.width_default,
+				//enablePluginDebug: true,
+	            //plugins: ['flash','silverlight'],
+				startLanguage:startLang,
+				success:function(mediaElement,domObject)
+				{
+					multimedia.player = mediaElement;
+					mediaElement.addEventListener('timeupdate',function(e){
+						multimedia.setCurrentTimeSpan();
+					},false);
+					callback("success",null);
+					return;
+				},
+				error:function(){
+					callback("Cannot initialise the player.","error");
+					return;
+				}
+		}
+		
+		if(lang != null)
+		{
+			var transcript_track = $("<track/>").attr("kind","subtitles").attr("src","../downloadTranscript?type=webvtt&multimediaId="+recording.id).attr("srclang",lang);
+			transcript_track.appendTo(player_tag);
+		}
+		else //remove the track
+		{
+			player_tag.children("track[kind='subtitles']").remove();
+		}
+		
+		
+		player_tag.mediaelementplayer(opts);
+	},
 	resize:function(width,height){}, 
 	play:function()
 	{
@@ -298,7 +323,6 @@ var MediaElementJSPlayer = MultimediaBase.extend({
 	},
 	setPosition:function(position) 
 	{
-		//console.log("set position");
 		var p = multimedia.player;
 		var position = position?position:0;
 		if(p)

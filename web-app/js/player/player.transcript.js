@@ -39,7 +39,6 @@ var Transcript = Base.extend({
 	},
 	initTranscript:function()
 	{
-		
 		//Start loading transcript
 		if(recording.canEdit)
 		{
@@ -413,7 +412,6 @@ var Transcript = Base.extend({
 				}
 			 },
 			highlight: function(label) {
-				console.log("hightlight");
 				$(label).closest('.control-group').addClass('error');
 			},
 		});
@@ -724,13 +722,6 @@ var Transcript = Base.extend({
 		var transcripts_content_div = this.inner_container;
 		var multimediaId = this.recording.id;
 		//transcripts_content_div.empty();
-		
-		//Yunjia: it's difficult to caculate the height of transcript to be honest, so I will use fixed height for transcript_content_div
-		var transcript_content_div_height = window.screen.height - multimedia.height +108; 
-		//(window.screen.height- multimedia.height-223)>0?window.screen.height- multimedia.height-223:windows.screen.height;
-		//console.log("window:"+ window.screen.height);
-		//console.log("player:"+ multimedia.height);
-		transcripts_content_div.height(transcript_content_div_height);
 		
 		$.ajax({
 			   type: "GET",

@@ -205,6 +205,26 @@
 }
 
 /*###############slides########################*/
+#image_container_div
+{
+	overflow-x:hidden;
+	overflow-y:scroll;
+	width:100%;
+	min-height:100px;
+	margin-top:50px;
+}
+
+#image_container_div .span-thumbnail
+{
+	margin-left:0 !important;
+	width:48.7179%;
+}
+.slide_hover,.slide_selected
+{
+	-moz-box-shadow: 0 0 4px 4px yellow;
+	-webkit-box-shadow: 0 0 4px 4px yellow;
+	box-shadow: 0 0 4px 4px yellow;
+}
 @media (min-width: 1200px) /* span-fluid-right + 480px = 1140px*/
 {
 	.player-fixed-width
@@ -310,6 +330,12 @@
     {
     	width:auto;
     }
+    
+    #image_container_div .span-thumbnail
+	{
+		margin-left:0 !important;
+		width:100%;
+	}
 }
 @media (min-width: 480px) and (max-width: 767px) /* span-fluid-right width auto*/
 {
@@ -347,8 +373,8 @@
     	display:inline;
     }
     
-    /*hide all h2 in smaller screen*/
-    h2
+    /*hide all h3 in smaller screen*/
+    h3
     {
     	position: absolute;
    		left: -9999px;
@@ -365,19 +391,35 @@
 	}
 	
 	/*On a narrower tablet, it's not a good idea to have div scrollable, because it will be overlapped by the screen scroll*/
+	#transcripts_content_div[style],#synmark_list_div[style],#image_container_div[style]
+	{
+		max-height:none !important;
+	}
+	
 	#transcripts_content_div
 	{
 		width:100%;
-		height:auto !important;
 		min-height:100px;
 		margin-top:20px;
 	}
 	
 	#synmark_list_div
 	{
-		height:auto !important;
 		width:100%;
 		min-height:100px;
-		margin-top:50px;
+		margin-top:20px;
+	}
+	
+	#image_container_div
+	{
+		width:100%;
+		min-height:100px;
+		margin-top:20px;
+	}
+	
+	#image_container_div .span-thumbnail
+	{
+		margin-left:0 !important;
+		width:100%;
 	}
 }

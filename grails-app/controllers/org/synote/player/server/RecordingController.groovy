@@ -26,6 +26,7 @@ import org.synote.resource.Resource
 import org.synote.analysis.Views
 import org.synote.linkeddata.LinkedDataService
 import org.synote.config.ConfigurationService
+import org.synote.resource.ResourceService
 
 import org.synote.player.client.MultimediaData
 import org.synote.player.client.PlayerException
@@ -61,6 +62,7 @@ class RecordingController {
 	def linkedDataService
 	def utilsService
 	def configurationService
+	def resourceService
 	
 	/*private auth()
 	{
@@ -129,8 +131,11 @@ class RecordingController {
 			
 			def views = Views.countByResource(recording)
 			def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+			
+			def metrics = resourceService.getMultimediaResourceMetrics(recording)
+			
 			return [recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
-				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL]
+				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc]
 		}
 		else
 		{

@@ -11,10 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" href="${resource(dir: 'css', file: 'player.css')}" />
 	<style type="text/css">
-		#slides_div
-		{
-			background-color:#999999;
-		}
 		body {
 	        padding-top: 60px;
 	    }
@@ -50,7 +46,7 @@
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.mediafragment.controller.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.transcript.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.synmark.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.synmark.click.menu.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.presentation.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.textselector.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js',file:"synote-multimedia-service-client.js")}"></script>
@@ -110,6 +106,7 @@
 		recording.isVideo = "${recording.isVideo}".toLowerCase();
 		recording.uuid = "${recording.uuid}";
 		recording.thumbnail = "${recording.thumbnail}";
+		recording.hasCC = "${hasCC}".toLowerCase();
 
 		user = new Object();
 		if("${user}".length>0)
@@ -271,7 +268,7 @@
 					
 					<div id="multimedia_player_div">
 						<g:if test="${recording.isVideo}">
-							<video id="multimedia_player" width="480" height="320" poster="${recording.thumbnail}">
+							<video id="multimedia_player" width="480" height="320">
 								<source src=""/>
 							</video>
 						</g:if>
@@ -308,21 +305,20 @@
 				<div id="transcripts_div" class="tab-pane span-left">
 					<div>
 						<h3 class="heading-inline">Transcript</h3>
-						<div class="pull-left" id="synmark_count_div"></div>
 						<div class="pull-right btn-toolbar" style="display:inline">
 							<g:if test="${canEdit}">
 							<div class="btn-group" id="transcript_edit_enter_div">
 								<button class="btn" title="Add a new transcript block" id="edit_transcript_add_btn">
-									<img src="${resource(dir:'images/player',file:"edit_transcript_add_22.png")}"  id="edit_transcript_add_img" title="Add new transcript block"/>
+									<img src="${resource(dir:'images/player',file:"edit_transcript_add_22.png")}"  id="edit_transcript_add_img" alt="Add new transcript block"/>
 								</button>
 								<button class="btn" title="Edit the selected transcript block" id="edit_transcript_edit_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_22.png")}"  id="edit_transcript_enter_img" title="Edit Transcript"/>
+									<img src="${resource(dir:'images/player',file:"edit_transcript_22.png")}"  id="edit_transcript_enter_img" alt="Edit Transcript"/>
 								</button>
 								<button class="btn" title="Delete the selected transcript block" id="edit_transcript_delete_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_delete_img" title="Remove all the transcripts"/>
+									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_delete_img" alt="Remove all the transcripts"/>
 								</button>
 								<button class="btn" title="Transcript editing help" id="edit_transcript_help_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_help_22.png")}"  id="edit_transcript_help_img" title="Transcript editing help"/>
+									<img src="${resource(dir:'images/player',file:"edit_transcript_help_22.png")}"  id="edit_transcript_help_img" alt="Transcript editing help"/>
 								</button>
 							</div>
 							</g:if>
@@ -380,13 +376,13 @@
 								</div>
 								<div class="form-actions">
 									<input class="btn btn-primary" id="transcript_submit" type="button" value="Submit"/><!-- This is not a submit button, because nothing will be submitted to the server -->
-									<input class="btn" id="transcript_cancel" type="reset" value="Exit" />
+									<input class="btn" id="transcript_cancel" type="reset" value="Cancel" />
 								</div>
 							</fieldset>
 						</form>
 					</div>
 					</g:if>
-					<div id="transcript_laoding_div" style="display:none;"><img id="transcript_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
+					<div id="transcript_loading_div" style="display:none;"><img id="transcript_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
 					<div id="transcripts_inner_div">
 						<div id="transcripts_content_div">
 							<ol id="transcript_ol"></ol>
@@ -427,8 +423,8 @@
 						</div>
 						<!-- Synmarks -->
 						<ul class="nav nav-tabs" id="tab_right">
-							<li class="active dropdown"><a href="#synmarks_div" data-toggle="tab">Synmarks</a></li>
-							<li><a href="#slides_div" data-toggle="tab">Slides</a></li>
+							<li class="active dropdown"><a href="#synmarks_div" data-toggle="tab">Synmarks <span id="synmark_count_span"></span></a></li>
+							<li><a href="#slides_div" data-toggle="tab">Slides <span id="slides_count_span"></span></a></li>
 							<li class="visible-phone"><a href="#transcripts_div" data-toggle="tab">Transcripts</a></li>
 						</ul>
 						<div class="tab-content" id="tab_content_div">
@@ -486,20 +482,24 @@
 											<input type="hidden" name="synmark_id" id="synmark_id"/> 
 											<div class="control-group">
 												<label for="synmark_st" class="control-label"><b><em>*</em>Start:</b></label>
-												<div class="input-append">
-													<input type='text' size="10" class="required span6" name='synmark_st' id='synmark_st'/>
-													<button class="btn" id="synmark_st_time" title="Get current time" type="button"><i class="icon-time"></i></button>
-													<button class="btn" id="synmark_st_add" title="add one second" type="button"><i class="icon-plus"></i></button>
-													<button class="btn" id="synmark_st_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+												<div class="controls">
+													<div class="input-append">
+														<input type='text' size="10" class="required span6" name='synmark_st' id='synmark_st' style="display:inline;"/>
+														<button class="btn" id="synmark_st_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+														<button class="btn" id="synmark_st_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+														<button class="btn" id="synmark_st_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+													</div>
 												</div>
 											</div>
 											<div class="control-group">
 												<label for="synmark_et" class="control-label"><b><em>*</em>End:</b></label>
-												<div class="input-append">
-													<input type='text' size="10" class="required span6" name='synmark_et' id='synmark_et'/>
-													<button class="btn" id="synmark_et_time" title="Get current time" type="button"><i class="icon-time"></i></button>
-													<button class="btn" id="synmark_et_add" title="add one second" type="button"><i class="icon-plus"></i></button>
-													<button class="btn" id="synmark_et_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+												<div class="controls">
+													<div class="input-append">
+														<input type='text' size="10" class="required span6" name='synmark_et' id='synmark_et' style="display:inline;"/>
+														<button class="btn" id="synmark_et_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+														<button class="btn" id="synmark_et_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+														<button class="btn" id="synmark_et_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+													</div>
 												</div>
 											</div>
 											<div class="control-group">
@@ -517,20 +517,78 @@
 											</div>
 											<div class="form-actions">
 												<input class="btn btn-primary" id="synmark_submit" type="submit" value="Submit"/><!-- This is not a submit button, because nothing will be submitted to the server -->
-												<input class="btn" id="synmark_cancel" type="reset" value="Exit" />
+												<input class="btn" id="synmark_cancel" type="reset" value="Cancel" />
 											</div>
 										</fieldset>
 									</form>
 								</div>
 								</g:if>
-								<div id="synmark_laoding_div" style="display:none;"><img id="synmark_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
+								<div id="synmark_loading_div" style="display:none;"><img id="synmark_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
 								<div id="synmarks_inner_div">
 									<div id="synmark_list_div"></div>
 								</div>
 							</div>
 							<!-- Slides  -->
-							<div id="slides_div" class="tab-pane span-right" style="height:600px;">
+							<div id="slides_div" class="tab-pane span-right">
 								<h3 class="hiding">Slides</h3>
+								<div class="pull-right btn-toolbar" style="display:inline">
+									<g:if test="${canEdit}">
+									<div class="btn-group" id="slides_edit_div">
+										<button class="btn" title="Add a new transcript block" id="slides_add_btn">
+											<img src="${resource(dir:'images/player',file:"slides_add_22.png")}"  id="slides_add_img" alt="Add new slide"/>
+										</button>
+										<button class="btn" title="Edit the selected transcript block" id="slides_edit_btn">	
+											<img src="${resource(dir:'images/player',file:"slides_edit_22.png")}"  id="slides_edit_img" alt="Edit slides"/>
+										</button>
+										<button class="btn" title="Delete the selected transcript block" id="slides_delete_btn">	
+											<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="slides_delete_img" alt="Remove all slide"/>
+										</button>
+									</div>
+									</g:if>
+								</div>
+								<div id="slides_msg_div"></div><!-- displaying info, error messages -->
+								<!-- slide editing form -->
+								<g:if test="${canEdit}">
+								<div id="presentation_edit_div" class="well" style="display:none;">
+									<form id="presentation_edit_form" method="post" class="form-vertical">
+										<fieldset>
+											<input type="hidden" name="slide_id" id="slide_id"/> 
+											<input type="hidden" name="old_index" id="old_index"/> 
+											<div class="control-group">
+												<label for="slide_st" class="control-label"><b><em>*</em>Start:</b></label>
+												<div class="input-append">
+													<input type='text' size="10" class="required span6" name='slide_st' id='slide_st' style="display:inline;"/>
+													<button class="btn" id="slide_st_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+													<button class="btn" id="slide_st_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+													<button class="btn" id="slide_st_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+												</div>
+											</div>
+											<div class="control-group">
+												<label for="slide_et" class="control-label"><b><em>*</em>End:</b></label>
+												<div class="input-append">
+													<input type='text' size="10" class="required span6" name='slide_et' id='slide_et' style="display:inline;"/>
+													<button class="btn" id="slide_et_time" title="Get current time" type="button"><i class="icon-time"></i></button>
+													<button class="btn" id="slide_et_add" title="add one second" type="button"><i class="icon-plus"></i></button>
+													<button class="btn" id="slide_et_remove" title="minus one second" type="button"><i class="icon-minus"></i></button>
+												</div>
+											</div>
+											<div class="control-group">
+												<label for="slide_index"><em>*</em><b>Slide index:</b></label>
+												<select name='slide_index' id='slide_index'></select>
+											</div>
+											<div class="control-group">
+												<label for="slide_url"><em>*</em><b>Slide url:</b></label>
+												<input type='text' class="required" name='slide_url' id='slide_url'/>
+											</div>
+											<div class="form-actions">
+												<input class="btn btn-primary" id="presentation_submit" type="submit" value="Submit"/><!-- This is not a submit button, because nothing will be submitted to the server -->
+												<input class="btn" id="presentation_cancel" type="reset" value="Cancel" />
+											</div>
+										</fieldset>
+									</form>
+								</div>
+								</g:if>
+								<div id="slides_loading_div" style="display:none;"><img id="slides_loading_img" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></div>
 								<div id="image_container_div">
 								</div>	
 							</div>

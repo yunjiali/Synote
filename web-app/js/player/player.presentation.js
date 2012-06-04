@@ -22,36 +22,10 @@ var Presentation = Base.extend({
 	},
 	initPresentation:function()
 	{	
-		//Start loading slides
-		//this.refresh(this.outer_container,this.inner_container);
-		 //Yunjia: we can setup a mode to float display the slides
-		   //$("#slides_div").aqFloater({attach:"s", duration:0, opacity:.9,offsetX:0,offsetY:0});
-		//var slides_div = this.outer_container;
-		this.outer_container.remove("#container");
-		this.outer_container.appendTo("#container_wrapper");
-		
-		//Init the control buttons on slides bar
-		$("#slides_play_btn").bind('click',{},function(){
-			multimedia.play();
-		});
-		$("#slides_pause_btn").bind('click',{},function(){
-			multimedia.pause();
-		});
-		$("#slides_stop_btn").bind('click',{},function(){
-			multimedia.stop();
-		});
-		$("#slides_rewind_btn").bind('click',{},function(){
-			multimedia.rewind();
-		});
-		$("#slides_forward_btn").bind('click',{},function(){
-			multimedia.forward();
-		});
 		
 		//If can edit, init the add, edit and delete buttons
 		if(recording.canEdit === "true")
 		{
-			$("#presentation_edit_dialog .uniForm").uniform();
-			$("#presentation_edit_dialog .uniForm input[type=text]").wijtextbox();
 			$("#slide_st").mask("?99:99:99");
 			$("#slide_et").mask("?99:99:99");
 			$("#slide_st_time").click(function(){
@@ -83,17 +57,16 @@ var Presentation = Base.extend({
 				var newTime = oldTime-1000>0?oldTime-1000:0;
 				$("#slide_et").val(milisecToString(newTime));
 			});
-			$("#presentation_submit").button();
-			$("#presentation_cancel").button().click(function(){
-				$("#presentation_edit_dialog").wijdialog('close');
-				$("#presentation_edit_dialog").wijdialog('destroy');//exit editing
+			$("#presentation_cancel").click(function(){
+				$("#presentation_edit_form").resetForm();
+				$("#presentation_edit_div").hide(400);
 			});
 			//Yunjia: Can't use combobox because the dropdownlist keep on appearing behind the dialog
 			//$("#presentation_edit_dialog select").combobox();
 			$("#slides_add_btn").click(function(){
 				var newTime = multimedia.getPosition();
 				presentation.fillPresentationForm(milisecToString(newTime),"","","","","");
-				presentation.showEditForm("Add Slide");
+				$("#presentation_edit_div").show(400);
 				return;
 			});
 			
@@ -101,7 +74,7 @@ var Presentation = Base.extend({
 				//Add slide_id first
 				if(presentation.selectedSlide != null)
 				{
-					presentation.showEditForm("Edit Slide");
+					$("#presentation_edit_div").show(400);
 					var slide_st = milisecToString(presentation.selectedSlide.attr("date-time-st"));
 					var slide_index = parseInt(presentation.selectedSlide.attr("index"))+1;
 					var slide_et;
@@ -155,21 +128,23 @@ var Presentation = Base.extend({
 							datatype:"text",
 							success:function(data)
 							{
-								//console.log("data:"+data);
-								var respJson = data;
-								//console.log("status:"+status);
-								if(respJson.success) //status == 200
+								if(data.success) //status == 200
 								{
 									//console.log("success"+respJson.success.description);
-									presentation.showMsgDialog(respJson.success.description);
+									presentation.showMsg(data.success.description,null);
 								}
-								else if(respJson.error)
+								else if(data.error)
 								{
 									//console.log("not success");
-									presentation.showMsgDialog("<span style='color:red'>"+respJson.error.description+"</span>");
+									presentation.showMsg(data.error.description,"error");
 								}
-								//$(":wijmo-wijdialog").wijdialog("destroy").remove();
 								presentation.refresh();
+							},
+							error:function(jqXHR,textStatus,errorThrown)
+							{
+								var resp =$.parseJSON(jqXHR.responseText);
+								presentation.showMsg(resp.error.description,"error");
+								return;
 							}
 						});
 					}
@@ -198,35 +173,54 @@ var Presentation = Base.extend({
 					url:url,
 					//resetForm:true,
 					type:'post',
-					dataType:'text',
+					dataType:'json',
 					//data:params,
-					beforeSend:function(event)
+					success:function(data, statusText, xhr, $form)
 					{
-						$("#presentation_dialog").wijdialog('destroy');
-						
-					},
-					success:function(responseText, statusText, xhr, $form)
-					{
-						//var respText = ""; //this will be the string go to the dialog
-						var respJson = $.parseJSON(responseText);
-						//console.log("status:"+status);
-						if(respJson.success) //status == 200
+						if(data.success) //status == 200
 						{
-							presentation.showMsgDialog(respJson.success.description);
+							presentation.showMsg(respJson.success.description,null);
 							presentation.resetPresentationForm();
-							$("#presentation_edit_dialog").wijdialog('close');
 							presentation.refresh();
 						}
-						else if(respJson.error)
+						else if(data.error)
 						{
-							presentation.showMsgDialog("<span style='color:red'>"+respJson.error.description+"</span>");
-							
+							presentation.showMsg(data.error.description);
 						}
 						
+					},
+					error:function(jqXHR,textStatus,errorThrown)
+					{
+						var resp =$.parseJSON(jqXHR.responseText);
+						presentation.showMsg(resp.error.description,"error");
+						return;
 					}
 				});
 				
 				return false;
+			});
+			
+			$("#presentation_edit_form").validate(
+			{
+				rules: {
+				    slides_st: {
+					    required:true
+				    },
+				    slides_et:{
+						required:true
+					},
+					slide_index:{
+						required:true,
+					},
+					slide_url:{
+						required:true,
+						maxlength:255,
+						url:true
+					}
+				 },
+				highlight: function(label) {
+					$(label).closest('.control-group').addClass('error');
+				},
 			});
 		}
 	},
@@ -243,48 +237,17 @@ var Presentation = Base.extend({
 		$("#old_index").val(old_index);
 		$("#slide_id").val(slide_id);
 	},
-	showEditForm:function(title)
+	showMsg:function(msg,error)
 	{
-		$("#presentation_edit_dialog").wijdialog('destroy');
-		$("#presentation_edit_dialog").attr("title",title).wijdialog({
-	        autoOpen: true,
-	        height: 320,
-	        width: 480,
-	        modal: false,
-	        position:"right center",
-	        close:function(e){
-	        	presentation.resetPresentationForm();
-	        },
-	        captionButtons: {
-	            pin: { visible: false },
-	            refresh: { visible: false },
-	            toggle: { visible: false },
-	            minimize: { visible: false },
-	            maximize: { visible: false }
-	        }
-	    });
-	},
-	showMsgDialog:function(msg)
-	{
-		$("#presentation_dialog").html(msg);
-		$("#presentation_dialog").wijdialog({
-            autoOpen: true,
-            height: 180,
-            width: 400,
-            modal: true,
-            buttons: {
-                Ok: function () {
-                    $(this).wijdialog("close");
-                }
-            },
-            captionButtons: {
-                pin: { visible: false },
-                refresh: { visible: false },
-                toggle: { visible: false },
-                minimize: { visible: false },
-                maximize: { visible: false }
-            }
-        });
+		var msg_div = $("#slides_msg_div");
+		if(type == "error")
+		{
+			msg_div.html("<div class='alert alert-error'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
+		else
+		{
+			msg_div.html("<div class='alert alert-success'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
 	},
 	sync:function(currentPosition)
 	{
@@ -328,11 +291,7 @@ var Presentation = Base.extend({
 			{
 				var index = parseInt(currentSlide.attr("index"));
 				var i = index-this.scrollOffset>0?index-this.scrollOffset:index;
-				//console.log("i:"+i);
-				$("#image_container_ul").data('jcarousel').scroll($.jcarousel.intval(index));
 			}
-				//this.inner_container.scrollTo(currentSlide,400, {offset:this.scrollOffset});
-				
 		}
 	},
 	clickSlide:function(currentSlide)
@@ -356,6 +315,18 @@ var Presentation = Base.extend({
 			$("#slide_index").append(opt);
 		}
 	},
+	showMsg:function(msg,type)
+	{
+		var msg_div = $("#slides_msg_div");
+		if(type == "error")
+		{
+			msg_div.html("<div class='alert alert-error'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
+		else
+		{
+			msg_div.html("<div class='alert alert-success'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
+		}
+	},
 	refresh:function()
 	{
 		var image_container_div  = this.inner_container;
@@ -364,48 +335,40 @@ var Presentation = Base.extend({
 		var getPresentationsURL = g.createLink({controller:'recording', action:'getPresentationsAjax'});
 		//var slides_div = $("<div/>").attr("id","slides_div").appendTo("body");
 		var slides_div = this.outer_container;
-		var image_zoom_div = $("<div />").attr('id',"image_zoom_div").appendTo(slides_div);
-		image_container_div.css({width:"100%"});
-		var image_container_ul=$("<ul/>").attr('id',"image_container_ul").addClass("jcarousel-skin-tango").appendTo(image_container_div);
-		var slides_button = $("#slides_collapse_expand_btn");
-		var slides_count_span = $("#slides_count_span");
+		var image_container_ul=$("<ul/>").attr('id',"image_container_ul").addClass("thumbnails").appendTo(image_container_div);
 		$.ajax({
 			   type: "GET",
 			   url: getPresentationsURL,
 			   data:{multimediaId:multimediaId},
 			   dataType: "json",
-			   //Yunjia: Add a beforeSend function to display the loading message
+			   beforeSend:function(jqXHR, settings)
+			   {
+				   $("#slides_loading_div").show();
+			   },
 			   success:function(data)
 			   {
 				   if(!data || !data[0] || data[0].slides.length==0)
 				   {
-					   slides_button.removeClass("slides_div_collapse");
-					   slides_button.addClass("slides_div_expand");
-					   slides_count_span.html("No Presentation Slides");
+					   image_container_div.html("No Presentation Slides");
+					   $("#slides_count_span").text("(0)");
 					   if(recording.canEdit === "true")
 					   {
 						   presentation.initEditing();
-						   //$("#presentation_edit_dialog select").combobox();
 					   }
-					   //image_container_div.hide();
-					   //slides_div.remove("#container");
-					   //slides_div.appendTo("#container_wrapper");
-					   initFixedBottomSlider('25','bottom','0.75');
 					   return;
 				   }
 				   presentation.presentationId = data[0].id;
-				   slides_count_span.html(data[0].slides.length+" Presentation Slides");
+				   $("#slides_count_span").text("("+data[0].slides.length+")");
 				   $.each(data[0].slides, function(i,slide){
-					   var single_slide_li = $("<li/>");
-					   var slide_div = $("<div style='text-align:center;'/>").appendTo(single_slide_li);
-					   var slide_time_span = $("<span style='color:yellow;'/>").text(milisecToString(slide.start)).appendTo(slide_div);
-					   slide_div.append($("<br/>"));
+					   var single_slide_li = $("<li/>").addClass("span-thumbnail");
+					   var slide_a = $("<div/>").addClass("thumbnail");
+					   //var slide_time_span = $("<span style='color:yellow;'/>").text(milisecToString(slide.start)).appendTo(slide_div);
 					   var slide_thumb_img = $("<img>",{
 						   src: slide.url,
 						   alt: slide.start,
-						   height:96,
-						   width:128,
 						   id:"slide_"+slide.id,
+						   //height:165,
+						   //width:220,
 						   mouseover:function(){$(this).addClass("slide_hover");},
 						   mouseout:function(){$(this).removeClass("slide_hover");},
 						   click:function()
@@ -415,74 +378,31 @@ var Presentation = Base.extend({
 					   }).attr("date-time-st",slide.start).attr("date-time-et",slide.end?slide.end:"").attr("index",i+1).attr("slide_id",slide.id)
 					   .addClass("slide_thumb_image");//date-time-et is not used
 					   slide_thumb_img.bind("dblclick",function(){
-						   //console.log("double click images");
-							 //$("#image_zoom_div").wijdialog("destroy");attr("index",slide.index)
-					         $("#image_zoom_div").wijdialog({ 
-					        	 width: 640, 
-					        	 height: 480, 
-					        	 contentUrl: slide.url, 
-					        	 autoOpen: true,
-					        	 captionButtons:{
-					     			pin:{visible:false},
-					     			refresh:{visible:false},
-					     			toggle:{visible:false}
-					     			}
-					     		});
+					         
 						});
-					   slide_div.append(slide_thumb_img);
+					   slide_a.append(slide_thumb_img);
 					   //single_slide_li.append(slide_thumb_img);
-					   single_slide_li.append(slide_div);
+					   single_slide_li.append(slide_a);
 					   image_container_ul.append(single_slide_li);
 					   //Microdata: add imageObject
-					   mdHelper.setMediaObject(single_slide_li,factory.isAudio);
+					   mdHelper.setMediaObject(single_slide_li,recording.isVideo == 'true'?true:false);
 					   mdHelper.setItemid(single_slide_li,attachFragmentToURI(resourceBaseURI+recording.id,getFragmentString(slide.start,slide.end)));
 					   mdHelper.setItemprop(slide_thumb_img,"image");
 					   mdHelper.createItem(slide_thumb_img,"http://schema.org/ImageObject");
 				   });
-				   //On collapse and expand button click:
-				   slides_button.click(function(){
-					   //console.log("collapse button");
-					   if(image_container_div.is(':hidden'))
-					   {
-						   image_container_div.show();
-						   $(this).removeClass("slides_div_expand");
-						   $(this).addClass("slides_div_collapse");
-						   initFixedBottomSlider('170','bottom','0.75'); //a method in player.presentation.js
-					   }
-					   else
-					   {
-						   image_container_div.hide();
-						   $(this).removeClass("slides_div_collapse");
-						   $(this).addClass("slides_div_expand");
-						   initFixedBottomSlider('25','bottom','0.75');
-					   }
-				   })
+				   
 				   presentation.slides = $(".slide_thumb_image");
 				   
 				   //###########################init the index in edit form############################
 				   if(recording.canEdit === "true")
 				   {
 					   presentation.initEditing();
-					   //$("#presentation_edit_dialog select").combobox();
 				   }
-				   //slides_div.remove("#container");
-				   //slides_div.appendTo("#container_wrapper");
-				   initFixedBottomSlider('170','bottom','0.75');
-				   //To make it width 100%				   
-				   $("#image_container_ul").jcarousel();
+			   },
+			   complete:function(jqXHR, textStatus)
+			   {
+				   $("#slides_loading_div").hide();
 			   }
 		});	   
 	}
 });
-
-//Function to make the slides float on the bottom
-var initFixedBottomSlider = function(height,position,opacity)
-{
-	 	presentation.outer_container.meerkat({
-			height: height,//128 for image div, 25 for top bar
-			opacity:opacity,
-			width: '100%',
-			position: position,
-			animationIn: 'slide'
-		});
-};
