@@ -268,7 +268,7 @@
 					
 					<div id="multimedia_player_div">
 						<g:if test="${recording.isVideo}">
-							<video id="multimedia_player" width="480" height="320">
+							<video id="multimedia_player" width="480" height="320" preload="none">
 								<source src=""/>
 							</video>
 						</g:if>
@@ -480,6 +480,7 @@
 									<form id="synmark_form" method="post" class="form-vertical">
 										<fieldset>
 											<input type="hidden" name="synmark_id" id="synmark_id"/> 
+											<input type="hidden" name="synmark_thumbnail" id="synmark_thumbnail"/> 
 											<div class="control-group">
 												<label for="synmark_st" class="control-label"><b><em>*</em>Start:</b></label>
 												<div class="controls">

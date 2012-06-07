@@ -353,23 +353,32 @@ class DatabaseService {
 		if(!params.max)
 			params.max=10
 		
-			def orderBy = ''
+		def orderBy = ''
 		if (params.sort)
 		{
 			orderBy = "order by ${params.sort}"
-			if (params.order == 'desc')
-				orderBy += ' desc'
 		}
+		else
+			orderBy ="order by date_created"
 		
-		String query = 
-					"""
-					select distinct s.*, group_concat(distinct t.content separator ',') as tags 
-					from resource as s inner join resource as t on t.parent_resource_id = s.id  
-					where t.class='org.synote.resource.single.text.SynmarkTag' and s.owner_id=${user.id} group by s.id ${orderBy} 
-					limit ${params.max} offset ${params.offset}
-					"""
-					
-		//println "query:"+query
+		if (!params.order)
+			orderBy += ' ${params.sort}'
+		else
+		 	orderBy += ' desc'
+		String query =
+			"""
+				select distinct s.*, t.tags
+				from resource as s left join 
+				(
+				    select distinct m.parent_resource_id, group_concat(distinct m.content separator ',') as tags from resource as m
+				    where m.class='org.synote.resource.single.text.SynmarkTag' and m.owner_id=${user.id} group by m.parent_resource_id
+				) as t on t.parent_resource_id = s.id
+				where s.class='org.synote.resource.compound.SynmarkResource' and s.owner_id=${user.id}
+				group by s.id
+				${orderBy}
+				limit ${params.max} offset ${params.offset}
+			"""
+		
 		def synmarkList = dbInstance.rows(query)
 		return synmarkList
 	}
@@ -378,13 +387,17 @@ class DatabaseService {
 	{
 		def dbInstance = getSqlInstance()
 		String query = """
-					select distinct s.*, group_concat(distinct t.content separator ',') as tags
-					from resource as s inner join resource as t on t.parent_resource_id = s.id
-					where t.class='org.synote.resource.single.text.SynmarkTag' and s.owner_id=${user.id}
-					group by s.id
+					select count(distinct s.id) as count
+					from resource as s left join 
+					(
+					    select distinct m.parent_resource_id, group_concat(distinct m.content separator ',') as tags from resource as m
+					    where m.class='org.synote.resource.single.text.SynmarkTag' and m.owner_id=${user.id} group by m.parent_resource_id
+					) as t on t.parent_resource_id = s.id
+					where s.class='org.synote.resource.compound.SynmarkResource' and s.owner_id=${user.id}
 				"""
-		def synmarkList = dbInstance.rows(query)
-		return synmarkList.size()
+		def result = dbInstance.rows(query)
+		int count =result[0]["count"]
+		return count
 	}
 	
 	def searchMySynmarks(params, user, text)
@@ -397,19 +410,26 @@ class DatabaseService {
 		def orderBy = ''
 		if (params.sort)
 		{
-			orderBy = "order by synmark.${params.sort}"
-			if (params.order == 'desc')
-				orderBy += ' desc'
+			orderBy = "order by s.${params.sort}"
 		}
+		else
+			orderBy ="order by s.date_created"
 		
-		String query = """select synmark.*
-							from (
-								select distinct s.*, group_concat(distinct t.content separator ',') as tags
-								from resource as s inner join resource as t on t.parent_resource_id = s.id
-								where t.class='org.synote.resource.single.text.SynmarkTag' and s.owner_id=${user.id}
-								group by s.id
-							) as synmark
-							where synmark.tags like "%${text}%" or synmark.title like "%${text}%"
+		if (!params.order)
+			orderBy += ' ${params.sort}'
+		else
+		 	orderBy += ' desc'
+		
+		String query = """
+							select distinct s.*, t.tags
+							from resource as s left join 
+							(
+							    select distinct m.parent_resource_id, group_concat(distinct m.content separator ',') as tags from resource as m
+							    where m.class='org.synote.resource.single.text.SynmarkTag' and m.owner_id=${user.id} group by m.parent_resource_id
+							) as t on t.parent_resource_id = s.id
+							where s.class='org.synote.resource.compound.SynmarkResource' and s.owner_id=${user.id} and 
+								(t.tags like "%${text}%" or s.title like "%${text}%")
+							group by s.id
 							${orderBy}
 							limit ${params.max} offset ${params.offset}
 							"""
@@ -421,17 +441,20 @@ class DatabaseService {
 	def searchMySynmarksCount(params,user,text)
 	{
 		def dbInstance = getSqlInstance()
-		String query = """select synmark.*
-							from (
-								select distinct s.*, group_concat(distinct t.content separator ',') as tags
-								from resource as s inner join resource as t on t.parent_resource_id = s.id
-								where t.class='org.synote.resource.single.text.SynmarkTag' and s.owner_id=${user.id}
-								group by s.id
-							) as synmark
-							where synmark.tags like "%${text}%" or synmark.title like "%${text}%"
+		String query = """
+							select count(distinct s.id) as count
+							from resource as s left join 
+							(
+							    select distinct m.parent_resource_id, group_concat(distinct m.content separator ',') as tags from resource as m
+							    where m.class='org.synote.resource.single.text.SynmarkTag' and m.owner_id=${user.id} group by m.parent_resource_id
+							) as t on t.parent_resource_id = s.id
+							where s.class='org.synote.resource.compound.SynmarkResource' and s.owner_id=${user.id} and 
+								(t.tags like "%${text}%" or s.title like "%${text}%")
+
 							"""
 		
-		def synmarkList = dbInstance.rows(query)
-		return synmarkList.size()
+		def result = dbInstance.rows(query)
+		int count =result[0]["count"]
+		return count
 	}
 }

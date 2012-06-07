@@ -391,7 +391,6 @@
 		<!-- Yunjia: The dialog doesn't look very nice -->
 		<div id="synmark_dialog"></div>
 		<form id="synmark_form" method="post" action="" class="uniForm">
-			<div class="errorMsg" id="synmark_create_errorMsg" style="display:none; margin:5px 0;padding:5px 5px;"></div>
 			<div class="ctrlHolder inlineLabels">
 			    <label for="synmark_st"><em>*</em>Start:</label>
 				<input type='text' size="10" class="textInput small required" name='synmark_st' id='synmark_st' value="" />

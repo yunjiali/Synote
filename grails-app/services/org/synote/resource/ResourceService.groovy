@@ -216,13 +216,15 @@ class ResourceService {
 					id:s.id,
 					//owner_name:r.owner.userName, Don't need owner_name, it's you!
 					title:s.title,
-					tags:s.tags.split(","),
+					tags:s.tags?.size() > 0?s.tags.split(","):null,
 					note:sr.note?.content?.trim()?.size()>256?sr.note?.content?.substring(0,256)+"...":sr.note?.content,
 					rtitle:mr.title,
 					rid:mr.id,
+					risVideo:mr.isVideo,
 					mf: synpoint?linkedDataService.getFragmentStringFromSynpoint(synpoint):null,//get media fragment
 					start: start !=null?TimeFormat.getInstance().toString(start):"unknown",
 					end:end !=null?TimeFormat.getInstance().toString(end):"unknown",
+					thumbnail:s.thumbnail,
 					date_created:utilsService.convertSQLTimeStampToFormattedTimeString(s.date_created,"dd.MM.yyyy HH:mm"),
 					last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(s.last_updated,"dd.MM.yyyy HH:mm")
 				]

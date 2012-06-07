@@ -383,8 +383,10 @@ class RecordingController {
 		String note = params.synmark_note.trim()
 		String[] tags = params.synmark_tags.split(",")
 		String nextSynmark = (params.synmark_next?.trim()?.size() > 0) ? params.synmark_next?.trim() : null
+		String thumbnail = params.synmark_thumbnail?.size()>0? params.synmark_thumbnail:null
+		println "thumbnail:"+thumbnail
 		
-		SynmarkData synmarkData = new SynmarkData(start,end,title,note,tags,nextSynmark)
+		SynmarkData synmarkData = new SynmarkData(start,end,title,note,tags,nextSynmark,thumbnail)
 		try
 		{
 			playerService.createSynmark(multimediaId,synmarkData);
@@ -464,8 +466,9 @@ class RecordingController {
 		String note = params.synmark_note.trim()
 		String[] tags = params.synmark_tags.split(",")
 		String nextSynmark = (params.synmark_next?.trim()?.size() > 0) ? params.synmark_next?.trim() : null
+		String thumbnail = params.synmark_thumbnail?.size()>0? params.thumbnail:null
 		
-		SynmarkData synmarkData = new SynmarkData(start,end,title,note,tags,nextSynmark)
+		SynmarkData synmarkData = new SynmarkData(start,end,title,note,tags,nextSynmark,thumbnail)
 		
 		try
 		{

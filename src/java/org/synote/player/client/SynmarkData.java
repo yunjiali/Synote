@@ -18,6 +18,11 @@ public class SynmarkData extends AbstractData
 	{
 		this(null, null, true, true, start, end, title, note, tags, next);
 	}
+	
+	public SynmarkData(int start, Integer end, String title, String note, String[] tags, String next, String thumbnail)
+	{
+		this(null, null, true, true, start, end, title, note, tags, next, thumbnail);
+	}
 
 	public SynmarkData
 		( String id
@@ -31,8 +36,30 @@ public class SynmarkData extends AbstractData
 		, String[] tags
 		, String next)
 	{
-		super(id, owner, edit, delete);
+		super(id, owner, edit, delete,null);
 
+		this.start = start;
+		this.end = end;
+		this.title = title;
+		this.note = note;
+		this.tags = tags;
+		this.next = next;
+	}
+	
+	public SynmarkData ( String id
+						, UserData owner
+						, boolean edit
+						, boolean delete
+						, int start
+						, Integer end
+						, String title
+						, String note
+						, String[] tags
+						, String next
+						, String thumbnail)
+	{
+		super(id, owner, edit, delete, thumbnail);
+	
 		this.start = start;
 		this.end = end;
 		this.title = title;

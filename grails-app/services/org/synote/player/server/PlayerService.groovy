@@ -683,7 +683,8 @@ class PlayerService {
 		, synmark.title
 		, synmark.note?.content
 		, synmark.tags ? (String[]) synmark.tags.sort {tag -> tag.content}.collect {tag -> tag.content} : new String[0]
-		, synmark.next ? synmark.next.id.toString() : null )
+		, synmark.next ? synmark.next.id.toString() : null
+		, synmark.thumbnail)
 	}
 	
 	SynmarkData createSynmark(String multimediaId, SynmarkData synmarkData)
@@ -695,7 +696,8 @@ class PlayerService {
 				( owner: user
 				, title: synmarkData.getTitle()?.trim() ? synmarkData.getTitle().trim() : null
 				, note: new SynmarkTextNote(owner: user, content: synmarkData.getNote()?.trim() ? synmarkData.getNote().trim() : null)
-				, next: synmarkData.getNext()?.trim() ? SynmarkResource.get(synmarkData.getNext().trim().toLong()) : null )
+				, next: synmarkData.getNext()?.trim() ? SynmarkResource.get(synmarkData.getNext().trim().toLong()) : null
+				, thumbnail:synmarkData.getThumbnail() )
 		
 		synmarkData.getTags().each {content ->
 			if (content?.trim() && !synmark?.tags.find {tag -> tag.content.equalsIgnoreCase(content.trim())})
@@ -755,6 +757,7 @@ class PlayerService {
 		synmark.title = synmarkData.getTitle()?.trim() ? synmarkData.getTitle().trim() : null
 		synmark.note.content = synmarkData.getNote()?.trim() ? synmarkData.getNote().trim() : null
 		synmark.next = synmarkData.getNext()?.trim() ? SynmarkResource.get(synmarkData.getNext().trim().toLong()) : null
+		synmark.thumbnail = synmarkData.getThumbnail()? synmarkData.getThumbnail():null
 		
 		synmark.tags?.findAll {tag ->
 			!synmarkData.getTags().find {content ->

@@ -7,7 +7,7 @@ var Synmark = Base.extend({
 	inner_container:null,
 	selectedSynmark:null, //is a jquery object, not a dom object
 	synmarks:null,//a list of synmark divs, jquery object
-	synmarksData:null, //a lit of synmark json data
+	synmarksData:null, //a list of synmark json data
 	synmarkTags:null, //an array of tags
 	synchronised:true,
 	autoScroll:true,
@@ -113,59 +113,107 @@ var Synmark = Base.extend({
 				//plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist,rdfa",
 				valid_elements : "*[*]",
 				theme:"advanced",
-				theme_advanced_buttons1 : "bold,italic,underline,forecolor,backcolor,|,code",//,|,namespace,about,property,rdfGraph,rdfEnrich,stat,setting",
+				theme_advanced_buttons1 : "bold,italic,underline,forecolor,backcolor",//,|,namespace,about,property,rdfGraph,rdfEnrich,stat,setting",
 				theme_advanced_buttons2 : "",
 		        theme_advanced_buttons3 : "",
 		        theme_advanced_toolbar_location : "top",
 		        theme_advanced_toolbar_align : "left",
 		        theme_advanced_statusbar_location : "bottom",
 		        theme_advanced_resizing : true,
+		        theme_advanced_path : false,
+		        force_p_newlines : false,
+		        force_br_newlines : true,
+		        forced_root_block : ''
 			});
 
 			//Init the ajax submitting of forms
 			$('#synmark_form').submit(function(){
-				console.log("submit");
-				var url;
+				var synmark_st = stringToMilisec($("#synmark_st").val());
+				var synmark_et = stringToMilisec($("#synmark_et").val());
 				if($("#synmark_id").val() != null && $("#synmark_id").val() !== undefined && $.trim($("#synmark_id").val()).length>0) //if id is not null, it means synmark updates 
 				{
-					url = g.createLink({controller:"recording",action:"updateSynmarkAjax"});//, params:{synmark_id:$.trim($("#synmark_id").val())}});
+					var url = g.createLink({controller:"recording",action:"updateSynmarkAjax"});//, params:{synmark_id:$.trim($("#synmark_id").val())}});
+					var synmarkData = synmark.getSynmarkData($("#synmark_id").val());
+					var oldMiddle = (synmarkData.start + synmarkData.end)/2;
+					if(recording.thumbnail != 'null' && recording.isVideo == 'true' && (cue.thumbnail == null || (oldMiddle<newCue.start || oldMiddle > newCue.end))) //need to regenerate the thumbnail
+					{
+						mmServiceClient.generateThumbnail(recording.url,recording.uuid, synmark_st, synmark_et, function(thumbnail_url, error){
+							//We are not going to print out any error message here
+							if(error == null)
+							{
+								$("#synmark_thumbnail").val(thumbnail_url);
+							}
+							synmark.updateSynmarkAjax(url, function(msg,error){
+								if(error == null)
+								{
+									synmark.showMsg(msg,null);
+									$("#synmark_create_div").hide(400);
+									synmark.refresh();
+								}
+								else
+								{
+									synmark.showMsg(msg,"error");
+								}
+							});
+						});
+					}
+					else
+					{
+						synmark.updateSynmarkAjax(url, function(msg,error){
+							if(error == null)
+							{
+								synmark.showMsg(msg,null);
+								$("#synmark_create_div").hide(400);
+								synmark.refresh();
+							}
+							else
+							{
+								synmark.showMsg(msg,"error");
+							}
+						});
+					}
 				}
 				else
 				{
-					url = g.createLink({controller:"recording",action:"saveSynmarkAjax",params:{multimedia_id:recording.id}});
-				}
-				$(this).ajaxSubmit({
-					url:url,
-					//resetForm:true,
-					type:'post',
-					dataType:'json',
-					beforeSend:function(event)
+					var url = g.createLink({controller:"recording",action:"saveSynmarkAjax",params:{multimedia_id:recording.id}});
+					if(recording.isVideo == 'true' && recording.thumbnail != 'null')
 					{
-						//Do nothing
-						
-					},
-					success:function(data,textStatus, jqXHR, $form) //
-					{
-						//console.log("status:"+status);
-						if(data.success) //status == 200
-						{
-							synmark.showMsg(data.success.description,null);
-							$("#synmark_create_div").hide(400);
-							synmark.refresh();
-						}
-						else if(respJson.error)
-						{
-							synmark.showMsg(data.error.description,"error");
-						}
-						
-					},
-					error:function(jqXHR,textStatus,errorThrown)
-					{
-						var resp =$.parseJSON(jqXHR.responseText);
-						synmarks.showMsg(resp.error.description,"error");
+						mmServiceClient.generateThumbnail(recording.url,recording.uuid, synmark_st, synmark_et, function(thumbnail_url, error){
+							//We are not going to print out any error message here
+							if(error == null)
+							{
+								$("#synmark_thumbnail").val(thumbnail_url);
+							}
+							synmark.updateSynmarkAjax(url, function(msg,error){
+								if(error == null)
+								{
+									synmark.showMsg(msg,null);
+									$("#synmark_create_div").hide(400);
+									synmark.refresh();
+								}
+								else
+								{
+									synmark.showMsg(msg,"error");
+								}
+							});
+						});
 					}
-				});
-				
+					else
+					{
+						synmark.updateSynmarkAjax(url, function(msg,error){
+							if(error == null)
+							{
+								synmark.showMsg(msg,null);
+								$("#synmark_create_div").hide(400);
+								synmark.refresh();
+							}
+							else
+							{
+								synmark.showMsg(msg,"error");
+							}
+						});
+					}
+				}
 				return false;
 			});
 			$("#synmark_cancel").click(function(){
@@ -175,7 +223,7 @@ var Synmark = Base.extend({
 			
 			$("#add_synmark_btn").click(function(){
 				var newTime = multimedia.getPosition();
-				synmark.fillSynmarkForm(milisecToString(newTime),"","","","","");
+				synmark.fillSynmarkForm(milisecToString(newTime),"","","","","","");
 				$("#synmark_create_div").show(400);
 			});
 			
@@ -207,7 +255,37 @@ var Synmark = Base.extend({
 			});
 		}
 	},
-	fillSynmarkForm:function(synmark_st, synmark_et, synmark_title,synmark_tags, synmark_note, synmark_id)
+	updateSynmarkAjax:function(url,callback)
+	{
+		$("#synmark_form").ajaxSubmit({
+			url:url,
+			//resetForm:true,
+			type:'post',
+			dataType:'json',
+			beforeSend:function(event)
+			{
+				//Do nothing
+			},
+			success:function(data,textStatus, jqXHR, $form) //
+			{
+				//console.log("status:"+status);
+				if(data.success) //status == 200
+				{
+					callback(data.success.description,null);
+				}
+				else if(data.error)
+				{
+					callback(data.error.description,"error");
+				}
+				
+			},
+			error:function(jqXHR,textStatus,errorThrown)
+			{
+				callback(resp.error.descrption,"error");
+			}
+		});
+	},
+	fillSynmarkForm:function(synmark_st, synmark_et, synmark_title,synmark_tags, synmark_note, synmark_id,synmark_thumbnail)
 	{
 		$("#synmark_st").val(synmark_st);
 		$("#synmark_et").val(synmark_et);
@@ -216,6 +294,7 @@ var Synmark = Base.extend({
 		//$("#synmark_note").val(synmark_note);
 		//CKEDITOR.instances.synmark_note.setData(synmark_note);
 		$("#synmark_note").val(synmark_note);
+		$("#synmark_thumbnail").val(synmark_thumbnail);
 		$("#synmark_id").val(synmark_id);
 	},
 	splitTags:function(val)
@@ -253,6 +332,18 @@ var Synmark = Base.extend({
 		}
 		//console.log("date-time-st:"+cs.attr("date-time-st"));
 		return cs;
+	},
+	getSynmarkData:function(synmark_id)
+	{
+		var synmarkData = null;
+		$.each(this.synmarksData,function(i,s){
+			if(s.id == synmark_id)
+			{
+				synmarkData = s;
+				return;
+			}
+		});
+		return synmarkData;
 	},
 	setSynmarkSelected:function(currentSynmark)
 	{
@@ -435,7 +526,8 @@ var Synmark = Base.extend({
 										});
 									}
 									synmark.fillSynmarkForm(milisecToString(synmarkData.start),
-											milisecToString(synmarkData.end),synmarkData.title,tags,synmarkData.note,synmarkData.id);
+											milisecToString(synmarkData.end),synmarkData.title,tags,synmarkData.note,synmarkData.id,
+											synmarkData.thumbnail);
 									
 									$("html,body").animate({scrollTop:$("#synmarks_div").offset().top},200);
 									$("#synmark_create_div").show(200);

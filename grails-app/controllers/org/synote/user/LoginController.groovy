@@ -100,11 +100,13 @@ class LoginController {
 	// Login page (function|json) for Ajax access.
 	def authAjax = {
 		nocache(response)
-		//this is example:
+		def g = new org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib()
+		def redirectUrl = g.createLink(controller:'login',action:'auth');
+		//redirect to login page
 		render """
 		<script type='text/javascript'>
 		(function() {
-			loginForm();
+			window.location = '${redirectUrl}';
 		})();
 		</script>
 		"""

@@ -22,7 +22,7 @@ function SynoteMultimediaServiceClient(url)
  */
 SynoteMultimediaServiceClient.prototype.generateThumbnail = function(videourl, id, start, end, callback)
 {
-	var opts = {videourl:videourl, id:id};
+	var opts = {videourl:encodeURIComponent(videourl), id:id};
 	if(start != null)
 	{
 		opts.start = start;
@@ -74,7 +74,7 @@ SynoteMultimediaServiceClient.prototype.getDuration = function(videourl, callbac
 	$.ajax({
 		   type: "GET",
 		   url: this.getDurationURL,
-		   data: {videourl:videourl}, 
+		   data: {videourl:encodeURIComponent(videourl)}, 
 		   timeout:60000, 
 		   dataType: "json",
 		   success:function(data,textStatus, jqXHR)
@@ -104,7 +104,7 @@ SynoteMultimediaServiceClient.prototype.isVideo = function(videourl,callback)
 	$.ajax({
 		   type: "GET",
 		   url: this.isVideoURL,
-		   data: {videourl:videourl}, 
+		   data: {videourl:encodeURIComponent(videourl)}, 
 		   timeout:60000, 
 		   dataType: "json",
 		   success:function(data,textStatus, jqXHR)
