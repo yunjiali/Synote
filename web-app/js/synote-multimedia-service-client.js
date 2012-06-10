@@ -92,6 +92,8 @@ SynoteMultimediaServiceClient.prototype.getDuration = function(videourl, callbac
 		   },
 		   error:function(jqXHR,textStatus,errorThrown)
 		   {
+			   console.log(jqXHR);
+			   
 			   var resp =$.parseJSON(jqXHR.responseText);
 			   callback(null, resp.message);
 			   return;

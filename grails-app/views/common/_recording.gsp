@@ -37,7 +37,7 @@
 	<div class="span2">	
 		<div style="position:relative">	
 			<g:link controller='recording' action='replay' id="${row.id}" title="play ${row.title}">				
-			<img class="thumbnail-img" src="${thumbnail_src}"/>
+			<img class="thumbnail-img" src="${thumbnail_src}" alt="Play recording"/>
 			<div style="position:absolute;z-index:1;left:0;bottom:0">
 				<span class="label label-inverse label-duration"><g:printTime time="${duration}"/></span>
 			</div>

@@ -12,6 +12,7 @@
 var nerdit = function(extractor_name,id){
 	var finished_extractors = 0;
 	var extract_url = g.createLink({controller:'nerd',action:'extractAjax'});
+	var ne_td =$("#ne_td_"+extractor_name+"_"+id);
 	$.ajax({
 		   type: "GET",
 		   url: extract_url,
@@ -21,7 +22,6 @@ var nerdit = function(extractor_name,id){
 		   //Yunjia: Add a beforeSend function to display the loading message
 		   success:function(data,textStatus, jqXHR)
 		   {
-				var ne_td =$("#ne_td_"+extractor_name+"_"+id);
 				if(data.error !== undefined)
 				{
 					//Show error messages
@@ -38,10 +38,22 @@ var nerdit = function(extractor_name,id){
 				{
 					if(i!= 0)
 						ne_td.append($("<br/>"));
-					var entity_type = data[i].type === undefined ?"unknown type":data[i].type.toLowerCase();
+					//This is the type from other extractors, we will us nerdType instead
+					//var entity_type = data[i].type === undefined ?"unknown type":data[i].type.toLowerCase();
+					var entity_type = data[i].nerdType ==""?"Thing":data[i].nerdType.split("#")[data[i].nerdType.split("#").length-1]
+					var html='';
+					if(data[i].uri == null || data[i].uri == "null"  || data[i].uri =="NORDF")
+					{
+						html += data[i].entity
+					}
+					else
+					{
+						html+="<a target='_blank' href='"+data[i].uri+"' title='"+data[i].entity+
+								"'>"+data[i].entity+"<i class='icon-link-small'></i></a> is a(n) "+entity_type;
+					}
+						
 					var entity_span = $("<span/>",{
-						html:"<a target='_blank' href='"+data[i].uri+"' title='"+data[i].entity+
-								"'>"+data[i].entity+"<i class='icon-link-small'></i></a> is a(n) "+entity_type
+						html:html
 					});
 					
 					var approve_btn = $("<button/>").addClass("btn btn-success btn-mini btn-nerd-entity-approve").text("approve").attr('title', "approve");

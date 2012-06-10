@@ -74,7 +74,7 @@ function initSynotePlayer(recording)
 	transcript.refresh();
 	presentation.refresh();
 	
-	//timer = new SynoteTimer();
-	//timer.run();
+	timer = new SynoteTimer();
+	timer.run();
 }
 
