@@ -65,58 +65,6 @@ class MultimediaResourceController {
 		}
 	}
 	
-	private void createSynmark(multimediaResource) throws ResourceException, AnnotationException
-	{
-		//create synmark
-		def description = params.description
-		def tags = params.tags
-		
-		if(!description && !tags)
-			return
-		
-		def owner = securityService.getLoggedUser()
-		
-		if(owner)
-		{
-				
-				def synmark = new SynmarkResource
-				( owner: owner
-				, title: params.title
-				, note: new SynmarkTextNote(owner: owner, content: description))
-				
-				if(tags)
-				{
-					def synmarkTags = []
-					synmarkTags = tags.split(',')
-					synmarkTags.each {content ->
-						if (content?.trim())
-						{
-							synmark.addToTags(new SynmarkTag(owner: owner, content: content.trim()))
-						}
-					}
-				}
-				
-				if (!synmark.save(flush:true))
-				{
-					log.error "Error create Synmark ${synmark.properties.toString()}"
-					throw new ResourceException("Cannot create Synmark")
-				}
-					
-				//synmark.index()
-			
-				def annotation = new ResourceAnnotation(owner: owner, source: synmark, target: multimediaResource)
-				
-				def start = 0
-				
-				annotation.addToSynpoints(new Synpoint(targetStart: start))
-				
-				if (!annotation.save())
-				{
-					log.error "Error adding annotation to synmark id=${synmark.id}"
-					throw new AnnotationException("Cannot create annotation")
-				}		
-		}
-	}
 	
 	private getGroupList()
 	{
@@ -124,27 +72,6 @@ class MultimediaResourceController {
 		def groupList = UserGroup.findAllByOwnerOrShared(owner,true)
 		
 		return groupList as JSON
-	}
-	
-	private String saveAjaxResponse(msg, stat, mmr)
-	{
-		log.debug "Start creating saveAjax call response..."
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-		xml.synote(action:"ajaxSave")
-			{
-				status(stat)
-				description(msg)
-				if(mmr != null)
-				{
-					multimedia(id:mmr.id)
-					{
-						title(mmr.title)
-					}
-				}
-			}
-		
-		return writer.toString();
 	}
 	
 	private saveResourcePermission(Resource multimediaResource) throws ResourcePermissionException
@@ -225,11 +152,15 @@ class MultimediaResourceController {
 	}
 	
 	def create = {
-		
-		def multimediaResource = new MultimediaResource(params)
+		//Do nothing
+	}
+	
+	def createyt = {
+		//def multimediaResource = new MultimediaResource(params)
 		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
-		return [multimediaResource: multimediaResource, isAllowedIPAddress:isAllowedIPAddress, 
-				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs()]
+		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		return [isAllowedIPAddress:isAllowedIPAddress,
+				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
 	}
 	
 	/**
@@ -280,131 +211,8 @@ class MultimediaResourceController {
 		}
 	}
 	
-	def save = {
-		
-		//MultimediaResource is the subclass of Resource, so the constraints don't work
-		//We have to validate here manually
-		
-		def multimediaResource = new MultimediaResource()
-		
-		def title = params.title
-		if (!title)
-		{
-			flash.error = "Title of the multimedia cannot be empty"
-			render (view:'create', model:[multimediaResource: multimediaResource])
-			return
-		}
-		multimediaResource.title = params?.title
-		
-		def url = params.url
-		if (!url)
-		{
-			flash.error = "URL of the multimedia cannot be empty"
-			render (view:'create', model:[multimediaResource: multimediaResource])
-			return
-		}
-		
-		url = url.replaceAll(" ", "%20")
-		if(!regExService.isUrl(url))
-		{
-			flash.error = "The format of URL is not valid"
-			render (view:'create', model:[multimediaResource: multimediaResource])
-			return
-		}
-		def user = securityService.getLoggedUser()
-		def multimediaUrl = new MultimediaUrl(url:url,owner:user)
-		multimediaResource.url = multimediaUrl
-		
-		multimediaResource.owner = user
-		
-		def pv
-		if(params?.perm)
-			pv = PermissionValue.findByVal(params?.perm)
-
-		else
-			pv = PermissionValue.findByName("PRIVATE")
-
-		multimediaResource.perm = pv
-		Resource.withTransaction{status->
-			try
-			{
-				if(multimediaResource.hasErrors() || !multimediaResource.save())
-				{
-					log.error("Cannot save multimedia resource.")
-					throw new ResourceException("Cannot save new recording ${multimediaResource.title}.")
-				}
-				
-				//multimediaResource.index()
-				
-				createSynmark(multimediaResource)
-				
-				if(params.groupId !=null && params.groupPermission != null)
-				{
-					saveResourcePermission(multimediaResource)
-				}
-				//println "UserLoggin:"+IBMTransJobService.getUserID()
-				if(params.useIBMTrans && securityService.isAllowedIPAddress(request.remoteAddr) && IBMTransJobService.getIBMTransJobEnabled()== "true" && IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs())
-				{
-					IBMTransJobService.addJob(multimediaResource, title, url.trim())
-				}
-				
-				flash.message = "Multimedia ${multimediaResource.title} was successfully created"
-				redirect(action: show, id: multimediaResource.id)
-				return
-			}
-			catch(IBMTransJobException ibmex)
-			{
-				status.setRollbackOnly()
-				flash.error= ibmex.getMessage()
-				ibmex.printStackTrace()
-				throw ibmex
-			}
-			catch(SynoteException syex)
-			{
-				status.setRollbackOnly()
-				flash.error= syex.getMessage()
-			}
-			catch(java.net.ConnectException conex)
-			{
-				status.setRollbackOnly()
-				IBMTransJobService.handleConnectException(conex)
-				flash.error = conex.getMessage()
-			}
-			catch(java.io.IOException ioe)
-			{
-				status.setRollbackOnly()
-				ioe.printStackTrace()
-				log.error "java.io.IOException:"+ioe.getMessage()
-				flash.error="The transcribing service couldn't return a valid response. Please double check if the media url is valid."
-				return
-			}
-			catch(Exception e)
-			{
-				status.setRollbackOnly()
-				flash.error= e.getMessage()
-				e.printStackTrace()
-				throw e
-			}
-			finally
-			{
-				render (view:'create', model:[multimediaResource:multimediaResource,isAllowedIPAddress:securityService.isAllowedIPAddress(request.remoteAddr),
-					isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs()])
-				return
-			}
-		}
-		
-	}
-	
 	/*Ajax call to create recording
-	 *It's not part of the api, api needs login code
-	 *<xml>
-	 *<synote action="saveAjax">
-	 *	<status>0</status>
-	 *	<description>OK message</description>
-	 *	<multimedia id="1234">
-	 *		<title>test title</title>
-	 *	</multimedia>
-	 *</synote>
+	 *
 	 */
 	def saveAjax = {
 		
@@ -412,7 +220,6 @@ class MultimediaResourceController {
 		//We have to validate here manually
 		log.debug "Start saveAjax call..."
 		String msg = ""
-		def stat = APIStatusCode.SUCCESS
 		
 		def multimediaResource = new MultimediaResource()
 		
@@ -420,9 +227,9 @@ class MultimediaResourceController {
 		if(!rlocation)
 		{
 			msg = "Error: Please select the video or audio file source"
-			stat = APIStatusCode.MM_CREATION_ERROR
-			def xmlStr = saveAjaxResponse(msg,stat,null)
-			render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+			}
 			return
 		}
 		
@@ -430,75 +237,33 @@ class MultimediaResourceController {
 		if (!title)
 		{
 			msg = "Error: Title of the multimedia cannot be empty"
-			stat = APIStatusCode.MM_CREATION_ERROR
-			def xmlStr = saveAjaxResponse(msg,stat,null)
-			render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+			}
 			return
 		}
 		multimediaResource.title = params?.title
 		
-		def url
-		String url_error = ""
-		
-		if(rlocation == "internet")
+		if (!params.url)
 		{
-			url = params.internet_url
-			url_error = "URL of the resource cannot be empty"
-		}
-		else if(rlocation == "youtube")
-		{
-			url = params.youtube_url
-			url_error = "URL of the youtube video cannot be empty"
-		}
-		else if(rlocation == "local")
-		{
-			log.debug "start uploading files"
-			def f = request.getFile("file")
-			def filename = f.getOriginalFilename()
-			File dest = new File(java.util.UUID.randomUUID().toString()+filename)
-			f.transferTo(dest)
-			
-			//println "filename path:"+dest.getPath()
-			//println "length:"+dest.length()
-			def uploaded_url = enterMediaService.uploadFile(dest, title)
-			if(!uploaded_url)
-			{
-				dest.delete()
-				stat = APIStatusCode.MM_CREATION_ERROR
-				msg = "Error: Cannot upload the file from local disk. Please try again later."
-				def xmlStr = saveAjaxResponse(msg,stat,null)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-				return
+			msg = "Error: the url of the recording is missing"
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
 			}
-			url = uploaded_url
-			dest.delete();
-		}
-		else if(rlocation=="syn_xml")
-		{
-			/*Yunjia: needs to be tested, maybe the "forward" function is not working*/
-			forward(action:"saveViascribeAjax", params:params)
 			return
 		}
 		
-		
-		if (!url)
-		{
-			msg = "Error:"+url_error
-			stat = APIStatusCode.MM_CREATION_ERROR
-			def xmlStr = saveAjaxResponse(msg,stat,null)
-			render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-			return
-		}
-		
-		url = url.trim().replaceAll(" ", "%20")
-		if(!regExService.isUrl(url))
+		if(!regExService.isUrl(params.url))
 		{
 			msg = "Error: The format of URL is not valid"
-			stat = APIStatusCode.MM_CREATION_ERROR
-			def xmlStr = saveAjaxResponse(msg,stat,null)
-			render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+			}
 			return
 		}
+		
+		def url = params.url?.trim()
+		
 		def user = securityService.getLoggedUser()
 		def multimediaUrl = new MultimediaUrl(url:url,owner:user)
 		multimediaResource.url = multimediaUrl
@@ -507,96 +272,83 @@ class MultimediaResourceController {
 		
 		def pv
 		if(params?.perm)
-			pv = PermissionValue.findByVal(params?.perm)
-
+			pv = PermissionValue.findByVal(params?.perm?.toString())
 		else
 			pv = PermissionValue.findByName("PRIVATE")
 
 		multimediaResource.perm = pv
-		Resource.withTransaction{status->
-			try
-			{
-				if(multimediaResource.hasErrors() || !multimediaResource.save())
+		
+		//save note
+		multimediaResource.note = new MultimediaTextNote(owner:user, content:(params.note?params.note:""))
+		
+		//save tags
+		def tags = params.tags?.split(",")
+		tags.each{t->
+			if(t.trim()?.size() >0)
+				multimediaResource.addToTags(new MultimediaTag(owner: user,content:t.trim()))
+		}
+		
+		multimediaResource.thumbnail = params.thumbnail?params.thumbnail:null
+		multimediaResource.isVideo = params.isVideo?Boolean.valueOf(params.isVideo):true
+		multimediaResource.duration = params.duration?Integer.valueOf(params.duration):null
+		
+			//try
+			//{
+				if(multimediaResource.hasErrors() || !multimediaResource.save(flush:true))
 				{
-					log.error("Cannot save multimedia resource.")
 					msg = "Cannot save new recording ${multimediaResource.title}."
-					stat = APIStatusCode.MM_CREATION_ERROR
-					def xmlStr = saveAjaxResponse(msg,stat,null)
-					render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
+					render(contentType:"text/json"){
+						error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+					}
 					return
 				}
 				
 				//multimediaResource.index()
 				
-				createSynmark(multimediaResource)
-				
-				//Yunjia: here is a bug, you cannot add multimple user group permissions
-				//if(params.groupId !=null && params.groupPermission != null)
-				//{
-				//	saveResourcePermission(multimediaResource)
-				//}
-				//println "UserLoggin:"+IBMTransJobService.getUserID()
 				if(params.useIBMTrans && securityService.isAllowedIPAddress(request.remoteAddr) && IBMTransJobService.getIBMTransJobEnabled()== "true" && IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs())
 				{
 					IBMTransJobService.addJob(multimediaResource, title, url.trim())
 				}
 				
 				msg = "Recording '${multimediaResource.title}' was successfully created"
-				def xmlStr = saveAjaxResponse(msg,stat,multimediaResource)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
+				render(contentType:"text/json"){
+					success(stat:APIStatusCode.SUCCESS, description:msg,mmid:multimediaResource.id?.toString())
+				}
 				return
-			}
-			catch(IBMTransJobException ibmex)
+			//}
+			/*catch(IBMTransJobException ibmex)
 			{
 				status.setRollbackOnly()
-				msg = ibmex.getMessage()
-				stat = APIStatusCode.MM_CREATION_ERROR
-				ibmex.printStackTrace()
-				def xmlStr = saveAjaxResponse(msg,stat,null)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-				return
+				msg=ibmex.getMessage();
 			}
 			catch(SynoteException syex)
 			{
 				status.setRollbackOnly()
 				msg = syex.getMessage()
-				stat = APIStatusCode.MM_CREATION_ERROR
-				def xmlStr = saveAjaxResponse(msg,stat,null)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-				return
 			}
 			catch(java.net.ConnectException conex)
 			{
 				status.setRollbackOnly()
 				IBMTransJobService.handleConnectException(conex)
 				msg = conex.getMessage()
-				stat = APIStatusCode.MM_CREATION_ERROR
-				def xmlStr = saveAjaxResponse(msg,stat,null)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-				return
 			}
 			catch(java.io.IOException ioe)
 			{
 				status.setRollbackOnly()
-				ioe.printStackTrace()
-				log.error "java.io.IOException:"+ioe.getMessage()
 				msg = "The transcribing service couldn't return a valid response. Please double check if the media url is valid."
-				stat = APIStatusCode.MM_CREATION_ERROR
-				def xmlStr = saveAjaxResponse(msg,stat,null)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-				return
 			}
 			catch(Exception e)
 			{
 				status.setRollbackOnly()
 				msg = e.getMessage()
-				stat = APIStatusCode.MM_CREATION_ERROR
-				e.printStackTrace()
-				def xmlStr = saveAjaxResponse(msg,stat,null)
-				render(text:xmlStr,contentType:"text/xml", encoding:"UTF-8")
-				return
 			}
-		}
+			finally
+			{
+				render(contentType:"text/json"){
+					error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+				}
+				return
+			}*/
 		
 	}
 	
@@ -648,7 +400,7 @@ class MultimediaResourceController {
 		multimediaResource.title = params.title
 		multimediaResource.perm = PermissionValue.findByVal(params.perm?.toString())
 		
-		//multimedia description and tags
+		//multimedia description
 		if(multimediaResource.note == null)
 		{
 			multimediaResource.note = new MultimediaTextNote(owner:owner, content:params.note)
@@ -670,7 +422,7 @@ class MultimediaResourceController {
 			{
 				tags.each{t->
 					if(t.trim()?.size() >0)
-						multimediaResource.addToTags(new MultimediaTag(owner: owner,content:tag.trim()))
+						multimediaResource.addToTags(new MultimediaTag(owner: owner,content:t.trim()))
 				}
 			}
 			else if(tags?.size()>0)//tags is an array of string

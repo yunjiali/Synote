@@ -92,7 +92,7 @@
 			    	<img  src="${resource(dir: 'images/skin', file: 'document_pencil_16.png')}"  /> create </a>
 			    	<ul>
 			    		<li>
-			    			<g:link controller="multimediaResource" action="create" title="recording diretory">
+			    			<g:link controller="multimediaResource" action="create_old" title="recording diretory">
 			    			<img  src="${resource(dir: 'images/skin', file: 'video_16.png')}"  />
 			    			 Create a recording </g:link>
 			    		</li>

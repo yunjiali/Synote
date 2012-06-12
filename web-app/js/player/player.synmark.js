@@ -271,17 +271,18 @@ var Synmark = Base.extend({
 				//console.log("status:"+status);
 				if(data.success) //status == 200
 				{
-					callback(data.success.description,null);
+					return callback(data.success.description,null);
 				}
 				else if(data.error)
 				{
-					callback(data.error.description,"error");
+					return callback(data.error.description,"error");
 				}
 				
 			},
 			error:function(jqXHR,textStatus,errorThrown)
 			{
-				callback(resp.error.descrption,"error");
+				var resp =$.parseJSON(jqXHR.responseText);
+				return callback(resp.error.descrption,"error");
 			}
 		});
 	},

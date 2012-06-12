@@ -12,13 +12,51 @@ function SynoteMultimediaServiceClient(url)
 }
 
 /*
+ * Connect to synote-multimedia-service and get metadata for a video or audio resource
+ * params:
+ * videourl: the url of the video
+ * callback (data,errorMsg): the callback function when the response is successfully obtained
+ */
+SynoteMultimediaServiceClient.prototype.getMetadata = function(videourl,callback)
+{
+	$.ajax({
+		   type: "GET",
+		   url: this.getMetadataURL,
+		   data: {videourl:encodeURIComponent(videourl)}, 
+		   timeout:60000, 
+		   dataType: "json",
+		   success:function(data,textStatus, jqXHR)
+		   {
+				if(data != null)
+				{
+					callback(data, null);
+					return;
+				}
+				else
+				{
+					callback(null, data.message);
+					return;
+				}
+		   },
+		   error:function(jqXHR,textStatus,errorThrown)
+		   {
+			   //console.log(jqXHR);
+			   
+			   var resp =$.parseJSON(jqXHR.responseText);
+			   callback(null, resp.message);
+			   return;
+		   }
+	});		
+}
+
+/*
  * Connect to synote-multimedia-service and generate thumbnail picture at a specific time
  * params:
  * videourl: the url of the video
  * id: uuid of the recording
  * start: the start time
  * end: the end time
- * callback: the callback function when the response is successfully obtained
+ * callback (thumbnail_url,errorMsg): the callback function when the response is successfully obtained
  */
 SynoteMultimediaServiceClient.prototype.generateThumbnail = function(videourl, id, start, end, callback)
 {

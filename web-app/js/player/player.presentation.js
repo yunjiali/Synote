@@ -237,7 +237,7 @@ var Presentation = Base.extend({
 		$("#old_index").val(old_index);
 		$("#slide_id").val(slide_id);
 	},
-	showMsg:function(msg,error)
+	showMsg:function(msg,type)
 	{
 		var msg_div = $("#slides_msg_div");
 		if(type == "error")
