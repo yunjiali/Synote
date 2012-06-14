@@ -267,6 +267,17 @@ function isYouTubeURL(url,bool) {
     if (url.match(pattern)) {
         return (bool !== true) ? RegExp.$1 : true;
     } else { return false; }
+}
+
+function isValidURL(str) {
+	
+	var pattern = /^(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$/;
+		if(!pattern.test(str)) {
+		  return false;
+	  } else {
+		  return true;
+	  }
+	
 };
 
 //get url variables

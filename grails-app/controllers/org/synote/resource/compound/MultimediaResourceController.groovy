@@ -2,6 +2,7 @@ package org.synote.resource.compound
 
 import grails.converters.*
 import org.xml.sax.SAXParseException
+import org.synote.player.client.PlayerException
 import org.synote.resource.Resource
 import org.synote.resource.ResourceService
 import org.synote.resource.single.text.MultimediaTag
@@ -14,6 +15,7 @@ import org.synote.permission.*
 import org.synote.permission.exception.ResourcePermissionException
 import org.synote.user.User
 import org.synote.user.SecurityService
+import org.synote.resource.compound.WebVTTService
 import org.synote.user.group.UserGroup
 import org.synote.user.group.UserGroupMember
 import org.synote.integration.viascribe.ViascribeService;
@@ -49,6 +51,7 @@ class MultimediaResourceController {
 	def enterMediaService
 	def resourceService
 	def configurationService
+	def webVTTService
 	
 	private auth()
 	{
@@ -157,12 +160,29 @@ class MultimediaResourceController {
 	
 	def createyt = {
 		//def multimediaResource = new MultimediaResource(params)
+		//def videoid = regExService.getVideoIDfromYouTubeURL("http://www.youtube.com/watch?v=4ceaKRyUaQc")
+		//def srt = resourceService.getSRTfromYouTube(videoid,null)
+		//println "srtt:"+srt
 		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
 		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
 		return [isAllowedIPAddress:isAllowedIPAddress,
 				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
 	}
 	
+	def createinet = {
+		//def multimediaResource = new MultimediaResource(params)
+		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
+		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		return [isAllowedIPAddress:isAllowedIPAddress,
+				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
+	}
+	
+	def createlocl = {
+		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
+		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		return [isAllowedIPAddress:isAllowedIPAddress,
+				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
+	}
 	/**
 	 * Ajax, add group permission
 	 */
@@ -288,68 +308,104 @@ class MultimediaResourceController {
 				multimediaResource.addToTags(new MultimediaTag(owner: user,content:t.trim()))
 		}
 		
-		multimediaResource.thumbnail = params.thumbnail?params.thumbnail:null
 		multimediaResource.isVideo = params.isVideo?Boolean.valueOf(params.isVideo):true
 		multimediaResource.duration = params.duration?Integer.valueOf(params.duration):null
 		
-			//try
-			//{
-				if(multimediaResource.hasErrors() || !multimediaResource.save(flush:true))
-				{
-					msg = "Cannot save new recording ${multimediaResource.title}."
-					render(contentType:"text/json"){
-						error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
-					}
-					return
-				}
-				
-				//multimediaResource.index()
-				
-				if(params.useIBMTrans && securityService.isAllowedIPAddress(request.remoteAddr) && IBMTransJobService.getIBMTransJobEnabled()== "true" && IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs())
-				{
-					IBMTransJobService.addJob(multimediaResource, title, url.trim())
-				}
-				
-				msg = "Recording '${multimediaResource.title}' was successfully created"
-				render(contentType:"text/json"){
-					success(stat:APIStatusCode.SUCCESS, description:msg,mmid:multimediaResource.id?.toString())
-				}
-				return
-			//}
-			/*catch(IBMTransJobException ibmex)
+		//save or generate thumbnail
+		if(!params.thumbnail || params.thumbnail == "")
+		{
+			if(multimediaResource.isVideo ==true)
 			{
-				status.setRollbackOnly()
-				msg=ibmex.getMessage();
+				//println "generating"
+				def uuid = java.util.UUID.randomUUID().toString()
+				multimediaResource.uuid = uuid
+				multimediaResource.thumbnail = resourceService.generateThumbnail(url,uuid,null,null)	
 			}
-			catch(SynoteException syex)
+		}
+		else
+		{
+			multimediaResource.thumbnail = params.thumbnail
+		}
+		
+		try
+		{
+			if(multimediaResource.hasErrors() || !multimediaResource.save(flush:true))
 			{
-				status.setRollbackOnly()
-				msg = syex.getMessage()
-			}
-			catch(java.net.ConnectException conex)
-			{
-				status.setRollbackOnly()
-				IBMTransJobService.handleConnectException(conex)
-				msg = conex.getMessage()
-			}
-			catch(java.io.IOException ioe)
-			{
-				status.setRollbackOnly()
-				msg = "The transcribing service couldn't return a valid response. Please double check if the media url is valid."
-			}
-			catch(Exception e)
-			{
-				status.setRollbackOnly()
-				msg = e.getMessage()
-			}
-			finally
-			{
+				msg = "Cannot save new recording ${multimediaResource.title}."
 				render(contentType:"text/json"){
 					error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
 				}
 				return
-			}*/
-		
+			}
+			
+			//multimediaResource.index()
+			
+			if(params.useIBMTrans && securityService.isAllowedIPAddress(request.remoteAddr) && IBMTransJobService.getIBMTransJobEnabled()== "true" && IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs())
+			{
+				IBMTransJobService.addJob(multimediaResource, title, url.trim())
+			}
+			
+			if(rlocation == "youtube" && params.cc == "true")
+			{
+				def videoid = regExService.getVideoIDfromYouTubeURL(url)
+				if(videoid != null)
+				{
+					def srt = resourceService.getSRTfromYouTube(videoid,null)
+					if(srt!=null)
+					{
+						//Save srt as webvtt in Synote	
+						webVTTService.createWebVTTResourceFromSRT(multimediaResource,srt)
+					}
+				}
+			}
+			
+			msg = "Recording '${multimediaResource.title}' was successfully created"
+			render(contentType:"text/json"){
+				success(stat:APIStatusCode.SUCCESS, description:msg,mmid:multimediaResource.id?.toString())
+			}
+			return
+		}
+		catch(IBMTransJobException ibmex)
+		{
+			status.setRollbackOnly()
+			msg=ibmex.getMessage()
+		}
+		catch(SynoteException syex)
+		{
+			status.setRollbackOnly()
+			msg = syex.getMessage()
+		}
+		catch(java.net.ConnectException conex)
+		{
+			status.setRollbackOnly()
+			IBMTransJobService.handleConnectException(conex)
+			msg = conex.getMessage()
+		}
+		catch(java.io.IOException ioe)
+		{
+			status.setRollbackOnly()
+			msg = "The transcribing service couldn't return a valid response. Please double check if the media url is valid."
+		}
+		catch(PlayerException playerex)
+		{
+			msg = "The recording is sucessfully created. But transcript cannot be uploaded with the recording."
+			render(contentType:"text/json"){
+				error(stat:playerex.getStatusCode(), description:msg)
+			}
+			return
+		}
+		catch(Exception e)
+		{
+			status.setRollbackOnly()
+			msg = e.getMessage()
+		}
+		finally
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+			}
+			return
+		}
 	}
 	
 	def edit = {

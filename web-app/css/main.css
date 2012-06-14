@@ -23,6 +23,11 @@ label.error {
   margin-top: 2px;
 }
 
+.help-block
+{
+	color:#999;
+}
+
 /* Search form */
 #search_bar_div
 {

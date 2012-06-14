@@ -3,6 +3,7 @@ package org.synote.resource
 import org.synote.utils.DatabaseService
 import org.synote.user.SecurityService
 import org.synote.utils.UtilsService
+import org.synote.config.ConfigurationService
 import org.synote.player.client.TimeFormat
 import org.synote.resource.compound.*
 import org.synote.resource.single.text.TagResource
@@ -15,12 +16,17 @@ import org.synote.analysis.Views
 import grails.converters.*
 import groovy.json.*
 
+import groovyx.net.http.HTTPBuilder
+import static groovyx.net.http.ContentType.*
+import static groovyx.net.http.Method.*
+
 class ResourceService {
 
 	def databaseService
 	def securityService
 	def utilsService
 	def linkedDataService
+	def configurationService
 	
     static transactional = true
 
@@ -304,5 +310,87 @@ class ResourceService {
 		}
 		
 		return [cc:cc,slides_count:slides_count,synmarks_count:synmarks_count]
+	}
+	
+	/*
+	 * Generating thumbnail pictures using synote-multimedia-service 
+	 */
+	def generateThumbnail(url, uuid, start,end)
+	{
+		def videourl = url?.encodeAsURL()
+		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		if(!synoteMultimediaServiceURL)
+			return null
+		def generateThumbnailURL = configurationService.getConfigValue("org.synote.service.generateThumbnail.path")
+		def requestURL = synoteMultimediaServiceURL+generateThumbnailURL	
+		
+		def http = new HTTPBuilder(synoteMultimediaServiceURL)
+		def thumbnail_url = null
+		try
+		{
+			def query = [videourl:videourl, id:uuid]
+			if(start != null)
+				query.put("start",start)
+			if(end != null)
+				query.put("end",end)
+			http.get(path:generateThumbnailURL, query:query){ resp,json->
+			
+				//println "------------------"
+				//println json
+				thumbnail_url = json.getAt("thumbnail_url")
+				return thumbnail_url
+			}
+		}catch(Exception ex)
+		{
+			//do nothing
+			log.debug(ex.getMessage())	
+		}
+		finally
+		{
+			return thumbnail_url	
+		}
+	}
+	
+	/*
+	 * Get closed captioning in srt format from YouTube
+	 * videoid: the id of YouTube Video
+	 * lang: language code, default is en
+	 */
+	def getSRTfromYouTube(videoid,lang)
+	{
+		if(videoid == null)
+			return null
+			
+		String l = lang
+		if(lang == null)
+			l= "en"
+		String fmt = "srt"
+		
+		def http = new HTTPBuilder("http://www.youtube.com")
+		def srt = null
+		try
+		{
+			def query = [v:videoid, fmt:fmt, lang:l]
+			
+			http.get(path:"/api/timedtext", contentType:TEXT, query:query){ resp,reader->
+			
+				String s = reader.text
+				if(s?.size() > 0)
+					srt = s
+				
+				return srt
+			}
+			
+			
+		}catch(Exception ex)
+		{
+			//do nothing
+			println ex.getMessage()
+			log.debug(ex.getMessage())
+		}
+		finally
+		{
+			return srt
+		}
 	}
 }

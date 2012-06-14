@@ -47,6 +47,9 @@ grails.project.dependency.resolution = {
 		runtime "org.codehaus.gpars:gpars:0.11"
 		runtime 'net.sf.jtidy:jtidy:r938'
 		runtime 'net.sourceforge.htmlunit:htmlunit:2.9'
+		compile('org.codehaus.groovy.modules.http-builder:http-builder:0.5.2') {
+			excludes "commons-logging", "xml-apis", "groovy"
+		}
     }
 
 }

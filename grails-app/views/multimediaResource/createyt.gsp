@@ -1,6 +1,6 @@
 <html>
 <head>
-<title><g:message code="org.synote.resource.compound.multimediaResource.create.title" /></title>
+<title><g:message code="org.synote.resource.compound.multimediaResource.createyt.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
 <g:urlMappings/>
@@ -30,6 +30,15 @@ function showMsg(msg,type)
 	{
 		msg_div.html("<div class='alert alert-success'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
 	}
+}
+
+function resetForm()
+{
+	$("#ugc_div").hide();
+	$("#metadata_div").hide();
+	$("#controls_div").hide();
+
+	$("#multimediaCreateForm .resetFields").clearFields();
 }
 
 $(document).ready(function(){
@@ -79,7 +88,6 @@ $(document).ready(function(){
 				//console.log("status:"+status);
 				if(data.success) //status == 200
 				{
-					showMsg(data.success.description,null);
 					$("#multimediaCreateForm_div").remove();
 					var mmid = data.success.mmid;
 					var edit_recording_url = $('#edit_recording_span a').attr('href')+"/"+mmid; 
@@ -87,6 +95,7 @@ $(document).ready(function(){
 					var play_recording_url = $('#play_recording_span a').attr('href')+"/"+mmid;
 					$('#play_recording_span a').attr('href',play_recording_url);
 					$("#after_save_div").show(200);
+					showMsg(data.success.description,null);
 				}
 				else if(data.error)
 				{
@@ -111,16 +120,14 @@ $(document).ready(function(){
 	
 	
 	$("#url_submit_btn").click(function(){
-		$("#ugc_div").hide();
-		$("#metadata_div").hide();
-		$("#controls_div").hide();
-		
 		var url = $("#url").val();
 		if(!isYouTubeURL(url,true))
 		{
 			showMsg("The YouTube video URL is not valid","error");
 			return;
 		}
+
+		resetForm();
 		
 		$("#url_submit_btn").button('loading');
 		$("#form_loading_div").show();
@@ -236,19 +243,19 @@ $(document).ready(function(){
 					      	<div class="control-group">
 								<label for="title" class="control-label"><b><em>*</em>Title</b></label>
 						      	<div class="controls">
-						        	<input type='text' autocomplete="off" class="required span4" name='title' id='title'/>
+						        	<input type='text' autocomplete="off" class="required span4 resetFields" name='title' id='title'/>
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
 								<label for="note" class="control-label"><b>Description</b></label>
 						      	<div class="controls">
-						        	<textarea class="input-xlarge span4" name='note' id='note' rows="8" id="note"></textarea>
+						        	<textarea class="input-xlarge span4 resetFields" name='note' id='note' rows="8" id="note"></textarea>
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
 								<label for="tags" class="control-label"><b>Tags</b></label>
 						      	<div class="controls">
-						        	<input class="span4" name='tags' id='tags' />
+						        	<input class="span4 resetFields" name='tags' id='tags' />
 						        	<span class="help-block">Please separate the tags by comma ","</span>
 						      	</div>
 					      	</div>
@@ -275,14 +282,14 @@ $(document).ready(function(){
 				      	</div>-->
 				      	<div class="span4" id="metadata_div" style="display:none;"> <!-- div for low level metadata -->
 				      		<div class="control-group">
-								<label for="duration" class="control-label"><b>Duration</b></label>
+								<label for="duration" class="control-label"><b><em>*</em>Duration</b></label>
 						      	<div class="controls">
-						      		<input type="text" class="span2 disabled" name="duration_span" id="duration_span" disabled="disabled"/>
-						      		<input type='hidden' class="required" name='duration' id='duration'/>
+						      		<input type="text" class="span2 disabled resetFields" name="duration_span" id="duration_span" disabled="disabled"/>
+						      		<input type='hidden' class="required resetFields" name='duration' id='duration'/>
 						      	</div>
 					      	</div>
 					      	<div class="control-group">
-								<label for="isVideo" class="control-label"><b>Video or Audio?</b></label>
+								<label for="isVideo" class="control-label"><b><em>*</em>Video or Audio?</b></label>
 						      	<div class="controls">
 						      		<label class="radio">
 						      			<input type="radio"	name="isVideo" value="true" id="isVideo_true" checked="checked" disabled="disabled"/>Video
@@ -292,14 +299,22 @@ $(document).ready(function(){
 						      		</label>
 						      	</div>
 					      	</div>
-					      	
 					      	<div class="control-group">
 								<label class="control-label"><b>Thumbnail Picture</b></label>
 						      	<div class="controls">
 						        	<img src="" class="thumbnail-img" id="thumbnail_img"/>
 						      	</div>
-						      	<input type='hidden' class="required span4" name='thumbnail' id='thumbnail' />
+						      	<input type='hidden' class="span4 resetFields" name='thumbnail' id='thumbnail' />
 						    </div>
+						    <div class="control-group">
+						    	<label class="control-label" for="cc"><b>Closed Captioning</b></label>
+					      		<div class="controls">
+					      			<label class="checkbox">
+					      				<input type="checkbox" name="cc" id="cc" checked="checked" value="true"/>
+					      				Automatic upload closed captioning from YouTube to Synote if available
+					      			</label>
+					      		</div>
+					      	</div>
 				      	</div>
 					</fieldset>
 					<div class="form-actions" id="controls_div" style="display:none;">

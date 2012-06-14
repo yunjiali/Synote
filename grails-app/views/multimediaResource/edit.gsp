@@ -138,7 +138,7 @@
 			<g:render template="/common/message" model="[bean: multimediaResource]" />
 			<div id="error_msg_div"></div>
 			<div>
-				<g:form method='POST' id="multimediaEditForm" name='multimediaEditForm' controller="multimediaResource" action="update">
+				<g:form method='POST' name='multimediaEditForm' controller="multimediaResource" action="update">
 					<fieldset>
 						<div class="span5">
 							<input type="hidden" name="id" value="${multimedia.id}" />

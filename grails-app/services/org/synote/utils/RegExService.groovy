@@ -18,7 +18,9 @@ class RegExService {
 	private static Pattern unacceptedSearchTermRegEx = ~/^(\W*)|(.*\*)$/
 	//University of Southampton and localhost
 	private static Pattern allowedIPv4AddressRegEx = ~/\b((152)\.(78)\.\d{1,3}\.\d{1,3})|(127\.0\.0\.1)\b/
-	private static Pattern allowedIPv6AddressRegEx = null
+	private static Pattern allowedIPv6AddressRegEx = null 
+	//private static Pattern youtubeURLRegEx = ~ /(youtu\.be\/|youtube\.com\/(watch\?(.*&)?v=|(embed|v)\/))([^\?&"'>]+)/
+	
 	
 	def isUserGuid(String guidStr)
 	{
@@ -79,5 +81,21 @@ class RegExService {
 	def isUnacceptedSearchTerm(String query)
 	{
 		return unacceptedSearchTermRegEx.matcher(query).matches()
+	}
+	
+	def getVideoIDfromYouTubeURL(String url)
+	{
+		def vid = null
+		
+		Pattern p = Pattern.compile("http.*\\?v=([a-zA-Z0-9_\\-]+)(?:&.)*")
+			
+		Matcher m = p.matcher(url)
+		 
+		if (m.matches())
+		{
+			vid = m.group(1)
+		}
+		
+		return vid
 	}
 }

@@ -950,6 +950,7 @@ class PlayerService {
 	
 //###########################  read transcript from database and generate srt  ######################################################################
 	/*
+	 * DEPRECATED
 	 * Extract the time and character from the old transcriptData format to start, end time and sentence mode
 	 */
 	private TranscriptDataSimple convertToSimple(TranscriptData transcript)
@@ -1107,7 +1108,8 @@ class PlayerService {
 	public TranscriptItemSRT[] convertToSRTObjectFromString(String content)
 	{
 		def srtList = []
-		String[] srtItems = content.split("\\r\\n\\r\\n");
+		String[] srtItems = content.split("\\n\\n");
+		//println "allsize:"+srtItems.size()
 		if(srtItems.length > 0)
 		{
 			for(int i=0;i<srtItems.length;i++)
@@ -1120,7 +1122,11 @@ class PlayerService {
 				{
 					continue
 				}
-				String[] srtContent =srtItems[i].split("\\r\\n",3);
+				String[] srtContent =srtItems[i].split("\\n",3);
+				//println "size:"+srtContent.size()
+				//srtContent.each{
+				//	println "srtContent:"+it
+				//}
 				
 				if(srtContent.length == 3)
 				{
@@ -1165,6 +1171,9 @@ class PlayerService {
 		}
 	}
 	//convert to transcriptitemsrt from transcriptdata
+	/*DEPRECATED
+	 * 
+	 */
 	public TranscriptItemSRT[] convertToSRTObject(TranscriptData data)
 	{
 		TranscriptDataSimple simpleData = convertToSimple(data)
@@ -1232,6 +1241,7 @@ class PlayerService {
 	   return true
    }
    /*
+	* DEPRECATED
 	* Convert srt json (TranscriptItemSRT) objects to srt string
 	* Not used
 	*/
@@ -1257,6 +1267,7 @@ class PlayerService {
    }
    
    /*
+    * DEPRECATED
     * Convert srt into TranscriptData
     * Not used
     */

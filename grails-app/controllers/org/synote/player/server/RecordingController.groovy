@@ -384,7 +384,7 @@ class RecordingController {
 		String[] tags = params.synmark_tags.split(",")
 		String nextSynmark = (params.synmark_next?.trim()?.size() > 0) ? params.synmark_next?.trim() : null
 		String thumbnail = params.synmark_thumbnail?.size()>0? params.synmark_thumbnail:null
-		println "thumbnail:"+thumbnail
+		//println "thumbnail:"+thumbnail
 		
 		SynmarkData synmarkData = new SynmarkData(start,end,title,note,tags,nextSynmark,thumbnail)
 		try
@@ -943,29 +943,7 @@ class RecordingController {
 			render ""
 			return
 		}
-		
-		/*String responseStr 
-		if(type == "srt")
-		{
-			log.debug "convert srt file."
-			responseStr = playerService.convertToSRT(transList[0])
-			render responseStr
-			return
-		}
-		if(type=="json")
-		{
-			log.debug "convert to webvtt json"
-			def srtList = playerService.convertToSRTObject(transList[0])
-			render srtList.encodeAsJSON()
-			return	
-		}
-		else
-		{
-			log.debug "convert tt file."
-			responseStr = playerService.convertToTT(transList[0])
-			render responseStr
-			return
-		}*/
+
 		if(transList?.size() == 1)
 		{
 			def cuesList = transList[0].getCues()
@@ -1052,122 +1030,8 @@ class RecordingController {
 			return
 		}
 	}
-	/*
-	 * Deprecated
-	 */
-	//Get the transcript draft
-	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
-	def getTranscriptDraftAjax = {
-		def multimediaId = params.multimediaId
-		if(!multimediaId)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MMID_MISSING, description:"Cannot find multimedia id!")
-			}
-			return
-		}
-		def multimedia = MultimediaResource.get(multimediaId.toLong())
-		if(!multimedia)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MM_NOT_FOUND, description:"Cannot find the multimedia resource with id=${multimediaId}!")
-			}
-			return
-		}
-		if(!playerService.canEdit(multimedia))
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.TRANSCRIPT_PERMISSION_DENIED, description:"You are not entitled to edit the transcript.")
-			}
-			return
-		}
-		def user = securityService.getLoggedUser()
-		def file = webVTTService.getWebVTTDraft(user,multimediaId)
-		//file doesn't exist
-		if(!file)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.TRANSCRIPT_DRAFT_NOT_FOUND, description:"Draft is not found for this transcript!")
-			}
-			return
-		}
-		
-		String vttStr = file.getText("utf-8")
-		try
-		{
-			def cueList = webVTTService.convertToWebVTTObjectFromString(vttStr)
-			//println "srtList size:"+srtList.encodeAsJSON()
-			render cueList.encodeAsJSON()
-			return
-		}
-		catch(PlayerException ex)
-		{
-			render(contentType:"text/json"){
-				error(stat:ex.getStatusCode(), description:ex.getMessage())
-			}
-			return
-		}
-	}
-	//the draft will be saved at temp/userid/transcript/multimediaId.vtt
-	/*
-	 * Deprecated
-	 */
-	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
-	def saveTranscriptDraftAjax = {
-		
-		def multimediaId = params.multimediaId
-		if(!multimediaId)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MMID_MISSING, description:"Cannot find multimedia id!")
-			}
-			return
-		}
-		def multimedia = MultimediaResource.get(multimediaId.toLong())
-		if(!multimedia)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MM_NOT_FOUND, description:"Cannot find the multimedia resource with id=${multimediaId}!")
-			}
-			return
-		}
-		if(!playerService.canEdit(multimedia))
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.TRANSCRIPT_PERMISSION_DENIED, description:"You are not entitled to edit the transcript.")
-			}
-			return
-		}
-		
-		if(!params.transcripts)
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.TRANSCRIPT_TRANSCRIPTS_MISSING, description:"Cannot find updated transcripts")
-			}
-			return
-		}
-		
-		def transcriptsJSON = JSON.parse(params.transcripts)
-		if(webVTTService.validateWebVTTJSON(transcriptsJSON))
-		{
-			def webVTTStr = webVTTService.convertJSONToWebVTT(transcriptsJSON)
-			def user = securityService.getLoggedUser()
-			
-			webVTTService.createWebVTTDraft(webVTTStr,user,multimediaId)
-			
-			render(contentType:"text/json"){
-				success(stat:APIStatusCode.SUCCESS, description:"The transcript draft has been successfully saved.")
-			}
-			return
-		}
-		else
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.TRANSCRIPT_WEBVTT_JSON_INVALID, description:"The transcripts are not valid.")
-			}
-			return
-		}
-	}
+	
+	
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def saveTranscriptAjax = {
 		def multimediaId = params.multimediaId

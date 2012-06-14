@@ -66,7 +66,7 @@ class WebVTTService {
 	   return true   
    }
    /*
-   * Get WebVTT format of transcript
+   * Get WebVTTData of transcript
    */
   WebVTTData[] getTranscripts(multimedia)
   {
@@ -98,37 +98,37 @@ class WebVTTService {
 	  
 	  return transcripts
   }
-  /*
-  * Convert WebVTTResource to WebVTT file
-  */
- public String convertToWebVTT(WebVTTData vtt)
- {
-	 StringBuilder builder = new StringBuilder()
-	 //attach the file header
-	 builder.append(vtt.fileHeader)
-	 builder.append("\r\n\r\n")
-	 
-	 def cues =  vtt.cues
-	 int i =1
-	 cues.sort{it.start}.each{cue->
-		 if(cue.cueText != null && cue.cueText?.trim()?.size() != 0)
-		 {
-			 builder.append(String.valueOf(i++))
-			 builder.append("\r\n")
-			 builder.append(TimeFormat.getInstance().toWebVTTTimeString(cue.start))
-			 builder.append(" --> ")
-			 builder.append(TimeFormat.getInstance().toWebVTTTimeString(cue.end))
-			 if(!cue.cueSettings.equals(null))
+	  /*
+	  * Convert WebVTTResource to WebVTT file
+	  */
+	 public String convertToWebVTT(WebVTTData vtt)
+	 {
+		 StringBuilder builder = new StringBuilder()
+		 //attach the file header
+		 builder.append(vtt.fileHeader)
+		 builder.append("\r\n\r\n")
+		 
+		 def cues =  vtt.cues
+		 int i =1
+		 cues.sort{it.start}.each{cue->
+			 if(cue.cueText != null && cue.cueText?.trim()?.size() != 0)
 			 {
-				 builder.append(" "+cue.cueSettings)
+				 builder.append(String.valueOf(i++))
+				 builder.append("\r\n")
+				 builder.append(TimeFormat.getInstance().toWebVTTTimeString(cue.start))
+				 builder.append(" --> ")
+				 builder.append(TimeFormat.getInstance().toWebVTTTimeString(cue.end))
+				 if(!cue.cueSettings.equals(null))
+				 {
+					 builder.append(" "+cue.cueSettings)
+				 }
+				 builder.append("\r\n")
+				 builder.append(cue.cueText)
+				 builder.append("\r\n\r\n")
 			 }
-			 builder.append("\r\n")
-			 builder.append(cue.cueText)
-			 builder.append("\r\n\r\n")
 		 }
+		 return builder.toString()
 	 }
-	 return builder.toString()
- }
  	/*
  	 * Convert WebVTTResource to .srt file
  	 */
@@ -160,6 +160,9 @@ class WebVTTService {
 		return builder.toString()
 	}
  
+	/*
+	 * Convert WebVTT to plain text
+	 */
 	def convertToText(WebVTTData vtt)
 	{
 		StringBuilder builder = new StringBuilder()
@@ -176,6 +179,56 @@ class WebVTTService {
 		return builder.toString()
 	}
 	
+	/*
+	 * save SRT string as new WebVTTResource resource. Create the annotations and save it
+	 * make sure the original webvttresource and resource annotation related to it is deleted before calling this method
+	 */
+	def createWebVTTResourceFromSRT(MultimediaResource multimedia,String srt) throws PlayerException
+	{
+		def user = securityService.getLoggedUser()
+		if(!user)
+		{
+			throw new PlayerException(APIStatusCode.AUTHENTICATION_FAILED,"User authentication failed.");
+		}
+		def owner = multimedia.owner
+		
+		def webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
+		def anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
+		
+		def items = playerService.convertToSRTObjectFromString(srt)
+		items.each{item ->
+			if(item.getText()?.trim().size() >0)
+			{
+				def cue = new WebVTTCue(
+					content: item.getText()?.trim(),
+					owner: owner,
+					title:"WebVTTCue",
+					cueIndex:item.getIndex(),
+					cueSettings:"")
+				webVTTResource.addToCues(cue)
+				
+				def sourceStart = item.getIndex()
+				def targetStart = item.getStart()
+				def targetEnd = item.getEnd()
+				anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
+						targetStart: targetStart,
+						targetEnd: targetEnd))
+				
+				WebVTTResource.withTransaction {status->
+					
+					if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+					{
+						 throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
+					}
+					
+					if(anno.hasErrors() || !anno.save(flush:true))
+					{
+						throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
+					}
+				}
+			}
+		}
+	}
    /*
     * Get WebVTTCue
     */
@@ -336,7 +389,9 @@ class WebVTTService {
    }
    
    /*
-    * Create a new cue from cueJSON
+    * Create a new cue from cueJSON (WebVTTCueData)
+    * 
+    * This method is used for Synote Player only.
     * 
     * No matter who edits the recording, the owner is the multimedia's owner
     */
@@ -384,7 +439,7 @@ class WebVTTService {
 					throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
 			   }
 			   
-			   println "cueId:"+cue.id
+			   //println "cueId:"+cue.id
 			   cueId = cue.id
 			   
 			   if(anno.hasErrors() || !anno.save(flush:true))
@@ -393,8 +448,6 @@ class WebVTTService {
 			   }
 		   }
 	   }
-	   
-	   return cueId
    }
    
    /*
