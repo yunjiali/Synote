@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Analyse multimedia using NERD</title>
+<title>Analyse Synmark using NERD</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
 </head>
@@ -8,7 +8,7 @@
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:render template="/common/userNav" model="['active':'recordings']"/>
+			<g:render template="/common/userNav" model="['active':'synmarks']"/>
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline">NERD Recording</h2>
@@ -37,25 +37,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- title row -->
-						<tr id="tr_${multimedia.id}">
-							<td><input id="cbx_${multimedia.id}" name="fields" value="${multimedia.id}" type="checkbox"/></td>
+						<!-- title row, synmark title could be empty -->
+						<g:if test="${synmark.title?.trim()?.size()>0}">
+						<tr id="tr_${synmark.id}">
+							<td><input id="cbx_${synmark.id}" name="fields" value="${synmark.id}" type="checkbox"/></td>
 							<td>Title</td>
-							<td id="text_${multimedia.id}">${multimedia.title}</td>
+							<td id="text_${synmark.id}">${synmark.title}</td>
 							<td>No entity yet</td>
 						</tr>
+						</g:if>
 						<!-- recording description row -->
-						<g:if test="${multimedia.note?.content?.trim()?.size()>0}">
-						<tr id="tr_${multimedia.note.id}">
-							<td><input id="cbx_${multimedia.note?.id}" name="fields" value="${multimedia.note?.id}" type="checkbox"/></td>
+						<g:if test="${synmark.note?.content?.trim()?.size()>0}">
+						<tr id="tr_${synmark.note.id}">
+							<td><input id="cbx_${synmark.note?.id}" name="fields" value="${synmark.note?.id}" type="checkbox"/></td>
 							<td>Description</td>
-							<td id="text_${multimedia.note.id}">${multimedia.note?.content}</td>
+							<td id="text_${synmark.note.id}">${synmark.note?.content}</td>
 							<td>No entity yet</td>
 						</tr>
 						</g:if>
 						<!-- recording tags rows -->
-						<g:if test="${multimedia.tags?.size() >0}">
-							<g:each in="${multimedia.tags}" var="tag">
+						<g:if test="${synmark.tags?.size() >0}">
+							<g:each in="${synmark.tags}" var="tag">
 								<g:if test="${tag.content?.trim()?.size() >0}">
 								<tr id="tr_${tag.id}">
 									<td><input id="cbx_${tag.id}" name="fields" value="${tag.id}" type="checkbox"/></td>
