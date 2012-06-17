@@ -9,6 +9,7 @@ import org.synote.resource.single.text.WebVTTCue
 import org.synote.annotation.ResourceAnnotation
 import org.synote.api.APIStatusCode
 import org.synote.permission.PermService
+import org.synote.resource.compound.WebVTTService
 import grails.converters.*
 
 import java.util.UUID
@@ -23,6 +24,7 @@ class NerdController {
 	
 	def nerdService
 	def permService
+	def webVTTService
 	/*
 	 * Extract named entity using nerd
 	 * params: extractor, language (default "en"), text
@@ -279,7 +281,7 @@ class NerdController {
 		
 		if(!synmarkResource)
 		{
-			flash.error = "Cannot find the synmark"
+			flash.error = "Cannot find the synmark."
 			redirect(action:'index', controller:'user')
 			return
 		}
@@ -288,18 +290,59 @@ class NerdController {
 		def anno = ResourceAnnotation.findBySource(synmarkResource)
 		if(!anno || !anno.target)
 		{
-			flash.error = "Cannot find the annotation"
+			flash.error = "Cannot find the annotation."
 			redirect(action:'index', controller:'user')
 			return
 		}
 		def perm = permService.getPerm(anno.target)
 		if(perm?.val <=0)
 		{
-			flash.error = "Access denied! You don't have permission to access this synmark"
+			flash.error = "Access denied! You don't have permission to access this synmark."
 			redirect(controller:'user',action: 'index')
 			return
 		}
 		
 		return [synmark:synmarkResource]
+	}
+	
+	/*
+	 * Nerd WebVTT Cue
+	 */
+	def nerdcue = {
+		def cue = WebVTTCue.get(params.id)
+		if(!cue)
+		{
+			flash.error = "Cannot find the transcript block."
+			redirect(action:'index', controller:'user')
+			return
+		}
+		
+		def anno = ResourceAnnotation.findBySource(cue.webVTTFile)
+		
+		if(!anno || !anno.target)
+		{
+			flash.error = "Cannot find the annotation."
+			redirect(action:'index', controller:'user')
+			return
+		}
+		def perm = permService.getPerm(anno.target)
+		if(perm?.val <=0)
+		{
+			flash.error = "Access denied! You don't have permission to access this transcript block."
+			redirect(controller:'user',action: 'index')
+			return
+		}
+		
+		def c = [
+			id:cue.id,
+			//owner_name:r.owner.userName, Don't need owner_name, it's you!
+			text:webVTTService.getCueText(cue.content),
+			speaker: webVTTService.getSpeaker(cue.content),
+			settings: cue.getCueSettings(),
+			//start: cue.getStart() !=null?TimeFormat.getInstance().toString(cue.getStart()):"unknown",
+			//end:cue.getEnd() !=null?TimeFormat.getInstance().toString(cue.getEnd()):"unknown",
+			//thumbnail:cue.getThumbnail()
+		]
+		return [cue:c]
 	}
 }

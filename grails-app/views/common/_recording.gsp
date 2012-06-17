@@ -84,6 +84,7 @@
 	  		<div class="span1"><span title="number of slides"><i class="icon-picture metrics-item"></i>${row.slides_count}</span>
 	  		</div>
 	  	</div>
+	  	<g:if test="${actionEnabled}">
 	  	<div class="btn-group pull-right">
 	 		<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
 	  			Actions<span class="caret"></span></a>
@@ -92,12 +93,28 @@
 	  				<li><g:link controller="multimediaResource" action="edit" id="${row.id}">Edit</g:link></li>
 	  				<li class="divider"></li>
 	  				</g:if>
+	  				<li><g:link controller="transcriptResource" action="list" id="${row.id}">Show Transcript</g:link></li>
+	  				<li><g:link controller="synmarkResource" action="list" id="${row.id}">Show Synmarks</g:link></li>
+	  				<li class="divider"></li>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>
+	 	</g:if>
+	 	<g:if test="${nerditEnabled}">
 	 	<div class="pull-right" style="margin-right:10px;">
 	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdmm" id="${row.id}">Nerd it</g:link>
 	 	</div>
+	 	</g:if>
+	 	<g:if test="${viewSynmarksEnabled}">
+	 	<div class="pull-right" style="margin-right:10px;">
+	 		<g:link class="btn pull-right" controller="synmarkResource" action="list" id="${row.id}">View Synmarks</g:link>
+	 	</div>
+	 	</g:if>
+	 	<g:if test="${viewTranscriptsEnabled}">
+	 	<div class="pull-right" style="margin-right:10px;">
+	 		<g:link class="btn pull-right" controller="transcriptResource" action="list" id="${row.id}">View Transcripts</g:link>
+	 	</div>
+	 	</g:if>
 	</div>
 </div>

@@ -28,6 +28,13 @@
     	<li>
     </g:else><g:link controller="user" action="listSynmarks">
     	<i class="icon-synmarks-small"></i>My Synmarks</g:link></li>
+    <g:if test="${active == 'transcripts' }">
+    	<li class="active">
+    </g:if>
+    <g:else>
+    	<li>
+    </g:else><g:link controller="user" action="listTranscripts">
+    	<i class="icon-transcripts-small"></i>My Transcripts</g:link></li>
     <g:if test="${active == 'tags'}">
     	<li class="active">
     </g:if>

@@ -80,6 +80,7 @@ $(document).ready(function(){
 			beforeSend:function(event)
 			{
 				$("#form_loading_div").show();
+				$("#multimediaCreateForm_submit").button("loading");
 				if($("#duration").val() == "" && $("#duration_span").val() != "")
 				{
 					$("#duration").val(stringToMilisec$("#duration_span").val());
@@ -114,6 +115,7 @@ $(document).ready(function(){
 			complete:function(jqXHR,textStatus)
 			{
 				$("#form_loading_div").hide();
+				$("#multimediaCreateForm_submit").button("reset");
 			}
 		});
 		//Don't forget return false
@@ -310,7 +312,7 @@ $(document).ready(function(){
 					</fieldset>
 					<div class="form-actions" id="controls_div" style="display:none;">
 						<div class="pull-left">
-			            	<input class="btn btn-primary" id="multimediaCreateForm_submit" type="submit" value="Create" />
+			            	<input class="btn btn-primary" id="multimediaCreateForm_submit" data-loading-text="Saving..." type="submit" value="Create" />
 			            	<input class="btn" id="multimediaCreateForm_reset" type="reset" value="Reset"/>
 			            </div>
 			        </div>

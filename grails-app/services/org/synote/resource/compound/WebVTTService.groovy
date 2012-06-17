@@ -41,6 +41,9 @@ import org.synote.integration.viascribe.exception.ViascribeException
 import org.synote.api.APIStatusCode
 import org.apache.commons.logging.LogFactory
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 class WebVTTService {
 
     static transactional = true
@@ -548,7 +551,36 @@ class WebVTTService {
    }
    public String getSpeaker(String cueText)
    {
-	  //parse the cueText and get the speaker string
-	   return "";
+	   //parse the cueText and get the speaker string
+	   String rel = "<v.(.*?)>(.*)"
+	   Pattern p = Pattern.compile(rel,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	   Matcher m = p.matcher(cueText);
+	   if (m.find())
+	   {
+		   String speaker=m.group(1)
+		   return speaker
+	   }
+	   
+	   return null
+   }
+   
+   /*
+    * Get the plain text forgetting about the speaker and other settings
+    */
+   public String getCueText(String cueText)
+   {
+	    //parse the cueText and get the speaker string
+	   String rel = "(<v.(.*?)>)?(.*)"
+	   Pattern p = Pattern.compile(rel,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	   Matcher m = p.matcher(cueText);
+	   if (m.find())
+	   {
+		   String text = null
+		   def groupCount = m.groupCount()
+		   text= m.group(groupCount)
+		   return text
+	   }
+	   
+	   return null
    }
 }

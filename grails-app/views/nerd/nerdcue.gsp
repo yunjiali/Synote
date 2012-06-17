@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Analyse Synmark using NERD</title>
+<title>Analyse Transcript Block NERD</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
 </head>
@@ -8,10 +8,10 @@
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:render template="/common/userNav" model="['active':'synmarks']"/>
+			<g:render template="/common/userNav" model="['active':'transcripts']"/>
 		</div>
 		<div class="span10" id="user_content_div">
-			<h2 class="heading-inline">NERD Synmark</h2>
+			<h2 class="heading-inline">NERD Recording</h2>
 			<hr/>
 			<g:form controller="nerd" action="nerditone" method='GET'>
 			<h3>Choose Named Entity Extractor</h3>
@@ -37,37 +37,17 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- title row, synmark title could be empty -->
-						<g:if test="${synmark.title?.trim()?.size()>0}">
-						<tr id="tr_${synmark.id}">
-							<td><input id="cbx_${synmark.id}" name="fields" value="${synmark.id}" type="checkbox"/></td>
-							<td>Title</td>
-							<td id="text_${synmark.id}">${synmark.title}</td>
-							<td>No entity yet</td>
-						</tr>
-						</g:if>
-						<!-- recording description row -->
-						<g:if test="${synmark.note?.content?.trim()?.size()>0}">
-						<tr id="tr_${synmark.note.id}">
-							<td><input id="cbx_${synmark.note?.id}" name="fields" value="${synmark.note?.id}" type="checkbox"/></td>
-							<td>Description</td>
-							<td id="text_${synmark.note.id}">${synmark.note?.content}</td>
-							<td>No entity yet</td>
-						</tr>
-						</g:if>
-						<!-- recording tags rows -->
-						<g:if test="${synmark.tags?.size() >0}">
-							<g:each in="${synmark.tags}" var="tag">
-								<g:if test="${tag.content?.trim()?.size() >0}">
-								<tr id="tr_${tag.id}">
-									<td><input id="cbx_${tag.id}" name="fields" value="${tag.id}" type="checkbox"/></td>
-									<td>Tag</td>
-									<td id="text_${tag.id}">${tag.content}</td>
-									<td>No entity yet</td>
-								</tr>
+						<tr id="tr_${cue.id}">
+							<td><input id="cbx_${cue.id}" name="fields" value="${cue.id}" type="checkbox"/></td>
+							<td>text</td>
+							<td id="text_${cue.id}">
+								<g:if test="${cue.speaker?.size()>0}">
+								<b>${cue.speaker}</b><br/>
 								</g:if>
-							</g:each>
-						</g:if>
+								${cue.text?.encodeAsHTML()}
+							</td>
+							<td>No entity yet</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

@@ -2,10 +2,12 @@ package org.synote.user
 
 import org.codehaus.groovy.grails.plugins.springsecurity.Secured
 import org.synote.user.UserRole
+import org.synote.annotation.ResourceAnnotation;
 import org.synote.resource.compound.*
 import org.synote.resource.single.text.TagResource
 import grails.converters.*
 import org.synote.resource.ResourceService
+import org.synote.resource.compound.WebVTTService
 import org.synote.user.group.UserGroup
 import org.synote.user.group.UserGroupMember
 import org.synote.user.group.UserGroupService
@@ -14,6 +16,7 @@ class UserController {
 
 	def securityService
 	def resourceService
+	def webVTTService
 	def userGroupService
 
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
@@ -366,6 +369,23 @@ class UserController {
 		}
 	}
 	
+	/*
+	 * List all my multimedia resource with transcript as JSON, not listing transcript
+	 */
+	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+	def listTranscripts = {
+		try
+		{
+			def multimediaList = resourceService.getMyTranscriptsAsJSON(params)
+			return [multimediaList:multimediaList, params:params]
+		}
+		catch(org.hibernate.QueryException qex) //In case the query params not found
+		{
+			flash.error = qex.getMessage()
+			redirect(action:'index')
+			return
+		}
+	}
 	
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def cancel =

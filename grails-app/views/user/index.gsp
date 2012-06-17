@@ -26,6 +26,7 @@
 			
 			<g:link class="user" action="listRecordings" title="My Recordings"><img src="${resource(dir: 'images/mysynote', file: 'recording_64.png')}" /><br />My Recordings</g:link>
 			<g:link class="user" action="listSynmarks" title="My Synmarks"><img src="${resource(dir: 'images/mysynote', file: 'synmark_64.png')}" /><br />My Synmarks</g:link>
+			<g:link class="user" action="listTranscripts" title="My Transcripts"><img src="${resource(dir: 'images/mysynote', file: 'transcript_64.png')}" /><br />My Transcripts</g:link>
 			<g:link class="user" action="listTags" title="My Tags"><img src="${resource(dir: 'images/mysynote', file: 'tag_64.png')}" /><br />My Tags</g:link>
 			<g:twitterEnabled>
 			<g:link class="user" controller="twitter" action="index" title="Upload Tweets"><img src="${resource(dir: 'images/mysynote', file: 'twitter.png')}" /><br />Upload Tweets</g:link>

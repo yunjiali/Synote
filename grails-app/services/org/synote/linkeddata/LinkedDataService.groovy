@@ -230,20 +230,26 @@ class LinkedDataService {
 	 */
 	def getFragmentStringFromSynpoint(Synpoint synpoint)
 	{
+		return getFragmentString(synpoint?.targetStart, synpoint?.targetEnd)
+	}
+	
+	/*
+	 * get media fragment string from start and end
+	 */
+	def getFragmentString(int start, int end)
+	{
 		String frag=""
-		if(synpoint != null)
+		
+		if(start)
 		{
-			if(synpoint.targetStart)
-			{
-				frag = "t="+TimeFormat.getInstance().toWebVTTTimeString(synpoint.targetStart)
-			}
-			else
-				frag="t=0"
-			
-			if(synpoint.targetEnd)
-			{
-				frag+=","+TimeFormat.getInstance().toWebVTTTimeString(synpoint.targetEnd)
-			}
+			frag = "t="+TimeFormat.getInstance().toWebVTTTimeString(start)
+		}
+		else
+			frag="t=0"
+		
+		if(end)
+		{
+			frag+=","+TimeFormat.getInstance().toWebVTTTimeString(end)
 		}
 		return frag
 	}

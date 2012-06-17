@@ -149,7 +149,7 @@ class ResourceService {
 				perm_name:r.perm?.name,
 				perm_val:r.perm?.val,
 				date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.dateCreated,"dd.MM.yyyy HH:mm"),
-				last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.lastUpdated,"dd.MM.yyyy HH:mm"),,
+				last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.lastUpdated,"dd.MM.yyyy HH:mm"),
 				thumbnail:r.thumbnail,
 				duration:r.duration,
 				isVideo:r.isVideo,
@@ -161,6 +161,89 @@ class ResourceService {
 				views:views
 			]
 		}
+		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
+		return jqGridData
+	}
+	
+	/*
+	 * given the mmid, get all the synmarks related to it
+	 */
+	def getSynmarksAsJSON(multimedia,params)
+	{
+		def sortIndex = params.sidx ?: 'start' //sort by start
+		def sortOrder  = params.sord ?: 'asc' //asc
+		if(!params.rows)
+			params.rows ="10"
+			
+		def maxRows = Integer.valueOf(params.rows)
+		if(!params.page)
+			params.page ="1"
+		def currentPage = Integer.valueOf(params.page) ?: 1
+		def rowOffset = currentPage == 1 ? 0 : (currentPage - 1) * maxRows
+		
+		//Select synpoint first to save time
+		def synpointList = []
+		
+		//Yunjia:Create a synmark view, all the fiedls are string
+		def annotations = ResourceAnnotation.findAllByTarget(multimedia)
+		
+		annotations.each {annotation ->
+			if (annotation.source.instanceOf(SynmarkResource))
+				synpointList << annotation.synpoints.toArray()[0]
+		}
+		def totalRows = synpointList.size()
+		def synpoints = synpointList.sort{it.targetStart}.subList(rowOffset, Math.min(rowOffset+maxRows, synpointList.size()))
+		def numberOfPages = Math.ceil(totalRows/maxRows)
+		def results = []
+		
+		synpoints?.collect{ synpoint->
+			
+			//println "sr:"+sr.id
+			def annotation = ResourceAnnotation.findById(synpoint.annotation?.id)
+			def sr = SynmarkResource.findById(annotation?.source?.id)
+			//println "sr:"+sr.id
+			def mr = annotation?.target
+			//println "mr:"+mr?.id
+			if(annotation && mr && sr)
+			{
+				def start = synpoint.targetStart
+				def end = synpoint.targetEnd
+				def tags = null
+				if(sr.tags?.size() > 0)
+				{
+					tags = []
+					sr.tags.each{t -> 
+						tags << t.content
+					}
+				}
+				else
+					tags = null
+				
+				def item = [
+					id:sr.id,
+					//owner_name:r.owner.userName, Don't need owner_name, it's you!
+					title:sr.title,
+					tags:tags,
+					note:sr.note?.content?.trim()?.size()>256?sr.note?.content?.substring(0,256)+"...":sr.note?.content,
+					rtitle:mr.title,
+					rid:mr.id,
+					risVideo:mr.isVideo,
+					mf: synpoint?linkedDataService.getFragmentStringFromSynpoint(synpoint):null,//get media fragment
+					start: start !=null?TimeFormat.getInstance().toString(start):"unknown",
+					end:end !=null?TimeFormat.getInstance().toString(end):"unknown",
+					thumbnail:sr.thumbnail,
+					date_created:utilsService.convertSQLTimeStampToFormattedTimeString(sr.dateCreated,"dd.MM.yyyy HH:mm"),
+					last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(sr.lastUpdated,"dd.MM.yyyy HH:mm")
+				]
+				
+				results << item
+			}
+			else //The synmark doesn't annotate any multimedia resource, so we need to delete it
+			{
+				sr.delete()
+			}
+		}
+		//println "size:"+synmarkList.size()
 		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 		return jqGridData
 	}
@@ -283,6 +366,79 @@ class ResourceService {
 		}
 		
 		return [rows:results,records:max]
+	}
+	
+	/*
+	 * Get the multimedia resources with transcripts
+	 */
+	def getMyTranscriptsAsJSON(params)
+	{
+		def sortIndex = params.sidx ?: 'dateCreated'
+		def sortOrder  = params.sord ?: 'desc'
+		if(!params.rows)
+			params.rows ="10"
+			
+		def maxRows = Integer.valueOf(params.rows)
+		if(!params.page)
+			params.page ="1"
+		def currentPage = Integer.valueOf(params.page) ?: 1
+		def rowOffset = currentPage == 1 ? 0 : (currentPage - 1) * maxRows
+		def user=securityService.getLoggedUser()
+		//Yunjia:Create a synmark view, all the fiedls are string
+	
+		def transcriptList = WebVTTResource.createCriteria().list(max:maxRows, offset:rowOffset){
+			eq('owner',user)
+			order(sortIndex,sortOrder).ignoreCase()
+		}
+		def totalRows = transcriptList.totalCount
+		def numberOfPages = Math.ceil(totalRows/maxRows)
+		def results = []
+		
+		transcriptList?.collect{ vtt->
+			def vttr = WebVTTResource.findById(vtt.id)
+			//println "sr:"+sr.id
+			def annotation = ResourceAnnotation.findBySource(vttr)
+			//println "an:"+annotation?.id
+			def mr = annotation?.target
+			//println "mr:"+mr?.id
+			if(annotation && mr)
+			{	
+				def views = Views.countByResource(mr)
+				def metrics = getMultimediaResourceMetrics(mr)
+				def tags = []
+				mr.tags.each{
+					tags<<it.content
+				}
+				def item = [
+					id:mr.id, 
+					//owner_name:r.owner.userName, Don't need owner_name, it's you!
+					title:mr.title,
+					url:mr.url?.url,
+					perm_name:mr.perm?.name,
+					perm_val:mr.perm?.val,
+					date_created:utilsService.convertSQLTimeStampToFormattedTimeString(mr.dateCreated,"dd.MM.yyyy HH:mm"),
+					last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(mr.lastUpdated,"dd.MM.yyyy HH:mm"),
+					thumbnail:mr.thumbnail,
+					duration:mr.duration,
+					isVideo:mr.isVideo,
+					note:mr.note?.content,
+					tags:tags,
+					cc:metrics.cc,
+					slides_count:metrics.slides_count,
+					synmarks_count: metrics.synmarks_count,
+					views:views
+				]
+				
+				results << item
+			}
+			else //The synmark doesn't annotate any multimedia resource, so we need to delete it
+			{
+				vttr.delete()
+			}
+		}
+		//println "size:"+synmarkList.size()
+		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
+		return jqGridData
 	}
 	
 	def getTagsAsArray(user)

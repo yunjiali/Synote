@@ -54,11 +54,8 @@
 	 		<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
 	  			Actions<span class="caret"></span></a>
 	  		<ul class="dropdown-menu">
-	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Details</g:link></li>
-	  				<li><g:link controller="multimediaResource" action="replay" id="${row.id}">Edit</g:link>
-	  				</li><li class="divider"></li>
 	  				<li><g:link controller="recording" action="replay" id="${row.rid}" fragment="${row.mf}">Play it in Synote Player</g:link></li>
-	  				<li><g:link controller="recording" action="print" id="${row.rid}" fragment="${row.mf }">Print Friendly Version</g:link></li>
+	  				<li><g:link controller="recording" action="print" id="${row.rid}" fragment="${row.mf}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>
 	 	<div class="pull-right" style="margin-right:10px;">

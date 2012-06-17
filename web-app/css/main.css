@@ -83,6 +83,12 @@ footer
     margin-right:2px;
 }
 
+.icon-transcripts-small
+{
+	background-image: url('../images/skin/transcript_16.png');
+    background-position: center center;
+    margin-right:2px;
+}
 .icon-twitter-small {
 	background-image: url('../images/skin/twitter_16.png');
     background-position: center center;
@@ -108,7 +114,7 @@ footer
 	font-weight: normal;
 }
 /* Recording, Synmark and Transcript Widget */
-.recording-row, .synmark-row
+.recording-row, .synmark-row, .cue-row
 {
 	padding:5px 0px;
 	border-top:1px solid #eeeeee;

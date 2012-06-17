@@ -324,6 +324,15 @@ class RecordingController {
 			return
 		}
 		
+		def perm = permService.getPerm(multimedia)
+		if(perm?.val <=0)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_PERMISSION_DENIED, description:"Permission Denied!")
+			}
+			return
+		}
+		
 		SynmarkData[] synmarkList = playerService.getSynmarks(multimediaId)
 		if(synmarkList == null || synmarkList?.size() == 0)
 		{
@@ -559,6 +568,15 @@ class RecordingController {
 		{
 			render(contentType:"text/json"){
 				error(stat:APIStatusCode.MM_NOT_FOUND, description:"Cannot find the multimedia resource with id=${multimediaId}!")
+			}
+			return
+		}
+		
+		def perm = permService.getPerm(multimedia)
+		if(perm?.val <=0)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_PERMISSION_DENIED, description:"Permission Denied!")
 			}
 			return
 		}
@@ -937,6 +955,15 @@ class RecordingController {
 			return
 		}
 			
+		def perm = permService.getPerm(multimedia)
+		if(perm?.val <=0)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_PERMISSION_DENIED, description:"Permission Denied!")
+			}
+			return
+		}
+		
 		WebVTTData[] transList = webVTTService.getTranscripts(multimedia)
 		if(transList == null || transList?.size() == 0)
 		{
