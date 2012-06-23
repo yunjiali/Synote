@@ -41,9 +41,10 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.5'
 		//runtime 'com.hp.hpl.jena:jena:2.5.5'
 		runtime ('com.hp.hpl.jena:jena:2.6.4')
-		runtime ('com.hp.hpl.jena:arq:2.8.8'){
+		runtime ('com.hp.hpl.jena:arq:2.8.7'){
 			excludes "lucene-core"	//searchable plugin has higher version lucene 2.4 than this dependency lucene 2.3.1. In 2.3.1 Field.Index.NOT_ANALYZED is not defined
 		}
+		runtime ('com.hp.hpl.jena:sdb:1.3.4')
 		runtime "org.codehaus.gpars:gpars:0.11"
 		runtime 'net.sf.jtidy:jtidy:r938'
 		runtime 'net.sourceforge.htmlunit:htmlunit:2.9'
