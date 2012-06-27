@@ -3,6 +3,19 @@
 <title>Analyse multimedia using NERD</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#cbx_selectall').change(function () {
+	    if ($(this).attr("checked")) {
+			$("input[name='fields']").attr("checked","checked");
+	        return;
+	    }
+	    
+	    $("input[name='fields']").removeAttr("checked");
+	    return
+	});
+});
+</script>
 </head>
 <body>
 <div class="container">
@@ -13,7 +26,7 @@
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline">NERD Recording</h2>
 			<hr/>
-			<g:form controller="nerd" action="nerditone" method='GET'>
+			<g:form controller="nerd" action="nerditone" method='GET' id="${multimedia.id}">
 			<h3>Choose Named Entity Extractor</h3>
 			<div>
 				<g:render template="/common/nerd_extractor"/>
@@ -30,27 +43,24 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th></th>
+							<th><input id="cbx_selectall" type="checkbox" checked="checked" /></th>
 							<th>Field</th>
 							<th>Content Preview</th>
-							<th>Named Entities</th>
 						</tr>
 					</thead>
 					<tbody>
 						<!-- title row -->
 						<tr id="tr_${multimedia.id}">
-							<td><input id="cbx_${multimedia.id}" name="fields" value="${multimedia.id}" type="checkbox"/></td>
+							<td><input id="cbx_${multimedia.id}" name="fields" value="${multimedia.id}" type="checkbox" checked="checked"/></td>
 							<td>Title</td>
 							<td id="text_${multimedia.id}">${multimedia.title}</td>
-							<td>No entity yet</td>
 						</tr>
 						<!-- recording description row -->
 						<g:if test="${multimedia.note?.content?.trim()?.size()>0}">
 						<tr id="tr_${multimedia.note.id}">
-							<td><input id="cbx_${multimedia.note?.id}" name="fields" value="${multimedia.note?.id}" type="checkbox"/></td>
+							<td><input id="cbx_${multimedia.note?.id}" name="fields" value="${multimedia.note?.id}" type="checkbox" checked="checked"/></td>
 							<td>Description</td>
 							<td id="text_${multimedia.note.id}">${multimedia.note?.content}</td>
-							<td>No entity yet</td>
 						</tr>
 						</g:if>
 						<!-- recording tags rows -->
@@ -58,10 +68,9 @@
 							<g:each in="${multimedia.tags}" var="tag">
 								<g:if test="${tag.content?.trim()?.size() >0}">
 								<tr id="tr_${tag.id}">
-									<td><input id="cbx_${tag.id}" name="fields" value="${tag.id}" type="checkbox"/></td>
+									<td><input id="cbx_${tag.id}" name="fields" value="${tag.id}" type="checkbox" checked="checked"/></td>
 									<td>Tag</td>
 									<td id="text_${tag.id}">${tag.content}</td>
-									<td>No entity yet</td>
 								</tr>
 								</g:if>
 							</g:each>

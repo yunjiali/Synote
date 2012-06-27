@@ -6,6 +6,7 @@ import org.synote.config.ConfigurationService
 import org.synote.user.User
 import org.synote.resource.compound.MultimediaResource
 import org.synote.resource.compound.SynmarkResource
+import org.synote.resource.single.text.*
 import org.synote.user.group.UserGroup
 import org.synote.integration.ibmhts.IBMTransJobService
 import org.synote.linkeddata.LinkedDataService
@@ -231,6 +232,42 @@ class SynoteTagLib {
 		if(attrs.datetime)
 		{
 			out << utilsService.convertSQLTimeStampToFormattedTimeString(attrs.datetime,attrs.format);
+		}
+	}
+	
+	def printFullTextFromResource = {attrs->
+		if(attrs.resource)
+		{
+			def resource = attrs.resource
+			StringBuilder builder = new StringBuilder()
+			if(resource.instanceOf(MultimediaResource) || resource.instanceOf(SynmarkResource))
+			{
+				builder.append("<b>Title</b>: <br/>")
+				builder.append(resource.title)
+				
+				if(resource.tags)
+				{
+					builder.append("<br/><b>Tags</b>: <br/>")
+					resource.tags.each{tag->
+						int i=0
+						if(i>0)
+							builder.append(",")
+						builder.append(tag.content)
+						i++
+					}
+				}
+				
+				if(resource.note)
+				{
+					builder.append("<br/><b>Note</b>: <br/>")
+					builder.append(resource.note?.content)
+				}
+			}
+			else if(resource.instanceOf(TagResource)||resource.instanceOf(TextNoteResource) || resource.instanceOf(WebVTTCue))
+			{
+				builder.append(resource.content)
+			}
+			out << builder.toString()
 		}
 	}
 	

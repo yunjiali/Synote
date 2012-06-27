@@ -3,6 +3,19 @@
 <title>Analyse Transcript Block NERD</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#cbx_selectall').change(function () {
+	    if ($(this).attr("checked")) {
+			$("input[name='fields']").attr("checked","checked");
+	        return;
+	    }
+	    
+	    $("input[name='fields']").removeAttr("checked");
+	    return
+	});
+});
+</script>
 </head>
 <body>
 <div class="container">
@@ -13,7 +26,7 @@
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline">NERD Recording</h2>
 			<hr/>
-			<g:form controller="nerd" action="nerditone" method='GET'>
+			<g:form controller="nerd" action="nerditone" method='GET' id="${cue.id}">
 			<h3>Choose Named Entity Extractor</h3>
 			<div>
 				<g:render template="/common/nerd_extractor"/>
@@ -30,15 +43,14 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th></th>
+							<th><input id="cbx_selectall" type="checkbox" checked="checked" /></th>
 							<th>Field</th>
 							<th>Content Preview</th>
-							<th>Named Entities</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr id="tr_${cue.id}">
-							<td><input id="cbx_${cue.id}" name="fields" value="${cue.id}" type="checkbox"/></td>
+							<td><input id="cbx_${cue.id}" name="fields" value="${cue.id}" type="checkbox" checked="checked"/></td>
 							<td>text</td>
 							<td id="text_${cue.id}">
 								<g:if test="${cue.speaker?.size()>0}">
@@ -46,7 +58,6 @@
 								</g:if>
 								${cue.text?.encodeAsHTML()}
 							</td>
-							<td>No entity yet</td>
 						</tr>
 					</tbody>
 				</table>

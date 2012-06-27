@@ -18,6 +18,7 @@ import org.synote.resource.single.text.WebVTTCue
 import org.synote.annotation.ResourceAnnotation
 import org.synote.annotation.synpoint.Synpoint
 import org.synote.user.User
+import org.synote.linkeddata.Vocabularies as V
 
 import org.synote.permission.PermService
 import org.synote.linkeddata.LinkedDataService
@@ -28,6 +29,14 @@ import org.synote.linkeddata.RDFBuilder
 import org.synote.linkeddata.RedirectData
 import org.synote.linkeddata.exception.RDFGenerationException
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime
+import com.hp.hpl.jena.query.ResultSetFormatter
+import com.hp.hpl.jena.sparql.resultset.ResultsFormat
+import com.hp.hpl.jena.sparql.resultset.ResultSetFormat
+import com.hp.hpl.jena.query.ResultSet
+import com.hp.hpl.jena.rdf.model.Model
+import com.hp.hpl.jena.sdb.SDBFactory
+import com.hp.hpl.jena.sdb.store.DatasetStore
+import com.hp.hpl.jena.query.*
 
 /**
 *
@@ -286,6 +295,101 @@ class LinkedDataController {
 			response.sendError(404)
 			response.contentType="text/plain"
 			response.outputStream.flush()
+			return
+		}
+	}
+	
+	/*
+	 * Display a query page
+	 */
+	def query = {
+		def prefixList = V.getVocabularies()
+		StringBuilder builder = new StringBuilder()
+		prefixList.each{p->
+			builder.append(("PREFIX "+p[0]+":"+"<"+p[1]+">").encodeAsHTML())
+			builder.append("\n")	
+		}
+		return [prefixString:builder.toString()]
+	}
+	
+	/*
+	 * the sparql endpoint for Synote, implemented by Jena ARQ
+	 */
+	def sparql = {
+		//use result formatter to get the correct response type
+		if(!params.query)
+		{
+			response.status = 200
+			response.contentType="text/plain"
+			response.outputStream << "Query string is empty"
+			response.outputStream.flush()
+			return
+		}
+		
+		String queryString = params.query
+		if(!params.output)
+			params.output = "json"
+
+		def store = linkedDataService.getSDBInstance()
+		//Model model = SDBFactory.connectDefaultModel(store)
+		Dataset ds = DatasetStore.create(store)
+		Query query
+		QueryExecution qexec
+		try
+		{
+			query = QueryFactory.create(queryString)
+			qexec = QueryExecutionFactory.create(query, ds)
+		}
+		catch(Exception exp)
+		{	
+			response.contentType = "text/plain"
+			response.outputStream << "Error!"+exp.getMessage()
+			response.outputStream.flush()
+			//throw exp
+			return
+		}
+		
+		try
+		{
+			ResultSet results = null
+			results = qexec.execSelect()
+			
+			if(results == null)
+			{
+				response.contentType = "text/plain"
+				response.outputStream << "No result is found."
+			}
+			else
+			{
+				switch (params.output) {
+					case "json":
+						response.contentType = "application/json"
+						ResultSetFormatter.outputAsJSON(response.outputStream,results)
+						break
+					case "htmltab":
+						ResultSetFormatter.outputAsJSON(response.outputStream, results);
+						break
+					case "rdfxml":
+						response.contentType = "application/rdf+xml"
+						ResultSetFormatter.outputAsRDF(response.outputStream,results)
+						break
+					default:
+						response.contentType = "application/json"
+						ResultSetFormatter.output(response.outputStream,results,ResultSetFormat.syntaxText)
+						break
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			response.contentType = "text/plain"
+			response.outputStream << "Error!"+ex.getMessage()
+			throw ex
+		}
+		finally
+		{
+			response.outputStream.flush()
+			qexec.close()
 			return
 		}
 	}

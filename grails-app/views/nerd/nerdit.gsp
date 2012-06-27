@@ -98,7 +98,7 @@ var nerdit = function(extractor_name,id){
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:render template="/common/userNav" model="['active':'recordings']"/>
+			<g:render template="/common/userNav"/>
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2 class="hiding">NERD It</h2>

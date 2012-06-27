@@ -66,7 +66,12 @@ class APIStatusCode {
    private final static int NERD_EXTRACTOR_NOT_FOUND = 811
    private final static int NERD_ID_MiSSING = 812
    private final static int NERD_RESOURCE_NOT_FOUND = 813
+   private final static int NERD_EXTRACTIONID_NOT_FOUND = 814
    private final static int NERD_EXTRACTOR_INTERAL_ERROR = 819
+   
+   /*for linkeddata errors, including triple store*/
+   private final static int LINKEDDATA_RATING_NOT_FOUND = 301
+   private final static int LINKEDDATA_RATING_INVALID = 302
    
    /*other errors*/
    private final static int PARAMS_MISSING = 990

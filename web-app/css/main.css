@@ -137,9 +137,11 @@ footer
 	color: #666666;
 }
 
-.btn-nerd-entity-approve, .btn-nerd-entity-reject
+.btn-group-nerd
 {
-	margin-left:10px;
+	display:inline;
+	margin-right:10px;
+	margin-bottom:10px;
 }
 
 .permission-info

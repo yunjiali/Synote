@@ -95,6 +95,7 @@
 	  				</g:if>
 	  				<li><g:link controller="transcriptResource" action="list" id="${row.id}">Show Transcript</g:link></li>
 	  				<li><g:link controller="synmarkResource" action="list" id="${row.id}">Show Synmarks</g:link></li>
+	  				<li><g:link controller="nerd" action="listne" id="${row.id}">Review Named Entities</g:link></li>
 	  				<li class="divider"></li>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>

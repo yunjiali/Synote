@@ -24,6 +24,10 @@ class UrlMappings {
 			controller="linkedData"
 			action="usersData"
 		}
+		"/query"{
+			controller="linkedData"
+			action="query"	
+		}
 		"/$controller/$action?/$id?"{
 		      constraints {
 				 // apply constraints here

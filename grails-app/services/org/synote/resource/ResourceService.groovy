@@ -8,7 +8,11 @@ import org.synote.player.client.TimeFormat
 import org.synote.resource.compound.*
 import org.synote.resource.single.text.TagResource
 import org.synote.resource.single.text.SynmarkTag
+import org.synote.resource.single.text.MultimediaTag
 import org.synote.resource.single.text.SynmarkTextNote
+import org.synote.resource.single.text.MultimediaTextNote
+import org.synote.resource.single.text.WebVTTCue
+import org.synote.resource.single.binary.PresentationSlide
 import org.synote.annotation.ResourceAnnotation
 import org.synote.permission.PermissionValue
 import org.synote.linkeddata.LinkedDataService
@@ -467,6 +471,110 @@ class ResourceService {
 		
 		return [cc:cc,slides_count:slides_count,synmarks_count:synmarks_count]
 	}
+	
+	/*
+	 * Given a resource, get the corresponding synpoint. If no synpoint or not only one synpoint is corresponded,
+	 * return null
+	 */
+	def getSynpointByResource(Resource r)
+	{
+		if(r.instanceOf(MultimediaResource)||r.instanceOf(MultimediaTag) || 
+			r.instanceOf(MultimediaTextNote) || r.instanceOf(WebVTTResource) || r.instanceOf(PresentationResource))	
+		{
+			return null	
+		}
+		else if(r.instanceOf(SynmarkResource))
+		{
+			def anno = ResourceAnnotation.findBySource(r)
+			if(!anno)
+				return null
+			
+			return anno.synpoints[0]	
+		}
+		else if(r.instanceOf(SynmarkTag) || r.instanceOf(SynmarkTextNote))
+		{
+			def synmark = r.synmark
+			def anno = ResourceAnnotation.findBySource(synmark)
+			if(!anno)
+				return null
+			
+			return anno.synpoints[0]
+		}
+		else if(r.instanceOf(WebVTTCue))
+		{
+			def vtt = r.webVTTFile
+			def anno = ResourceAnnotation.findBySource(vtt)
+			if(!anno)
+				return null
+			
+			def synpoint = anno.synpoints.find{it.sourceStart == r.cueIndex}
+			return synpoint
+		}
+		else if(r.instanceOf(PresentationSlide))
+		{
+			def presentation = r.presentation
+			def anno = ResourceAnnotation.findBySource(presentation)
+			if(!anno)
+				return null
+			
+			def synpoint = anno.synpoints.find{it.sourceStart == r.index}
+			return synpoint
+		}
+		else
+			return null
+	}
+	
+	/*
+	* Given a resource, get the corresponding multimedia it annotates or related to
+	*/
+   def getMultimediaByResource(Resource r)
+   {
+	   if(r.instanceOf(MultimediaResource))
+	   {
+		   return r
+	   }
+	   else if(r.instanceOf(MultimediaTag) || r.instanceOf(MultimediaTextNote)) 
+	   {
+		   return r.multimedia
+	   }
+	   else if(r.instanceOf(SynmarkResource) || r.instanceOf(WebVTTResource) || r.instanceOf(PresentationResource))
+	   {
+		   def anno = ResourceAnnotation.findBySource(r)
+		   if(!anno)
+			   return null
+		   
+		   return anno.target
+	   }
+	   else if(r.instanceOf(SynmarkTag) || r.instanceOf(SynmarkTextNote))
+	   {
+		   def synmark = r.synmark
+		   def anno = ResourceAnnotation.findBySource(synmark)
+		   if(!anno)
+			   return null
+		   
+		   return anno.target
+	   }
+	   else if(r.instanceOf(WebVTTCue))
+	   {
+		   def vtt = r.webVTTFile
+		   def anno = ResourceAnnotation.findBySource(vtt)
+		   if(!anno)
+			   return null
+		   
+		   return anno.target
+	   }
+	   else if(r.instanceOf(PresentationSlide))
+	   {
+		   def presentation = r.presentation
+		   def anno = ResourceAnnotation.findBySource(presentation)
+		   if(!anno)
+			   return null
+		   
+		   return anno.target
+	   }
+	   else
+		   return null
+   }
 	
 	/*
 	 * Generating thumbnail pictures using synote-multimedia-service 

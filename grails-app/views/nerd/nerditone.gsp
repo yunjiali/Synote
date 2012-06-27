@@ -12,14 +12,16 @@ var prgs = 0;
 var entityCount = 0;
 var extractorCount = ${textResource.extractors?.size()};
 var finishedCount = 0;
+
 var nerditone = function(extractor_name,text){
 	var finished_extractors = 0;
 	var extract_url = g.createLink({controller:'nerd',action:'extractAjax'});
 	var ne_td =$("#ne_td_"+extractor_name);
+	var resourceId = $("#resourceId").val();
 	$.ajax({
 		   type: "GET",
 		   url: extract_url,
-		   data: {extractor:extractor_name,text:text}, //default language is English
+		   data: {extractor:extractor_name,text:text,resourceId:resourceId}, //default language is English
 		   timeout:60000, // the call will be queued on the server-side, so we need to set it for a longer time
 		   dataType: "json",
 		   //Yunjia: Add a beforeSend function to display the loading message
@@ -39,15 +41,15 @@ var nerditone = function(extractor_name,text){
 				
 				for(var i=0;i<data.length;i++)
 				{
-					if(i!= 0)
-						ne_td.append($("<br/>"));
 					//This is the type from other extractors, we will us nerdType instead
 					//var entity_type = data[i].type === undefined ?"unknown type":data[i].type.toLowerCase();
 					var entity_type = data[i].nerdType ==""?"Thing":data[i].nerdType.split("#")[data[i].nerdType.split("#").length-1]
+					if(data[i].type != null)
+						entity_type+=" ("+data[i].type+")";
 					var html='';
 					if(data[i].uri == null || data[i].uri == "null"  || data[i].uri =="NORDF")
 					{
-						html += data[i].entity
+						html += data[i].entity + " is a(n) "+entity_type
 					}
 					else
 					{
@@ -55,15 +57,9 @@ var nerditone = function(extractor_name,text){
 								"'>"+data[i].entity+"<i class='icon-link-small'></i></a> is a(n) "+entity_type;
 					}
 						
-					var entity_span = $("<span/>",{
-						html:html
-					});
-					
-					var approve_btn = $("<button/>").addClass("btn btn-success btn-mini btn-nerd-entity-approve").text("approve").attr('title', "approve");
-					var reject_btn = $("<button/>").addClass("btn btn-danger btn-mini btn-nerd-entity-reject").text("reject").attr('title','reject');
-					entity_span.append(approve_btn);
-					entity_span.append(reject_btn);
-					ne_td.append(entity_span);
+					var entity_div = $("<div/>");
+					entity_div.html(html);
+					ne_td.append(entity_div);
 					entityCount++;
 				}
 		   },
@@ -105,7 +101,7 @@ var nerditone = function(extractor_name,text){
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:render template="/common/userNav" model="['active':'recordings']"/>
+			<g:render template="/common/userNav"/>
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2 class="hiding">NERD It</h2>
@@ -116,6 +112,11 @@ var nerditone = function(extractor_name,text){
 					<div class="span9"><b>Content Preview</b><br/>
 						<p id="preview_p">${textResource.text}</p>
 					</div>
+					<div class="span3 pull-left">
+						<g:link controller="nerd" action="listne" id="${resourceId}" class="btn btn-info">
+							Review Named Entities
+						</g:link>
+					</div>
 					<div class="span3 pull-right"><!-- Add this function later -->
 						<div class="progress progress-striped">
 							<div class="bar" id="prgs_div" style="width:0%;"></div>
@@ -123,8 +124,11 @@ var nerditone = function(extractor_name,text){
 						<span class="nerd-entity-count"><span id="finished_count_span">0</span> out of ${textResource.extractors?.size()}</span>
 						<span id="prgs_span" class="pull-right nerd-entity-count">0 entities found</span>
 					</div>
+					
 				</div>
 				<div>
+					<g:form controller="nerd" action="save" method='POST'>
+					<input id="resourceId" name="resourceId" type="hidden" value="${resourceId}"/>
 					<table class="table table-bordered table-striped">
 						<colgroup>
 							<col class="span2"/><!-- image -->
@@ -152,6 +156,7 @@ var nerditone = function(extractor_name,text){
 							</g:each>
 						</tbody>
 					</table>
+					</g:form>
 				</div>
 			</div>
 		</div>

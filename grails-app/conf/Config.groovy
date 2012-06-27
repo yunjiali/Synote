@@ -49,10 +49,26 @@ grails.plugin.databasemigration.changelogFileName = "changelog.xml"
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://synote.soton.ac.uk"
+        grails.serverURL = "http://linkeddata.synote.org"
+		jena {
+			enabled = true
+			sdb{
+				assembler = "sdb-mysql-innodb-prod.ttl"
+				checkFormattedOnStartUp = false
+				emptyOnStartUp = false
+			}
+        }
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
+		jena {
+			enabled = true
+			sdb{
+				assembler = "sdb-mysql-innodb-dev.ttl"
+				checkFormattedOnStartUp = false
+				emptyOnStartUp = true //empty the triple store on start up
+			}
+		}
     }
     test {
         grails.serverURL = "http://localhost:8080/${appName}"

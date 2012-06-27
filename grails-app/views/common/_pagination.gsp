@@ -13,14 +13,19 @@
 					params="[page:page_prev,text:text,rows:rows,sidx:sidx,sord:sord]" title="previous page">Prev</g:link>
 			</li>
 			</g:else>
-			<g:if test="${cPage <=4}">
-				<g:set var="pages" value="${(1..(total>7?7:total))}"/>
+			<g:if test="${total<=7}">
+				<g:set var="pages" value="${(1..total)}"/>
 			</g:if>
-			<g:elseif test="${cPage>=total-3}">
-				<g:set var="pages" value="${(total-6..total)}"/>
-			</g:elseif>
 			<g:else>
-				<g:set var="pages" value="${(cPage-3..cPage+3)}"/>
+				<g:if test="${cPage <=4}">
+					<g:set var="pages" value="${(1..7)}"/>
+				</g:if>
+				<g:elseif test="${cPage>=total-3}">
+					<g:set var="pages" value="${(total-6..total)}"/>
+				</g:elseif>
+				<g:else>
+					<g:set var="pages" value="${(cPage-3..cPage+3)}"/>
+				</g:else>
 			</g:else>
 			<g:each var="i" in="${pages}">
 				<li class="${cPage==i?'active':''}"><g:link controller="${ctrl}" action="${act}" id="${id}" 

@@ -81,4 +81,18 @@
 			</label>
 		</li>
 	</ul>
+	<div>
+		<button type="button" class="btn" id="select_btn">Select All Extractors</button>
+		<button type="button" class="btn" id="unselect_btn">Unselect All Extractors</button>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#select_btn").click(function(){
+				 $('#nerd_extractor_div input:checkbox').attr('checked','checked');
+			});
+			$("#unselect_btn").click(function(){
+				 $('#nerd_extractor_div input:checkbox').removeAttr('checked');
+			});
+		})
+	</script>
 </div>
