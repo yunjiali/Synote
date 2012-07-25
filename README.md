@@ -43,8 +43,9 @@ Synote Members
 
 Contributors
 ---------------------
-** [Rapha‘l Troncy](http://www.eurecom.fr/~troncy/) (EURECOM)
-** [Giuseppe Rizzo](http://www.eurecom.fr/~rizzo/) (EURECOM)
+** [Raphael Troncy](http://www.eurecom.fr/~troncy/) (EURECOM, Sophia-Antipolis, France)
+
+** [Giuseppe Rizzo](http://www.eurecom.fr/~rizzo/) (EURECOM, Sophia-Antipolis, France)
 
 
 Copyright
