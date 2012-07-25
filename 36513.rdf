@@ -1,0 +1,1324 @@
+<rdf:RDF
+    xmlns:ma="http://www.w3.org/ns/ma-ont#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:ore="http://www.openarchives.org/ore/terms/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:dbpedia="http://dbpedia.org/resource/"
+    xmlns:oac="http://www.openannotation.org/ns/"
+    xmlns:rnews="http://iptc.org/std/rNews/2011-10-07#"
+    xmlns:lode="http://linkedevents.org/ontology/"
+    xmlns:schemaorg="http://schema.org/"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" > 
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:04:55.000,00:05:15.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36645"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:55.000,00:05:15.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:55.000,00:05:15.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:04:55.000,00:05:15.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:49.000,00:14:08.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:08.000,00:11:09.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=0">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:02.000,00:11:03.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:57.000,00:06:03.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:02:53.000,00:03:10.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:56.000,00:07:23.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:03:44.000,00:03:57.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36644"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:44.000,00:03:57.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:44.000,00:03:57.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:03:44.000,00:03:57.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=0,00:04:34.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36526"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=0,00:04:34.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=0,00:04:34.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=0,00:04:34.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:40.000,00:12:48.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:24.000,00:05:11.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:03:28.000,00:03:44.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36678"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:28.000,00:03:44.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:28.000,00:03:44.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:03:28.000,00:03:44.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:49.000,00:13:51.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:24.000,00:11:45.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:15:50.000,00:16:12.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36667"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:50.000,00:16:12.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:50.000,00:16:12.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:15:50.000,00:16:12.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:50.000,00:10:54.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:08:21.000,00:08:49.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36525"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:21.000,00:08:49.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:21.000,00:08:49.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:08:21.000,00:08:49.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:24.000,00:11:45.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36669"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:24.000,00:11:45.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:24.000,00:11:45.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:24.000,00:11:45.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:15:15.000,00:15:32.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36656"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:15.000,00:15:32.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:15.000,00:15:32.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:15:15.000,00:15:32.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:36.000,00:15:00.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:24.000,00:09:45.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:09.000,00:14:22.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:35.000,00:14:49.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513/">
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:04.000,00:11:05.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:13:13.000,00:13:32.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:02:53.000,00:03:10.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:08.000,00:11:09.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:10:24.000,00:10:39.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:08:41.000,00:09:08.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:07:40.000,00:07:48.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:09.000,00:14:22.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:09.000,00:11:24.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:00:17.000,00:00:36.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:01:39.000,00:02:02.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:40.000,00:12:48.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:04:55.000,00:05:15.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:46.000,00:13:12.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:36.000,00:15:00.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:04:20.000,00:04:56.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:23.000,00:14:34.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:08:21.000,00:08:49.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:15:15.000,00:15:32.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:04:35.000,00:04:56.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:46.000,00:12:00.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:49.000,00:13:51.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:22.000,00:12:45.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:35.000,00:14:49.000"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:18.000,00:14:42.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:03.000,00:11:04.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:07.000,00:11:08.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:09:24.000,00:09:45.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:02.000,00:12:21.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:03:57.000,00:04:11.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:06:56.000,00:07:23.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:01:03.000,00:01:18.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:15:48.000,00:15:57.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:15:50.000,00:16:12.000"/>
+    <schemaorg:dateModified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2012-01-30T16:36:24Z</schemaorg:dateModified>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:02:03.000,00:02:29.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:02:31.000,00:02:52.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:00.000,00:11:01.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:09:45.000,00:09:58.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:07:23.000,00:07:35.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:13:33.000,00:13:49.000"/>
+    <dc:title>Tim Berners-Lee: The next Web of open, linked data</dc:title>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:05.000,00:11:06.000"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaResource"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:00:38.000,00:01:02.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:03:11.000,00:03:28.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:13:52.000,00:14:16.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:08:14.000,00:08:37.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:06:09.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:02.000,00:11:03.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:06:31.000,00:06:56.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:09:46.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:08.000,00:12:28.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:05:48.000,00:06:03.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:05:12.000,00:05:48.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:09:59.000,00:10:23.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:07:35.000,00:07:55.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:12:29.000,00:12:39.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:11:24.000,00:11:45.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:04:12.000,00:04:19.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:01:18.000,00:01:38.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:00:01.000,00:00:14.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:13:49.000,00:14:08.000"/>
+    <schemaorg:dateCreated rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2012-01-30T16:36:24Z</schemaorg:dateCreated>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:07:55.000,00:08:14.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:07:48.000,00:08:20.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:15:33.000,00:15:49.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:06:06.000,00:06:30.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:10:55.000,00:12:07.000"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:04:57.000,00:06:03.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:09:08.000,00:09:23.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:10:40.000,00:11:00.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=0"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:03:28.000,00:03:44.000"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <rdfs:label>Tim Berners-Lee: The next Web of open, linked data</rdfs:label>
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36535"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo</ma:locator>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=0,00:04:34.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:17.000,00:14:35.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:14:50.000,00:15:15.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:03:44.000,00:03:57.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:04:24.000,00:05:11.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:16:13.000,00:16:16.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:08:50.000,00:10:54.000"/>
+    <ma:hasFragment rdf:resource="http://linkeddata.synote.org/synote/resources/36513#t=00:06:04.000,00:07:47.000"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:09:59.000,00:10:23.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36643"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:59.000,00:10:23.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:59.000,00:10:23.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:09:59.000,00:10:23.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:55.000,00:08:14.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:02:31.000,00:02:52.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36641"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:02:31.000,00:02:52.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:02:31.000,00:02:52.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:02:31.000,00:02:52.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:02.000,00:11:03.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36676"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:02.000,00:11:03.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:02.000,00:11:03.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:02.000,00:11:03.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:46.000,00:12:00.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:22.000,00:12:45.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:23.000,00:14:34.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:18.000,00:14:42.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:33.000,00:15:49.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:04:12.000,00:04:19.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36682"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:12.000,00:04:19.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:12.000,00:04:19.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:04:12.000,00:04:19.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:35.000,00:14:49.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36673"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:35.000,00:14:49.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:35.000,00:14:49.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:35.000,00:14:49.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:01:18.000,00:01:38.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:02.000,00:12:21.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36689"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:02.000,00:12:21.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:02.000,00:12:21.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:02.000,00:12:21.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:40.000,00:12:48.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36534"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:40.000,00:12:48.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:40.000,00:12:48.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:40.000,00:12:48.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:36.000,00:15:00.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:48.000,00:08:20.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:56.000,00:07:23.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:09.000,00:14:22.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:15.000,00:15:32.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:05:48.000,00:06:03.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:13:52.000,00:14:16.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36533"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:52.000,00:14:16.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:52.000,00:14:16.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:13:52.000,00:14:16.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:33.000,00:13:49.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:09.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:01:39.000,00:02:02.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36687"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:01:39.000,00:02:02.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:01:39.000,00:02:02.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:01:39.000,00:02:02.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:22.000,00:12:45.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:04:57.000,00:06:03.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36523"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:57.000,00:06:03.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:57.000,00:06:03.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:04:57.000,00:06:03.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:14.000,00:08:37.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:23.000,00:14:34.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36688"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:23.000,00:14:34.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:23.000,00:14:34.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:23.000,00:14:34.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.ted.com/talks/tim_berners_lee_on_the_next_web.html">
+    <lode:involvedAgent rdf:resource="http://dbpedia.org/resource/Tim_Berners-Lee"/>
+    <lode:atPlace rdf:resource="http://dbpedia.org/resource/Terrace_Theater"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:31.000,00:06:56.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:50.000,00:15:15.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36672"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:50.000,00:15:15.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:50.000,00:15:15.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:50.000,00:15:15.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:16:13.000,00:16:16.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:03.000,00:11:04.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:09.000,00:14:22.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36684"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:09.000,00:14:22.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:09.000,00:14:22.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:09.000,00:14:22.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:36.000,00:15:00.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36527"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:36.000,00:15:00.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:36.000,00:15:00.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:36.000,00:15:00.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:08.000,00:11:09.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36648"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:08.000,00:11:09.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:08.000,00:11:09.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:08.000,00:11:09.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:06.000,00:06:30.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:35.000,00:07:55.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:10:55.000,00:12:07.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36524"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:10:55.000,00:12:07.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:10:55.000,00:12:07.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:10:55.000,00:12:07.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:20.000,00:04:56.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:04:20.000,00:04:56.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36683"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:20.000,00:04:56.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:20.000,00:04:56.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:04:20.000,00:04:56.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:07.000,00:11:08.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:07.000,00:11:08.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:05:12.000,00:05:48.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:06:09.000">
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/189"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:09.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:06:09.000</ma:locator>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <ma:description>Tim talked about linked data principles</ma:description>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36624"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36625"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:09.000"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <ma:title>Linked data and linked data principles</ma:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:49.000,00:14:08.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:09.000,00:11:24.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36650"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:09.000,00:11:24.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:09.000,00:11:24.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:09.000,00:11:24.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:04.000,00:07:47.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:06:06.000,00:06:30.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36658"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:06.000,00:06:30.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:06.000,00:06:30.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:06:06.000,00:06:30.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:18.000,00:14:42.000">
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <ma:title>Terrace Theater</ma:title>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:18.000,00:14:42.000"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:18.000,00:14:42.000</ma:locator>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36612"/>
+    <ma:description>&amp;lt;p&amp;gt;Where is Terrace Theater?&amp;lt;/p&amp;gt;</ma:description>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:18.000,00:14:42.000"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36613"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=0">
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=0"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=0"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36518"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36517"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=0</ma:locator>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36516"/>
+    <ma:title>Tim Berners-Lee: The next Web of open, linked data</ma:title>
+    <ma:description>20 years ago, Tim Berners-Lee invented the World Wide Web. For his next project, he's building a web for open, linked data that could do for numbers what the Web did for words, pictures, video: unlock our data and reframe the way we use it together.</ma:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:00:38.000,00:01:02.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36640"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:00:38.000,00:01:02.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:00:38.000,00:01:02.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:00:38.000,00:01:02.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:00:01.000,00:00:14.000">
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36634"/>
+    <lode:illustrate rdf:resource="http://www.ted.com/talks/tim_berners_lee_on_the_next_web.html"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36635"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:00:01.000,00:00:14.000"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:description>&amp;lt;div id=&amp;quot;namespaces&amp;quot; xmlns:dbpedia=&amp;quot;http://dbpedia.org/resource/&amp;quot; xmlns:lode=&amp;quot;http://linkedevents.org/ontology/&amp;quot;&amp;gt;
+&amp;lt;div about=&amp;quot;&amp;quot;&amp;gt;
+&amp;lt;div rel=&amp;quot;lode:illustrate&amp;quot; resource=&amp;quot;http://www.ted.com/talks/tim_berners_lee_on_the_next_web.html&amp;quot;&amp;gt;This TED talk took place at &amp;lt;span rel=&amp;quot;lode:atPlace&amp;quot; resource=&amp;quot;http://dbpedia.org/resource/Terrace_Theater&amp;quot;&amp;gt;Terrace Theater&amp;lt;/span&amp;gt; and it is given by &amp;lt;span rel=&amp;quot;lode:involvedAgent&amp;quot; resource=&amp;quot;http://dbpedia.org/resource/Tim_Berners-Lee&amp;quot;&amp;gt;Tim Berners Lee&amp;lt;/span&amp;gt; about Linked Data.&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;</ma:description>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:00:01.000,00:00:14.000</ma:locator>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <ma:title>TED talk</ma:title>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:00:01.000,00:00:14.000"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:23.000,00:14:34.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:52.000,00:14:16.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:00:01.000,00:00:14.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:10:24.000,00:10:39.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:02.000,00:12:21.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:10:40.000,00:11:00.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:08.000,00:09:23.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:10:55.000,00:12:07.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:20.000,00:04:56.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:45.000,00:09:58.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:05.000,00:11:06.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:23.000,00:07:35.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:00.000,00:11:01.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36636"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:00.000,00:11:01.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:00.000,00:11:01.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:00.000,00:11:01.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:57.000,00:06:03.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:11.000,00:03:28.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:46.000,00:13:12.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:55.000,00:05:15.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:35.000,00:04:56.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:57.000,00:04:11.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=0">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:09.000,00:11:24.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:00:17.000,00:00:36.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:44.000,00:03:57.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:14.000,00:08:37.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:16:13.000,00:16:16.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36655"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:16:13.000,00:16:16.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:16:13.000,00:16:16.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:16:13.000,00:16:16.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:00:38.000,00:01:02.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:02:53.000,00:03:10.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:22.000,00:12:45.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36674"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:22.000,00:12:45.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:22.000,00:12:45.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:22.000,00:12:45.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:01:18.000,00:01:38.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:07:23.000,00:07:35.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36657"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:23.000,00:07:35.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:23.000,00:07:35.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:07:23.000,00:07:35.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:45.000,00:09:58.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:07:35.000,00:07:55.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36651"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:35.000,00:07:55.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:35.000,00:07:55.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:07:35.000,00:07:55.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:02:53.000,00:03:10.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36637"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:02:53.000,00:03:10.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:02:53.000,00:03:10.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:02:53.000,00:03:10.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:14:17.000,00:14:35.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36522"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:17.000,00:14:35.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:17.000,00:14:35.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:14:17.000,00:14:35.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:08.000,00:09:23.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:59.000,00:10:23.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:00:01.000,00:00:14.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:18.000,00:14:42.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:05:12.000,00:05:48.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36664"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:05:12.000,00:05:48.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:05:12.000,00:05:48.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:05:12.000,00:05:48.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:21.000,00:08:49.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:08.000,00:12:28.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:17.000,00:14:35.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:00:17.000,00:00:36.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:10:40.000,00:11:00.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36659"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:10:40.000,00:11:00.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:10:40.000,00:11:00.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:10:40.000,00:11:00.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:50.000,00:15:15.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:50.000,00:15:15.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:08:50.000,00:10:54.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36529"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:50.000,00:10:54.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:50.000,00:10:54.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:08:50.000,00:10:54.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:09.000,00:11:24.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:50.000,00:10:54.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:04.000,00:11:05.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36681"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:04.000,00:11:05.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:04.000,00:11:05.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:04.000,00:11:05.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:09.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:15.000,00:15:32.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:46.000,00:13:12.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36685"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:46.000,00:13:12.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:46.000,00:13:12.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:46.000,00:13:12.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:41.000,00:09:08.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:31.000,00:06:56.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:46.000,00:12:00.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:07:40.000,00:07:48.000">
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:40.000,00:07:48.000"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/189"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:40.000,00:07:48.000"/>
+    <ma:description>&amp;lt;div about=&amp;quot;&amp;quot; xmlns:rnews=&amp;quot;http://iptc.org/std/rNews/2011-10-07#&amp;quot;&amp;gt;The article Tim mentioned is &amp;lt;a rel=&amp;quot;rnews:associatedArticle&amp;quot; href=&amp;quot;http://www.w3.org/DesignIssues/LinkedData.html&amp;quot;&amp;gt;here&amp;lt;/a&amp;gt;&amp;lt;/div&amp;gt;</ma:description>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36628"/>
+    <rnews:associatedArticle rdf:resource="http://www.w3.org/DesignIssues/LinkedData.html"/>
+    <ma:title>Linked data article</ma:title>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:07:40.000,00:07:48.000</ma:locator>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36629"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:12.000,00:04:19.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:55.000,00:05:15.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:01:18.000,00:01:38.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36679"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:01:18.000,00:01:38.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:01:18.000,00:01:38.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:01:18.000,00:01:38.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:07:55.000,00:08:14.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36665"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:55.000,00:08:14.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:55.000,00:08:14.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:07:55.000,00:08:14.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:13:13.000,00:13:32.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36649"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:13.000,00:13:32.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:13.000,00:13:32.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:13:13.000,00:13:32.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:06:56.000,00:07:23.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36639"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:56.000,00:07:23.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:56.000,00:07:23.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:06:56.000,00:07:23.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:28.000,00:03:44.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:08.000,00:12:28.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:24.000,00:09:45.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:09:24.000,00:09:45.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36661"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:24.000,00:09:45.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:24.000,00:09:45.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:09:24.000,00:09:45.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:04:35.000,00:04:56.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36531"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:35.000,00:04:56.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:35.000,00:04:56.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:04:35.000,00:04:56.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:59.000,00:10:23.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:10:40.000,00:11:00.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:08:14.000,00:08:37.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36690"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:14.000,00:08:37.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:14.000,00:08:37.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:08:14.000,00:08:37.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:02:31.000,00:02:52.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:46.000,00:12:00.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36654"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:46.000,00:12:00.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:46.000,00:12:00.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:46.000,00:12:00.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:24.000,00:11:45.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:14:17.000,00:14:35.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:08.000,00:12:28.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36520"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:08.000,00:12:28.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:08.000,00:12:28.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:08.000,00:12:28.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:04:24.000,00:05:11.000">
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:04:24.000,00:05:11.000</ma:locator>
+    <ma:description>Here is Hans Rosling&amp;amp;#39;s talk.</ma:description>
+    <ma:title>Hans Rosling's talk</ma:title>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36616"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:24.000,00:05:11.000"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36617"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:24.000,00:05:11.000"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/189"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:03.000,00:11:04.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36660"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:03.000,00:11:04.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:03.000,00:11:04.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:03.000,00:11:04.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:28.000,00:03:44.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:07.000,00:11:08.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36680"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:07.000,00:11:08.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:07.000,00:11:08.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:07.000,00:11:08.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:05:12.000,00:05:48.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:01:03.000,00:01:18.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:09:08.000,00:09:23.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36652"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:08.000,00:09:23.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:08.000,00:09:23.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:09:08.000,00:09:23.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:03:57.000,00:04:11.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36662"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:57.000,00:04:11.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:57.000,00:04:11.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:03:57.000,00:04:11.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:52.000,00:14:16.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:02:03.000,00:02:29.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:08:41.000,00:09:08.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36663"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:41.000,00:09:08.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:08:41.000,00:09:08.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:08:41.000,00:09:08.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:03.000,00:11:04.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:40.000,00:07:48.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:46.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:01:39.000,00:02:02.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:15:48.000,00:15:57.000">
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:48.000,00:15:57.000"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36608"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <ma:title>Repay of the investment</ma:title>
+    <ma:description>Tim said it would not be a immediate return of the investment</ma:description>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36609"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:15:48.000,00:15:57.000</ma:locator>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:48.000,00:15:57.000"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:14:35.000,00:14:49.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:04.000,00:11:05.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:41.000,00:09:08.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:29.000,00:12:39.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36530"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:29.000,00:12:39.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:29.000,00:12:39.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:29.000,00:12:39.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:50.000,00:16:12.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:35.000,00:04:56.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:01:39.000,00:02:02.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:46.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:04:12.000,00:04:19.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:57.000,00:04:11.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=0,00:04:34.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:05:48.000,00:06:03.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36646"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:05:48.000,00:06:03.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:05:48.000,00:06:03.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:05:48.000,00:06:03.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:00.000,00:11:01.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:11:05.000,00:11:06.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36671"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:05.000,00:11:06.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:05.000,00:11:06.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:11:05.000,00:11:06.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:16:13.000,00:16:16.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:00:17.000,00:00:36.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36675"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:00:17.000,00:00:36.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:00:17.000,00:00:36.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:00:17.000,00:00:36.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:05:48.000,00:06:03.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:06:31.000,00:06:56.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36653"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:31.000,00:06:56.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:31.000,00:06:56.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:06:31.000,00:06:56.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:12:49.000,00:13:51.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36521"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:49.000,00:13:51.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:49.000,00:13:51.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:12:49.000,00:13:51.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:13:49.000,00:14:08.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36638"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:49.000,00:14:08.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:49.000,00:14:08.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:13:49.000,00:14:08.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:04:24.000,00:05:11.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:05.000,00:11:06.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:40.000,00:07:48.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:49.000,00:13:51.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:06.000,00:06:30.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:29.000,00:12:39.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:13.000,00:13:32.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:33.000,00:13:49.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:48.000,00:15:57.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:01:03.000,00:01:18.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36677"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:01:03.000,00:01:18.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:01:03.000,00:01:18.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:01:03.000,00:01:18.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:10:55.000,00:12:07.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:08.000,00:11:09.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:48.000,00:08:20.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:13:33.000,00:13:49.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36668"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:13:33.000,00:13:49.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:33.000,00:13:49.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:13:33.000,00:13:49.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:01:03.000,00:01:18.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:35.000,00:07:55.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:10:24.000,00:10:39.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:03:11.000,00:03:28.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36647"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:11.000,00:03:28.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:11.000,00:03:28.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:03:11.000,00:03:28.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:03:44.000,00:03:57.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:10:24.000,00:10:39.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36666"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:10:24.000,00:10:39.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:10:24.000,00:10:39.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:10:24.000,00:10:39.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:13:13.000,00:13:32.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:03:11.000,00:03:28.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:04.000,00:07:47.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:48.000,00:15:57.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:46.000,00:13:12.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:04.000,00:11:05.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:09:45.000,00:09:58.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36686"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:45.000,00:09:58.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:45.000,00:09:58.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:09:45.000,00:09:58.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:15:33.000,00:15:49.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36642"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:33.000,00:15:49.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:33.000,00:15:49.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:15:33.000,00:15:49.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:08:21.000,00:08:49.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:11:02.000,00:11:03.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=0,00:04:34.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:06:04.000,00:07:47.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36528"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:06:04.000,00:07:47.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:06:04.000,00:07:47.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:06:04.000,00:07:47.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:02:31.000,00:02:52.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:11:00.000,00:11:01.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:09:46.000">
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:09:46.000</ma:locator>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36621"/>
+    <rdf:type rdf:resource="http://www.openannotation.org/ns/Target"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <ma:title>Government Data</ma:title>
+    <ma:hasKeyword rdf:resource="http://linkeddata.synote.org/synote/resources/36620"/>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/189"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:09:46.000"/>
+    <ma:description>I remembered he talked about government data some where else in TED.</ma:description>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:09:46.000"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:00:38.000,00:01:02.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:02:03.000,00:02:29.000">
+    <ma:hasSubtitling rdf:resource="http://linkeddata.synote.org/synote/resources/36670"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:02:03.000,00:02:29.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:02:03.000,00:02:29.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:02:03.000,00:02:29.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:02:03.000,00:02:29.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/36513#t=00:07:48.000,00:08:20.000">
+    <ma:hasRelatedImage rdf:resource="http://linkeddata.synote.org/synote/resources/36532"/>
+    <rdfs:isDefinedBy rdf:resource="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:48.000,00:08:20.000"/>
+    <rdfs:seeAlso rdf:resource="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:48.000,00:08:20.000"/>
+    <ma:locator>http://www.youtube.com/watch?v=OM6XIICm_qo#t=00:07:48.000,00:08:20.000</ma:locator>
+    <dcterms:creator rdf:resource="http://linkeddata.synote.org/synote/users/188"/>
+    <ma:isFragmentOf rdf:resource="http://linkeddata.synote.org/synote/resources/36513"/>
+    <rdf:type rdf:resource="http://www.w3.org/ns/ma-ont#MediaFragment"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:07:55.000,00:08:14.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:15:33.000,00:15:49.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/recording/replay/36513#t=00:12:29.000,00:12:39.000">
+    <dc:format>application/xhtml+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:40.000,00:12:48.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:15:50.000,00:16:12.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:12:02.000,00:12:21.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://linkeddata.synote.org/synote/resources/data/36513#t=00:07:23.000,00:07:35.000">
+    <dc:format>application/rdf+xml</dc:format>
+  </rdf:Description>
+</rdf:RDF>

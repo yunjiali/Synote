@@ -85,7 +85,7 @@ class LinkedDataService {
 		if(!tripleStore)
 		{
 			String assembler = grailsApplication.config.jena.sdb.assembler
-			println "assembler:"+assembler
+			log.debug("assembler:"+assembler)
 			tripleStore = SDBFactory.connectStore(assembler)
 			return tripleStore
 		}
@@ -919,9 +919,10 @@ class LinkedDataService {
 				else
 					mediaUri = getResourceBaseURI()+multimedia.id
 					
+				log.debug("extractions size:"+extractions?.size());
+				
 				for(Extraction e : extractions )
 			    {
-				   
 				   
 				   if(checkDuplicateNE(e, extractor,resource))
 				   {
@@ -941,10 +942,11 @@ class LinkedDataService {
 					   ne = model.createResource(e.getUri())
 				   }
 				   
-				   //description for named entities
+				   //description for named entities	
 				   JenaProperty p_rdf_type = model.createProperty(V.RDF_NS[1]+"type")
 				   JenaResource o_nerdType = model.createResource(e.getNerdType())
 				   model.add(ne,p_rdf_type,o_nerdType)
+				   log.debug("type");
 				   
 				   JenaProperty p_dc_type = model.createProperty(V.DC_NS[1]+"type")
 				   String dc_type = e.getType()
@@ -956,6 +958,7 @@ class LinkedDataService {
 				   JenaProperty p_rdfs_label = model.createProperty(V.RDFS_NS[1]+"label")
 				   Literal o_entityName = model.createLiteral(e.getEntity())
 				   model.add(ne,p_rdfs_label,o_entityName)
+				   log.debug("label");
 				   
 				   //description for OAC annotations
 				   JenaResource s_annotation = model.createResource(getNERDAnnotationBaseURI()+e.getIdExtraction())
@@ -976,12 +979,26 @@ class LinkedDataService {
 				   
 				   StringBuilder otherResult = new StringBuilder()
 				   otherResult.append("confidence:"+e.getConfidence()+",")
-				   otherResult.append("endChar:"+e.getEndChar()+",")
 				   otherResult.append("relevance:"+e.getRelevance()+",")
-				   otherResult.append("startChar:"+e.getStartChar())
+				   //otherResult.append("startChar:"+e.getStartChar()) will be saved as str:beginIndex
+				   //otherResult.append("endChar:"+e.getEndChar()+",") will be saved as str:endIndex
 				   JenaProperty p_dc_description = model.createProperty(V.DC_NS[1]+"description")
 				   Literal o_otherResult = model.createLiteral(otherResult.toString())
 				   model.add(s_annotation,p_dc_description,o_otherResult)
+				   
+				   //add startChar and endChar information
+				   if(e.getStartChar() != null)
+				   {
+					   JenaProperty p_str_beginIndex = model.createProperty(V.STR_NS[1]+"beginIndex")
+					   Literal o_str_start = model.createTypedLiteral(String.valueOf(e.getStartChar()),XSDDatatype.XSDinteger)
+					   model.add(s_annotation,p_str_beginIndex,o_str_start)
+				   }
+				   if(e.getEndChar() != null)
+				   {
+					   JenaProperty p_str_endIndex = model.createProperty(V.STR_NS[1]+"endIndex")
+					   Literal o_str_end = model.createTypedLiteral(String.valueOf(e.getEndChar()),XSDDatatype.XSDinteger)
+					   model.add(s_annotation,p_str_endIndex,o_str_end)
+				   }
 				   
 				   JenaProperty p_dcterms_created = model.createProperty(V.DCTERMS_NS[1]+"created")
 				   String c_time = Utils.calendarToXSDDateTimeString(new GregorianCalendar())

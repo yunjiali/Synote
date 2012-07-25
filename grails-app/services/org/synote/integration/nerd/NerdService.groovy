@@ -3,6 +3,7 @@ package org.synote.integration.nerd
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken
 import fr.eurecom.nerd.client.*
+import fr.eurecom.nerd.client.type.*
 import fr.eurecom.nerd.client.schema.*
 
 import java.lang.reflect.Type
@@ -24,53 +25,67 @@ class NerdService {
 	{
 		switch(extractor_name?.toLowerCase()){
 			case "alchemyapi":
-				return Extractor.ALCHEMYAPI
+				return ExtractorType.ALCHEMYAPI
 			case "spotlight":
-				return Extractor.DBPEDIA_SPOTLIGHT
+				return ExtractorType.DBPEDIA_SPOTLIGHT
 			case "evri":
-				return Extractor.EVRI
+				return ExtractorType.EVRI
 			case "extractiv":
-				return Extractor.EXTRACTIV
+				return ExtractorType.EXTRACTIV
 			case "ontotext":
-				return Extractor.ONTOTEXT
+				return ExtractorType.LUPEDIA
 			case "opencalais":
-				return Extractor.OPENCALAIS
+				return ExtractorType.OPENCALAIS
 			case "saplo":
-				return Extractor.SAPLO
+				return ExtractorType.SAPLO
 			case "wikimeta":
-				return Extractor.WIKIMETA
+				return ExtractorType.WIKIMETA
 			case "yahoo":
-				return Extractor.YAHOO
+				return ExtractorType.YAHOO
 			case "zemanta":
-				return Extractor.ZEMANTA
+				return ExtractorType.ZEMANTA
+			case "combined":
+				return ExtractorType.COMBINED
 			default:
 				return null	
 		}
     }
 	
-	def getNerdExtractorName(Extractor extr)
+	def getLanguageType(String lang)
+	{
+		switch(lang?.toLowerCase()){
+			case "en":
+				return LanguageType.ENGLISH
+			default:
+				return null
+		}
+	}
+	
+	def getNerdExtractorName(ExtractorType extr)
 	{
 		switch(extr){
-			case Extractor.ALCHEMYAPI:
+			case ExtractorType.ALCHEMYAPI:
 				return "alchemyapi"
-			case Extractor.DBPEDIA_SPOTLIGHT:
+			case ExtractorType.DBPEDIA_SPOTLIGHT:
 				return "spotlight"
-			case Extractor.EVRI:
+			case ExtractorType.EVRI:
 				return "evri"
-			case Extractor.EXTRACTIV:
+			case ExtractorType.EXTRACTIV:
 				return "extractiv"
-			case Extractor.ONTOTEXT:
+			case ExtractorType.LUPEDIA:
 				return "ontotext"
-			case Extractor.OPENCALAIS:
+			case ExtractorType.OPENCALAIS:
 				return "opencalais"
-			case Extractor.SAPLO:
+			case ExtractorType.SAPLO:
 				return "saplo"
-			case Extractor.WIKIMETA:
+			case ExtractorType.WIKIMETA:
 				return "wikimeta"
-			case Extractor.YAHOO:
+			case ExtractorType.YAHOO:
 				return "yahoo"
-			case Extractor.ZEMANTA:
+			case ExtractorType.ZEMANTA:
 				return "zemanta"
+			case ExtractorType.COMBINED:
+				return "combined"
 			default:
 				return null
 		}

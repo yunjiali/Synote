@@ -11,11 +11,18 @@
 			<g:render template="/common/userNav" model="['active':'transcripts']"/>
 		</div>
 		<div class="span10" id="user_content_div">
-			<h2>Transcript for
+			<h2 class="heading-inline">Transcript for
 				<g:link controller="reocording" action="replay" id="${multimedia.id}">${multimedia.title }</g:link>
 			</h2>
 			<div class="row">
-			<span id="recording_count_span" style="padding:5px" class="pull-right label label-info">${cueList.records} Transcript Blocks</span>
+				<span id="recording_count_span" style="padding:5px" class="pull-right label label-info">${cueList.records} Transcript Blocks</span>
+			</div>
+			<div class="row" style="margin-top:10px;">
+				<g:link class="btn btn-warning pull-right" controller="nerd" action="nerditsub" id="${multimedia.id}">
+					NERD It</g:link>
+				<g:link controller="recording" action="subpreview" id="${multimedia.id}" class="btn btn-info pull-right" style="margin-right:10px;">
+						Preview Named Entities
+				</g:link>
 			</div>
 			<div>
 				<div id="recording_list_div">
@@ -23,7 +30,7 @@
 						<div class="nodata">There is no transcript for this recording</div>
 					</g:if>
 					<g:each in="${cueList.rows}" var="row">
-						<g:render template="/common/webvttcue" model="['row':row,'multimedia':multimedia]"/>
+						<g:render template="/common/subtitle_nerd_all" model="['row':row,'multimedia':multimedia]"/>
 					</g:each>
 				</div>
 			</div>

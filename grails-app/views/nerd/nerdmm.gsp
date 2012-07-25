@@ -80,7 +80,7 @@ $(document).ready(function(){
 			</div>
 			<div class="form-actions">
 				<div class="pull-left">
-	            	<input type="submit" id="nerditForm_submit" class="btn btn-large btn-warning btn-nerd" value="Nerd it"/>
+	            	<input type="submit" id="nerditForm_submit" class="btn btn-large btn-warning btn-nerd" value="NERD It"/>
 	            	<input class="btn btn-large" id="nerditForm_reset" type="reset" value="Reset"/>
 	            </div>
 			</div>

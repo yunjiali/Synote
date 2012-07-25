@@ -461,7 +461,7 @@
 									</div>
 								</div>
 								<div id="synmark_msg_div"></div><!-- displaying info, error messages -->
-								<div id="synmark_url_dialog" class="modal hide">
+								<div id="synmark_url_dialog" class="modal hide fade">
 									<div class='modal-header'>
 									    <button type='button' class='close' data-dismiss='modal'>×</button>
 									    <h4>Synmark URL</h4>

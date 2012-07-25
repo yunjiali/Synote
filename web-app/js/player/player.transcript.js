@@ -715,7 +715,7 @@ var Transcript = Base.extend({
 		transcript.newId++;
 		transcript.transcripts = $(".transcript_line");	
 	},
-	refresh:function()
+	refresh:function(callback) //Add a callback function
 	{
 		var getTranscriptsURL = g.createLink({controller:'recording', action:'getTranscriptsAjax'});
 		var transcripts_div = this.outer_container;
@@ -740,6 +740,8 @@ var Transcript = Base.extend({
 			   complete:function(jqXHR, textStatus)
 			   {
 				   $("#transcript_loading_div").hide();
+				   if(callback != null)
+				   		callback(null);
 			   }
 		});
 	},

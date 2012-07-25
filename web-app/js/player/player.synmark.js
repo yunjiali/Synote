@@ -393,6 +393,7 @@ var Synmark = Base.extend({
 		//return getHostLocation()+"/"+appPath+"/resource/synmark/"+synmark_id;
 		
 		//This is the playing URI, which could be shared easily.
+		//console.log("getURI:"+resourceBaseURI+synmark_id);
 		return resourceBaseURI+synmark_id;
 	},
 	//reset synmark form
@@ -492,7 +493,7 @@ var Synmark = Base.extend({
 						   }).attr("title","Share the URL of this synmark").attr("type","button").addClass("btn btn-mini");
 					   link_synmark_btn.bind("click",{synmark_id:s.id},function(event){
 						   $("#synmark_url_dialog .modal-body").html("<p>"+synmark.getURI(event.data.synmark_id)+"</p>");
-						   $("#synmark_url_dialog").modal();
+						   $("#synmark_url_dialog").modal('show');
 					   });
 					   link_synmark_btn.appendTo(synmark_btn_span);
 					   

@@ -634,10 +634,19 @@ class ResourceService {
 		def srt = null
 		try
 		{
-			def query = [v:videoid, fmt:fmt, lang:l]
+			def query = [v:videoid, format:fmt, lang:l]
 			
 			http.get(path:"/api/timedtext", contentType:TEXT, query:query){ resp,reader->
 			
+				/*println "response status: ${resp.statusLine}"
+				println 'Headers: -----------'
+				resp.headers.each { h ->
+				  println " ${h.name} : ${h.value}"
+				}
+				println 'Response data: -----'
+				System.out << reader //stream closed
+				println '\n--------------------'*/
+				
 				String s = reader.text
 				if(s?.size() > 0)
 					srt = s

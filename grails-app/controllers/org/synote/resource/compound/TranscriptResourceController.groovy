@@ -19,7 +19,7 @@ class TranscriptResourceController {
     /*
 	* List all my multimedia resource with transcript as JSON, not listing transcript
 	*/
-   @Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+   //@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
    def list = {
 	   if(!params.id)
 	   {
@@ -88,6 +88,6 @@ class TranscriptResourceController {
 		   results << item
 	   }
 	   def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
-	   return [cueList:jqGridData, params:params, multimedia:multimedia]
+	   return [cueList:jqGridData, params:params, multimedia:multimedia,transcript:transcript]
    }
 }

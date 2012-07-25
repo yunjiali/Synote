@@ -601,4 +601,8 @@ class AdminController {
 		render (view:'secretOperations')
 		return
 	}
+	
+	def putNERDIntoTripleStroe ={
+			
+	}
 }

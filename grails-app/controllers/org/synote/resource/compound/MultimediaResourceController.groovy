@@ -356,10 +356,14 @@ class MultimediaResourceController {
 						//Save srt as webvtt in Synote	
 						webVTTService.createWebVTTResourceFromSRT(multimediaResource,srt)
 					}
+					else
+					{
+						msg+="No Closed Captioning could be uploaded.<br/>"	
+					}
 				}
 			}
 			
-			msg = "Recording '${multimediaResource.title}' was successfully created"
+			msg += "Recording '${multimediaResource.title}' was successfully created"
 			render(contentType:"text/json"){
 				success(stat:APIStatusCode.SUCCESS, description:msg,mmid:multimediaResource.id?.toString())
 			}

@@ -15,16 +15,22 @@ import org.synote.resource.ResourceService
 import org.synote.user.SecurityService
 import grails.converters.*
 import org.synote.linkeddata.LinkedDataService
+import org.synote.config.ConfigurationService
+import org.synote.player.client.WebVTTData
+import org.synote.player.client.PlayerException
+import org.synote.annotation.synpoint.Synpoint
+
 
 import java.util.UUID
 
 import fr.eurecom.nerd.client.*
+import fr.eurecom.nerd.client.type.*
 import fr.eurecom.nerd.client.schema.*
 
 @Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 class NerdController {
 	
-	final static String NERD_KEY = "56532eb996e0eb8ab30e1f8cd6d1be97b49fdf38"
+	def beforeInterceptor = [action: this.&checkNerdEnabled]
 	
 	def nerdService
 	def permService
@@ -32,7 +38,20 @@ class NerdController {
 	def linkedDataService
 	def resourceService
 	def securityService
+	def configurationService
 	
+	
+	private checkNerdEnabled()
+	{
+		//def enabled = configurationService.getConfigValue("org.synote.integration.nerd.enabed")
+		//if(enabled.toBoolean())
+		//{
+		//	return true
+		//}
+		//else
+		//	return false
+		return true
+	}
 	/*
 	 * Extract named entity using nerd
 	 * params: extractor, language (default "en"), text
@@ -40,10 +59,12 @@ class NerdController {
 	def extractAjax = {
 		def text =""
 		
+		final String NERD_KEY = configurationService.getConfigValue("org.synote.integration.nerd.key")
+		
 		if(!params.resourceId)
 		{
 			render(contentType:"text/json"){
-				error(stat:APIStatusCode.NERD_ID_MiSSING, description:"Resource id is missing.")
+				error(stat:APIStatusCode.NERD_ID_MISSING, description:"Resource id is missing.")
 			}
 			return
 		}
@@ -107,14 +128,138 @@ class NerdController {
 		try
 		{
 			
-			NERD nerd = new NERD(NERD_KEY)
-			def result= nerd.extractionJSON(nerdExtractor, text?.trim(),"en",true)
+			NERD nerd = new NERD("http://semantics.eurecom.fr/nerdtest/api/",NERD_KEY)
+			def result= nerd.extractionJSON(nerdExtractor,
+                                   DocumentType.PLAINTEXT,
+                                   LanguageType.ENGLISH,
+                                   text,
+                                   false); 
 			
 			def jsObj = JSON.parse(result)
 			
 			//save json to triple store
+			//println "before"
 			def extractions = nerdService.getExtractionFromJSON(result)
 			linkedDataService.saveNERDToTripleStroe(extractions,multimedia,resource,synpoint,params.extractor)
+			//println "afters"
+			render JSON.parse(result) as JSON
+			return
+		}
+		catch(Exception ex)
+		{
+			throw ex
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.NERD_EXTRACTOR_INTERAL_ERROR, description:"Connection failure to the extractor.")
+			}
+			return
+		}
+		
+	}
+	
+	/*
+	* Extract named entities from srt file using nerd
+	*/
+	def extractSRTAjax = {
+		def text =""
+		
+		final String NERD_KEY = configurationService.getConfigValue("org.synote.integration.nerd.key")
+		
+		if(!params.resourceId)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.NERD_ID_MISSING, description:"Resource id is missing.")
+			}
+			return
+		}
+		
+		def vtt = WebVTTResource.get(params.resourceId?.toLong())
+		if(!vtt)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.NERD_RESOURCE_NOT_FOUND, description:"Cannot find the resource with id ${params.id}.")
+			}
+			return
+		}
+		
+		def anno = ResourceAnnotation.findBySource(vtt)
+		def multimedia = anno.target
+		
+		if(!anno)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.RESOURCEANNOTATION_NOT_FOUND, description:"Cannot find the annotation.")
+				
+			}
+		}
+		def transcript = webVTTService.getTranscriptFromAnnotation(anno, vtt)
+		
+		text = webVTTService.convertToSRT(transcript)
+		
+		if(!params.extractor)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.NERD_EXTRACTOR_NOT_FOUND, description:"Cannot find the extractor.")
+			}
+			return
+		}
+		
+		def nerdExtractor = nerdService.getNerdExtractor(params.extractor)
+		if(!nerdExtractor)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.NERD_EXTRACTOR_NOT_FOUND, description:"Cannot find the extractor with name ${params.extractor}.")
+			}
+			return
+		}
+		
+		if(!text || text?.trim()?.size() ==0)
+		{
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.NERD_TEXT_NOT_FOUND, description:"Extraction text cannot be empty.")
+			}
+			return
+		}
+		
+		//TODO: add nerd language type
+		if(!params.lang)
+			params.lang = "en"
+		
+		def languageType = nerdService.getLanguageType(params.lang)
+		try
+		{
+			
+			NERD nerd = new NERD("http://semantics.eurecom.fr/nerdtest/api/",NERD_KEY)
+			def result= nerd.extractionJSON(nerdExtractor,
+								   DocumentType.TIMEDTEXT,
+								   languageType,
+								   text,
+								   false);
+			
+			def jsObj = JSON.parse(result)
+			
+			//save json to triple store
+			//println "before"
+			def extractions = nerdService.getExtractionFromJSON(result)
+			//def synpoint = resourceService.getSynpointByResource(resource)
+			//def multimedia = resourceService.getMultimediaByResource(resource)
+			
+			def synpoints = Synpoint.findAllByAnnotation(anno)
+			
+			synpoints.each{syn->
+				//TODO: if two synpoints have exactly the same start and end time
+				def exts = extractions.findAll{ ext->
+					(((int)(ext.getStartNPT()*1000)) == syn.targetStart) && 
+					(((int)(ext.getEndNPT()*1000)) == syn.targetEnd)
+				}
+				//println "exts size:"+exts?.size()
+				if(exts?.size() >0)
+				{
+					def cue = WebVTTCue.findByCueIndex(syn.sourceStart)
+					linkedDataService.saveNERDToTripleStroe(exts,multimedia,cue,syn,params.extractor)
+				}
+			}
+			
+			//println "afters"
 			render JSON.parse(result) as JSON
 			return
 		}
@@ -182,7 +327,11 @@ class NerdController {
 	}
 	
 	/*
+	 * DEPRECATED
 	 * This method nerd tag, description, note as separate documents, which may not be efficient
+	 * params: 
+	 * resourceId: the id of the transcript
+	 * extractor: the name of the extractor        
 	 */
 	def nerdit = {
 		//if there is an id, we will use params.id
@@ -414,6 +563,45 @@ class NerdController {
 	}
 	
 	/*
+	 * Nerd the subtitle as srt file without asking users to choose extractors
+	 * displaying the result similar to nerditone
+	 */
+	def nerditsub = {
+		def multimedia = MultimediaResource.get(params.id)
+		if(!multimedia)
+		{
+			flash.error = "Cannot find the recording."
+			redirect(action:'index', controller:'user')
+			return
+		}
+		
+		def perm = permService.getPerm(multimedia)
+		if(perm?.val <=0)
+		{
+			flash.error = "Access denied! You don't have permission to access this transcript block."
+			redirect(controller:'user',action: 'index')
+			return
+		}
+		
+		WebVTTData[] transcripts= webVTTService.getTranscripts(multimedia)
+	   
+	    if(!transcripts)
+	    {
+			flash.error = "No transcript is found for this recording."
+			redirect(controller:'user',action: 'index')
+			return
+	    }
+		def transcript = transcripts[0]
+	   
+	    def srtStr = webVTTService.convertToSRT(transcript)
+	
+		def results = [text:srtStr,extractors:["combined"]] as Map
+	
+		return [textResource:results,resourceId:transcript.id, multimedia:multimedia]
+		
+	}
+	
+	/*
 	 * list all the named entities about a resource
 	 */
 	def listne = {
@@ -446,7 +634,7 @@ class NerdController {
 		jsObj.each { i, data -> 
 			if(i == "results")
 			{
-				Extractor.values().each{val->
+				ExtractorType.values().each{val->
 					String extractor_name = nerdService.getNerdExtractorName(val)
 					def bs = data.bindings.findAll{it.extr.value == extractor_name}
 					nes.put(extractor_name, bs)	

@@ -66,7 +66,7 @@ environments {
 			sdb{
 				assembler = "sdb-mysql-innodb-dev.ttl"
 				checkFormattedOnStartUp = false
-				emptyOnStartUp = true //empty the triple store on start up
+				emptyOnStartUp = false //empty the triple store on start up
 			}
 		}
     }
@@ -114,7 +114,7 @@ log4j = {
 		warn   'org.mortbay.log' 
 		//info 	'org.synote.integration.ibmhts'
 		debug   'grails.app.service.org.synote.user.SecurityService',
-				'grails.app.service.org.synote.integration.entermedia.EnterMediaService',
+				'grails.app.service.org.synote.linkeddata.LinkedDataService',
 				//'org.synote.user.SynoteLdapAuthenticator',
 			   //'groovy.grails.plugins.springsecurity.GrailsDaoImpl',
 		       //'org.synote.user.SynoteLdapAuthenticationProcessingFilter',

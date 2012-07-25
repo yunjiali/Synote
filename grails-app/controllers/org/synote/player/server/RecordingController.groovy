@@ -27,6 +27,7 @@ import org.synote.analysis.Views
 import org.synote.linkeddata.LinkedDataService
 import org.synote.config.ConfigurationService
 import org.synote.resource.ResourceService
+import org.synote.linkeddata.Vocabularies as V
 
 import org.synote.player.client.MultimediaData
 import org.synote.player.client.PlayerException
@@ -1272,5 +1273,68 @@ class RecordingController {
 		}
 		return
 	}
+	
+	/*
+	* Preview the subtitles together with the video
+	*/
+   def subpreview = {
+	   def recording = null
+	   def resource = Resource.findById(params.id?.toString())
+	   if(!resource || !resource.instanceOf(MultimediaResource))
+	   {
+		   flash.error = "Cannot find resource with ID ${params.id}"
+		   redirect(controller:'multimediaResource',action: 'list')
+		   return
+	   }
+	   recording = resource
+	   
+	   if (recording)
+	   {
+		   def perm = permService.getPerm(recording)
+		   if(perm?.val <=0)
+		   {
+			   flash.error = "Access denied! You don't have permission to access this recording"
+			   //Yunjia: should redirect to error page instead of list page
+			   redirect(controller:'multimediaResource',action: 'list')
+			   return
+		   }
+		   
+		   def user = securityService.getLoggedUser()
+		   
+		   def views = Views.countByResource(recording)
+		   
+		   boolean canEdit = false
+		   boolean canCreateSynmark = false
+		   boolean isGuest = true
+		   //Don't need it, nobody should be able to annotate the recording
+		   //if(user)
+		   //{
+		   //if(playerService.canEdit(recording))
+			//	   canEdit = true
+			 //  if(playerService.canCreateSynmark(recording))
+			//	   canCreateSynmark = true
+		   //}
+		   
+		   def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		   
+		   def metrics = resourceService.getMultimediaResourceMetrics(recording)
+		   
+		   def prefixList = V.getVocabularies()
+		   StringBuilder builder = new StringBuilder()
+		   prefixList.each{p->
+			   builder.append("PREFIX "+p[0]+":"+"<"+p[1]+">")
+			   builder.append(" ")
+		   }
+		   
+		   return [prefixString:builder.toString(),recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
+			   resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc,]
+	   }
+	   else
+	   {
+		   flash.error = "Cannot find recording with ID ${params.id}"
+		   redirect(controller:'multimediaResource',action: 'list')
+		   return
+	   }
+   }
 	
 }

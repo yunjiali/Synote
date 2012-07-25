@@ -19,7 +19,7 @@ function createHTMLTab(jsObj)
 	$.each(jsObj.results.bindings,function(j,data){
 		tableStr+="<tr>";
 		$.each(data,function(k,bv){
-			console.log("data");
+			//console.log("data");
 			tableStr+="<td>"+bv.value+"</td>";
 		});	
 		tableStr += "</tr>";

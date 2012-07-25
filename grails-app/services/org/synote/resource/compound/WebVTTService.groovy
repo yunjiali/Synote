@@ -68,8 +68,25 @@ class WebVTTService {
 		//not implemented
 	   return true   
    }
+   
+   WebVTTData getTranscriptFromAnnotation(ResourceAnnotation annotation, WebVTTResource webVTTResource)
+   {
+	   def cues = webVTTResource.cues
+	   def cuesData = []
+	   annotation.synpoints.sort{synpoint -> synpoint.sourceStart}.each{synpoint->
+		   def cue = cues.find{it.cueIndex==synpoint.sourceStart}
+		   if(cue)
+		   {
+			   cuesData << new WebVTTCueData
+				   (cue.id.toString(), cue.cueIndex, synpoint.targetStart, synpoint.targetEnd, cue.content,cue.cueSettings,cue.thumbnail)
+		   }
+	   }
+	   
+	   return new WebVTTData( webVTTResource.id.toString() , playerService.getOwner(webVTTResource)
+			   , playerService.canEdit(webVTTResource), playerService.canDelete(webVTTResource), (WebVTTCueData[]) cuesData, webVTTResource.fileHeader)
+   }
    /*
-   * Get WebVTTData of transcript
+   * Get WebVTTData of transcript from multimedia
    */
   WebVTTData[] getTranscripts(multimedia)
   {
@@ -84,7 +101,6 @@ class WebVTTService {
 			  def webVTTResource = annotation.source
 			  def cues = webVTTResource.cues
 			  def cuesData = []
-			  
 			  annotation.synpoints.sort{synpoint -> synpoint.sourceStart}.each{synpoint->
 				  def cue = cues.find{it.cueIndex==synpoint.sourceStart}
 				  if(cue)
@@ -101,6 +117,7 @@ class WebVTTService {
 	  
 	  return transcripts
   }
+	 
 	  /*
 	  * Convert WebVTTResource to WebVTT file
 	  */

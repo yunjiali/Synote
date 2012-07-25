@@ -1,0 +1,81 @@
+/*CSS file for nerd in subpreview*/
+
+.nerd-label
+{
+	margin-right:10px;
+	color: white;
+	padding:10px;
+	font-size: 1.1em;
+	
+	-moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.nerd-label-small
+{
+	color: white;
+	padding:0 5px 0 5px;
+	-moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.nerd-line
+{
+	line-height:3.5em;
+}
+
+/*multiple types are overlapped*/
+.nerd-multiple
+{
+	background-color:black;
+	opacity:0.8;
+}
+
+.nerd-thing
+{
+	background-color:red;
+	opacity:0.8;
+}
+
+.nerd-person
+{
+	background-color:orange;
+	opacity:0.8;	
+}
+
+.nerd-organisation
+{
+	background-color:yellow;
+	opacity:0.8;
+	color:black;
+}
+
+.nerd-location
+{
+	background-color:green;
+	opacity:0.8;
+}
+
+.nerd-function
+{
+	background-color:PowderBlue;
+	opacity:0.8;
+	color:black;
+}
+
+.nerd-time
+{
+	background-color:Blue;
+	opacity:0.8;
+	
+}
+
+.nerd-amount
+{
+	background-color:purple;
+	opacity:0.8;
+}

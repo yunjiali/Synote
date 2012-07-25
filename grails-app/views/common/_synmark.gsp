@@ -61,7 +61,7 @@
 	 		</ul>
 	 	</div>
 	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdsmk" id="${row.id}">Nerd it</g:link>
+	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdsmk" id="${row.id}">NERD it</g:link>
 	 	</div>
 	</div>
 </div>

@@ -127,6 +127,7 @@ h2 {
 	<li>Enable Forget Password?</li>
 	<li>Change the linkeddata baseURI and servercontext in configuration</li>
 	<li>Change the synote-multimedia-service url in configuration</li>
+	<li>Enable NERD, set the NERD key if necessary</li>
 </ol>
 <h2>When the system restarts, you need to:</h2>
 <ol>

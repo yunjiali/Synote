@@ -64,7 +64,7 @@ class APIStatusCode {
    /*for external integration errors*/
    private final static int NERD_TEXT_NOT_FOUND = 810
    private final static int NERD_EXTRACTOR_NOT_FOUND = 811
-   private final static int NERD_ID_MiSSING = 812
+   private final static int NERD_ID_MISSING = 812
    private final static int NERD_RESOURCE_NOT_FOUND = 813
    private final static int NERD_EXTRACTIONID_NOT_FOUND = 814
    private final static int NERD_EXTRACTOR_INTERAL_ERROR = 819

@@ -22,7 +22,8 @@ class Vocabularies {
 	static final String[] NSA_NS=["nsa",'''http://multimedialab.elis.ugent.be/organon/ontologies/ninsuna#'''] //Ninsuna vocabulary
 	static final String[] REVIEW_NS=["review",'''http://purl.org/stuff/rev#'''] //review ontology
 	static final String[] OWL_NS=["owl",'''http://www.w3.org/2002/07/owl#'''] //owl ontology, useful for owl:sameAs
-	
+	static final String[] NERD_NS=["nerd",'''http://nerd.eurecom.fr/ontology#'''] //NERD ontology
+	static final String[] STR_NS=["str",'''http://nlp2rdf.lod2.eu/schema/string/'''] //lod2 String ontology, see http://nlp2rdf.org/nif-1-0
 	
 	/*
 	 * Define properties in form of XX_PropertyName:
@@ -46,6 +47,8 @@ class Vocabularies {
 		vocabularies << NSA_NS
 		vocabularies << REVIEW_NS
 		vocabularies << OWL_NS
+		vocabularies << NERD_NS
+		vocabularies << STR_NS
 		
 		return vocabularies
 	}
