@@ -8,10 +8,10 @@ Synote is a multimedia annotation system based on Web 2.0 and emerging Web 3.0 (
 * Automatically publish media fragments and annotations using Linked Data and they are searchable by Google. 
 * Transcripts can be automatically uploaded via speech recognition if linked to this type of service (only for users of University of Southampton).
 
-It's created and maintained by [Yunjia Li],[Dr Mike Wald] and EA Draffan at Web and Internet Science Research Group, School of Electronics and Computer Science, University of Southampton.
+It's created and maintained by Yunjia Li,Dr Mike Wald and EA Draffan at Web and Internet Science Research Group, School of Electronics and Computer Science, University of Southampton.
 
 Versioning
-----------
+---------------------
 
 Synote is maintained under the Semantic Versioning, so the version will be numbered in following format:
 
@@ -20,25 +20,32 @@ Synote is maintained under the Semantic Versioning, so the version will be numbe
 For more information on SemVer, please visit http://semver.org/.
 
 Roadmap
-----------
-* Add support for mobile and tablet devices, especially auido and video replay
+---------------------
+* Linking user generated annotations, including comments and transcripts into the linked data cloud using Named Entity Recognition and Disambiguation ([NERD](http://nerd.eurecom.fr))
+* Add support for mobile and tablet devices, especially audio and video replay
 * Use Twitter Bootstrap to optimise user interface for mobile and tablet 
 
-Authors
--------
+Synote Members
+---------------------
 
-**Yunjia Li (Leading Developer)**
+**Yunjia Li (Leading Developer, University of Southampton)**
 
 + http://www.ecs.soton.ac.uk/people/yl2
 + http://afterglowlee.blogspot.com
 
-**Dr Mike Wald (Pinciple Investigator)**
+**Dr Mike Wald (Pinciple Investigator, University of Southampton)**
 
 + http://www.ecs.soton.ac.uk/people/mw
 
-**E.A. Draffan (Project Manager)**
+**E.A. Draffan (Project Manager, University of Southampton)**
 
 + http://www.ecs.soton.ac.uk/people/ead
+
+Contributors
+---------------------
+** [Rapha‘l Troncy](http://www.eurecom.fr/~troncy/) (EURECOM)
+** [Giuseppe Rizzo](http://www.eurecom.fr/~rizzo/) (EURECOM)
+
 
 Copyright
 ---------------------
