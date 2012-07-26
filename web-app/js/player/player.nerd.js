@@ -41,12 +41,14 @@ function NerdClient(sparqlEndpoint,prefixString)
 		" Group by ?type";
 		
 	this.queryListNamedEntities = this.queryPrefixString +
-		" SELECT ?entity ?label ?beginIndex ?endIndex ?type"+
+		" SELECT ?entity ?label ?beginIndex ?endIndex ?type ?start ?end"+
 		" WHERE"+
 		" {"+
 		"   ?anno rdf:type oac:Annotation ."+
 		"   ?anno oac:hasTarget ?frag ."+
 		"   <"+resourceBaseURI+recording.id+"> ma:hasFragment ?frag."+
+		"   ?frag nsa:temporalStart ?start."+
+		"   ?frag nsa:temporalEnd ?end."+
 		"   ?anno oac:hasBody ?entity ."+
 		"   ?entity rdfs:label ?label."+
 		"   ?anno str:beginIndex ?beginIndex ."+
@@ -67,11 +69,9 @@ NerdClient.prototype.getEntitesCountByCategory = function()
 		   //Yunjia: Add a beforeSend function to display the loading message
 		   success:function(data,textStatus, jqXHR)
 		   {
-		   		var htmlStr = "<div class='well'>";
 		   		var types = nerdClient.listNerdTypes();
 		   		$.each(types,function(i,t){
 		   			var count = 0;
-		   			htmlStr+="<div class='nerd-line'>"
 		   			for(var k=0;k<data.results.bindings.length;k++)
 		   			{
 						if(data.results.bindings[k].type!= null && data.results.bindings[k].type.value == t)
@@ -80,17 +80,14 @@ NerdClient.prototype.getEntitesCountByCategory = function()
 							break;
 						}
 		   			}
-		   			
-					var nerdType = t.split("#")[t.split("#").length-1]
+					var nerdType = t.split("#")[t.split("#").length-1];
+					var nerd_div = $("#nerd_"+nerdType.toLowerCase()+"_count_div");
 					var highlightClass = nerdClient.getHighlightCSS(nerdType.toLowerCase());
-					htmlStr += "<span class='nerd-label "+highlightClass+"'>"+nerdType+"</span>";
-					htmlStr += "<span class='badge badge-info'>"+count+" entities <span>";
-						
-					htmlStr += "</div>";
+					var type_span = $("<span/>",{
+						text: nerdType+ " ("+count+" entities)"
+					}).addClass("nerd-label "+highlightClass);
+					type_span.appendTo(nerd_div);
 		   		});
-		   		//htmlStr+="<div class='nerd-line'><span class='nerd-label nerd-multiple'>Multiple Types</span>"
-				htmlStr+="</div>";
-				$("#nerd_category_list_div").html(htmlStr);
 		   },
 		   error:function(jqXHR,textStatus,errorThrown)
 		   {
@@ -117,58 +114,6 @@ NerdClient.prototype.getNamedEntities = function()
 		   {
 		   		if(transcript.transcriptsData != null && data.results.bindings.length >0)
 		   		{
-		   			/*
-		   			var d = transcript.transcriptsData;
-		   			var transcriptsData = $(d).sort(sortCueByStartTime); //defined in player.transcript.js
-		   			var charCount = 0;
-		   			var tIndex = 0;
-		   			
-		   			$.each(transcriptsData, function(i,t){
-		   				var blockStartChar = 0;
-		   				charCount+= t.cueText.length;
-		   				var entityList = [];
-		   				for(var k=0;k<data.results.bindings.length;k++)
-		   				{
-		   					var beginIndex = data.results.bindings[k].beginIndex.value;
-		   					var endIndex  = data.results.bindings[k].endIndex.value;
-		   					if(beginIndex >= blockStartChar && endIndex <=charCount)
-		   					{
-		   						var result = data.results.bindings[k];
-		   						entityList.push(result);
-		   					}
-		   					
-		   					if(beginIndex > charCount)
-		   						break;
-		   					else if(beginIndex < charCount)
-		   						continue;
-		   				}
-		   				
-		   				console.log("entityListlength:"+entityList.length);
-		   				if(entityList.length >0)
-		   				{
-		   					var oldText = t.cueText;
-		   					var newText = t.cueText;
-		   					for(var j=entityList.length-1;j>=0;j--)
-		   					{
-		   						var result = entityList[j];
-		   						//console.log("blockStartChar:"+blockStartChar);
-		   						var offset = result.beginIndex.value - blockStartChar;
-		   						//console.log("offset:"+offset);
-		   						var startStr = oldText.substring(0,offset);
-		   						//console.log("startStr:"+startStr);
-		   						var nerdType = result.type.value.split("#")[result.type.value.split("#").length-1];
-		   						var highlightClass = nerdClient.getHighlightCSS(nerdType.toLowerCase());
-		   						
-		   						var endStr = newText.substring(offset).replace(result.label.value,
-		   							"<span class='nerd-label-small "+highlightClass+"'>"+result.label.value+"</span>");
-		   						newText = startStr + endStr;
-		   					}
-		   					var transcript_content = $(".transcript_line[transcript_id='"+t.index+"'] div.transcript_line_content");
-		   					transcript_content.html(newText);
-		   				}
-		   				
-		   			});*/
-		   			
 		   			var d = transcript.transcriptsData;
 		   			var transcriptsData = $(d).sort(sortCueByStartTime); //defined in player.transcript.js
 		   			var charCount = transcriptsData[0].cueText.length;
@@ -176,6 +121,7 @@ NerdClient.prototype.getNamedEntities = function()
 		   			
 		   			var newText="";
 		   			$.each(data.results.bindings, function(i,result){
+		   				//highlight it in transcript
 		   				while(result.beginIndex.value > charCount)
 		   				{
 		   					newText = "";
@@ -204,6 +150,18 @@ NerdClient.prototype.getNamedEntities = function()
 		   				//newText = startStr+endStr;
 		   				var transcript_content = $(".transcript_line[transcript_id='"+transcriptsData[tIndex].index+"'] div.transcript_line_content");
 			   			transcript_content.html(newText);
+			   			
+			   			//list them in NERD widget
+			   			var nerd_div = $("#nerd_"+nerdType.toLowerCase()+"_list_div");
+			   			var entity_span = $("<span/>").addClass("nerd-entity");
+			   			entity_span.bind('click',{result:result},function(event){
+			   				var start = parseInt(result.start.value*1000,10);
+			   				var end = parseInt(result.end.value*1000,10);
+			   				multimedia.setPosition(start);
+			   				console.log("yes");
+			   			});
+			   			var entity_a = $("<a/>",{text:result.label.value}).appendTo(entity_span);
+			   			nerd_div.append(entity_span);
 		   			});
 		   		}
 		   },

@@ -166,7 +166,7 @@
 						</g:isAdminLoggedIn>
 				    	<li class="divider"></li>
 				    	<li>
-		    				<g:link controller="multimediaResource" action="create_old" title="create a recording">
+		    				<g:link controller="multimediaResource" action="create" title="create a recording">
 		    				Create a recording </g:link>
 			    		</li>
 			    		<li>
@@ -358,8 +358,35 @@
 						<div id="nerd_div" class="tab-pane span-left">
 							<h3>NERD</h3>
 							<div id="nerd_div_msg" style="display:none;"></div>
-							<div id="nerd_category_list_div">
-								
+							<div id="nerd_category_list_div" class="well">
+								<div id="nerd_thing_div" class="nerd-line">
+									<div id="nerd_thing_count_div"></div>
+									<div id="nerd_thing_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_person_div" class="nerd-line">
+									<div id="nerd_person_count_div"></div>
+									<div id="nerd_person_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_organisation_div" class="nerd-line">
+									<div id="nerd_organisation_count_div"></div>
+									<div id="nerd_organisation_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_location_div" class="nerd-line">
+									<div id="nerd_location_count_div"></div>
+									<div id="nerd_location_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_function_div" class="nerd-line">
+									<div id="nerd_function_count_div"></div>
+									<div id="nerd_function_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_time_div" class="nerd-line">
+									<div id="nerd_time_count_div"></div>
+									<div id="nerd_time_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_amount_div" class="nerd-line">
+									<div id="nerd_amount_count_div"></div>
+									<div id="nerd_amount_list_div" class="nerd-entity-line"></div>
+								</div>
 							</div>	
 						</div>
 					</div><!-- end transcript -->

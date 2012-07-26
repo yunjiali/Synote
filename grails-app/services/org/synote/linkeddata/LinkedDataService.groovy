@@ -770,7 +770,7 @@ class LinkedDataService {
 		  String prefixString = V.getPrefixListString()
 		  
 		  String resourceURI = getResourceBaseURI()+resource.id
-		  
+		  log.debug("resourceURI:"+resourceURI)
 		  def queryString = """
 				  ${prefixString}
 				  SELECT ?ne ?anno WHERE {

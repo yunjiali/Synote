@@ -254,7 +254,7 @@ class NerdController {
 				//println "exts size:"+exts?.size()
 				if(exts?.size() >0)
 				{
-					def cue = WebVTTCue.findByCueIndex(syn.sourceStart)
+					def cue = WebVTTCue.findByCueIndexAndWebVTTFile(syn.sourceStart,vtt)
 					linkedDataService.saveNERDToTripleStroe(exts,multimedia,cue,syn,params.extractor)
 				}
 			}

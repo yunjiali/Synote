@@ -23,11 +23,27 @@
     border-radius: 2px;
 }
 
+.nerd-entity
+{
+	margin-right:2.0em;
+	display:inline-block;
+	cursor:pointer;
+}
+
+.nerd-entity a
+{
+	
+}
+
 .nerd-line
 {
 	line-height:3.5em;
 }
 
+.nerd-entity-line
+{
+	line-height:2em;
+}
 /*multiple types are overlapped*/
 .nerd-multiple
 {

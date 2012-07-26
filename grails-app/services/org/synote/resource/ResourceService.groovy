@@ -650,6 +650,16 @@ class ResourceService {
 				String s = reader.text
 				if(s?.size() > 0)
 					srt = s
+				else
+				{
+					//try another possiblity
+					def query2 = [v:videoid, fmt:fmt, lang:l]
+					http.get(path:"/api/timedtext", contentType:TEXT, query:query2){ resp2,reader2->
+						String s2 = reader2.text
+						if(s2?.size() > 0)
+							srt = s2
+					}
+				}
 				
 				return srt
 			}

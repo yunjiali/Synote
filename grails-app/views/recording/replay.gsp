@@ -164,7 +164,7 @@
 						</g:isAdminLoggedIn>
 				    	<li class="divider"></li>
 				    	<li>
-		    				<g:link controller="multimediaResource" action="create_old" title="create a recording">
+		    				<g:link controller="multimediaResource" action="create" title="create a recording">
 		    				Create a recording </g:link>
 			    		</li>
 			    		<li>
