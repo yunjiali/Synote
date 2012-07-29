@@ -1112,6 +1112,7 @@ class PlayerService {
 		//println "allsize:"+srtItems.size()
 		if(srtItems.length > 0)
 		{
+			def emptyLines = 0
 			for(int i=0;i<srtItems.length;i++)
 			{
 				//split a srt block into 3 parts
@@ -1130,7 +1131,7 @@ class PlayerService {
 				
 				if(srtContent.length == 3 || srtContent.length ==2)
 				{
-					int seqCount = Integer.parseInt(srtContent[0]) //the index for srt
+					int seqCount = Integer.parseInt(srtContent[0])-emptyLines //the index for srt
 					int startTime=0;
 					int endTime=0;
 					
@@ -1151,12 +1152,17 @@ class PlayerService {
 						throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID, "Saved draft format error: The time format at index "+ String.valueOf(i)+" is bad formatted.");
 					}
 					
-					String text = "empty"
+					
 					if(srtContent.length == 3)
-						text = srtContent[2]
-						
-					TranscriptItemSRT srtLine = new TranscriptItemSRT(seqCount, startTime, endTime, text);
-					srtList << srtLine
+					{	
+						String text = srtContent[2]
+						TranscriptItemSRT srtLine = new TranscriptItemSRT(seqCount, startTime, endTime, text);
+						srtList << srtLine
+					}
+					else if(srtContent.length == 2) //only index and time interval, without text
+					{
+						emptyLines++	
+					}	
 				}
 				else //shouldn't throw exception here, there might be possibility that the text is empty
 				{
