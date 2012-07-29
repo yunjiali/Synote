@@ -55,7 +55,89 @@ function NerdClient(sparqlEndpoint,prefixString)
 		"   ?anno str:endIndex ?endIndex ."+
 		"   ?entity rdf:type ?type"+
 		" }"+
-		" order by ?beginIndex";	    
+		" order by ?beginIndex";
+	
+	this.defaultDBpediaSparqlEndpoint = "http://dbpedia.org/sparql";
+	this.defaultDBpediaGraphURI = "http://dbpedia.org";
+	this.defaultSparqlResultsFormat ="application/sparql-results+json";
+	
+	this.queryDBpediaPerson = "";
+	this.queryDBpediaLocation = "";
+	this.queryDBpediaOrganisation ="";	    
+}
+
+NerdClient.prototype.getDBpediaQueryString = function(nerdType,uri)
+{
+	switch(nerdType)
+	{
+		case "thing":
+	  		return this.getQueryDBpediaThing(uri);
+		case "person":
+	  		return this.getQueryDBpediaPerson(uri);
+  		case "organization":
+  			return this.getQueryDBpediaOrganisation(uri);
+  		case "location":
+  			return this.getQueryDBpediaLocation(uri);
+		default:
+	  		return this.getQueryDBpediaThing(uri);
+	}
+}
+
+NerdClient.prototype.getQueryDBpediaThing = function(uri)
+{
+	return "select distinct ?label ?abstract ?depiction"+ 
+		" where {"+
+		" 	{"+
+		"    <"+uri+"> rdfs:label ?label."+
+		"    <"+uri+"> dbpedia-owl:abstract ?abstract."+
+		"    <"+uri+"> foaf:depiction ?depiction."+
+		"    FILTER (langMatches( lang(?label), 'en') && langMatches(lang(?abstract),'en'))"+
+		" 	}"+
+		" }";	
+}
+
+NerdClient.prototype.getQueryDBpediaPerson = function(uri)
+{
+	return "select distinct ?label ?abstract ?depiction ?birthdate ?profession"+ 
+		" where {"+
+		" 	{"+
+		"    <"+uri+"> rdfs:label ?label."+
+		"    <"+uri+"> dbpedia-owl:abstract ?abstract."+
+		"    <"+uri+"> foaf:depiction ?depiction."+
+		"    optional {<"+uri+"> dbpedia-owl:birthDate ?birthdate.}"+
+		"    optional {<"+uri+"> dbpedia-owl:profession ?profession.}"+
+		"    FILTER (langMatches( lang(?label), 'en') && langMatches(lang(?abstract),'en'))"+
+		" 	}"+
+		" }";	
+}
+
+NerdClient.prototype.getQueryDBpediaOrganisation = function(uri)
+{
+	return "select distinct ?label ?abstract ?formationYear ?numberOfStaff ?homepage"+ 
+		" where {"+
+		" 	{"+
+		"    <"+uri+"> rdfs:label ?label."+
+		"    <"+uri+"> dbpedia-owl:abstract ?abstract."+
+		"    optional {<"+uri+"> dbpedia-owl:formationYear ?formationYear.}"+
+		"    optional {<"+uri+"> dbpedia-owl:numberOfStaff ?numberOfStaff.}"+
+		"    optional {<"+uri+"> foaf:homepage ?homepage.}"+
+		"    FILTER (langMatches( lang(?label), 'en') && langMatches(lang(?abstract),'en'))"+
+		" 	}"+
+		" }";	
+}
+
+NerdClient.prototype.getQueryDBpediaLocation = function(uri)
+{
+	return "select distinct ?label ?abstract ?latitude ?longitude"+ 
+		" where {"+
+		" 	{"+
+		"    <"+uri+"> rdfs:label ?label."+
+		"    <"+uri+"> dbpedia-owl:abstract ?abstract."+
+		"    optional {<"+uri+"> geo:lat ?latitude.}"+
+		"    optional {<"+uri+"> geo:long ?longitude.}"+
+		"    FILTER (langMatches( lang(?label), 'en') && langMatches(lang(?abstract),'en'))"+
+		" 	}"+
+		" }";	
 }
 
 //get entites count by category
@@ -142,8 +224,8 @@ NerdClient.prototype.getNamedEntities = function()
 		   				//var offset = result.endIndex.value - blockStartChar;
 		   				newText = newText.replace(result.label.value,
 		   						"<span class='nerd-label-small "+highlightClass+"'>"+result.label.value+"</span>");
-		   				console.log("entity:"+result.label.value);
-		   				console.log("newText:"+newText);
+		   				//console.log("entity:"+result.label.value);
+		   				//console.log("newText:"+newText);
 		   				//console.log("beginIndex:"+result.beginIndex.value+"#"+result.endIndex.value);
 		   				
 		   				//var endStr = transcriptsData[tIndex].cueText.substring(offset);
@@ -158,10 +240,10 @@ NerdClient.prototype.getNamedEntities = function()
 			   				var start = parseInt(result.start.value*1000,10);
 			   				var end = parseInt(result.end.value*1000,10);
 			   				multimedia.setPosition(start);
-			   				console.log("yes");
 			   			});
 			   			var entity_a = $("<a/>",{text:result.label.value}).appendTo(entity_span);
 			   			nerd_div.append(entity_span);
+			   			nerdClient.displayDisambiguation(entity_span,result.entity.value,result.label.value,nerdType);
 		   			});
 		   		}
 		   },
@@ -177,6 +259,56 @@ NerdClient.prototype.getNamedEntities = function()
 	});		
 }
 
+/*
+ * Display the Disambiguation information in a tooltip according to different NERD categories
+ * tooltip_span: the span (or other element) you want to display the tooltip
+ * url: the url of the named entity
+ * nerdType: type of the nerd, such as person, organization, etc.
+ */
+NerdClient.prototype.displayDisambiguation = function(tooltip_span, url, title, nerdType)
+{
+	//check if within dbpedia domain
+	if(url.indexOf("http://dbpedia.org/") ===0 || url.indexOf("http://www.dbpedia.org/") ===0)
+	{
+		var queryURL = this.defaultDBpediaSparqlEndpoint+"?default-graph-uri="+encodeURIComponent(this.defaultDBpediaGraphURI)
+					+"&format="+encodeURIComponent(this.defaultSparqlResultsFormat)
+					+"&query="+encodeURIComponent(this.getDBpediaQueryString(nerdType.toLowerCase(),url));
+		$.ajax({
+			url:queryURL,
+			dataType:'jsonp',
+			jsonp:'callback',
+			beforeSend:function(jqXHR,settings)
+			{
+				tooltip_span.addClass("nerd-disambiguation nerd-disambiguation-loading");
+			},
+			success:function(data){
+				//console.log("success");
+				var htmlStr = "<dl>";
+				$.each(data.results.bindings,function(i,result){
+					for(var key in result)
+					{
+						htmlStr += "<dt>"+key+"</dt>";
+						if(key === "depiction")
+						{
+							htmlStr += "<img src='"+result[key].value+"' alt='"+result.label.value+"' />";
+						}
+						else
+							htmlStr += "<dd>"+(result[key].value.length > 128?(result[key].value.substring(0,127)+"..."):result[key].value)+"</dd>";
+					}
+				});
+				htmlStr += "</dl>";
+				tooltip_span.attr("data-content",htmlStr);
+				tooltip_span.attr("data-original-title",title);
+				tooltip_span.popover({html:true});
+			},
+			complete:function(jqXHR,textStatus)
+			{
+				tooltip_span.removeClass("nerd-disambiguation-loading");
+			}
+		});
+	}
+}
+
 NerdClient.prototype.getHighlightCSS = function(type)
 {
 	switch(type)
@@ -185,8 +317,8 @@ NerdClient.prototype.getHighlightCSS = function(type)
 	  		return "nerd-thing";
 		case "person":
 	  		return "nerd-person";
-  		case "organisation":
-  			return "nerd-organisation";
+  		case "organization":
+  			return "nerd-organization";
   		case "location":
   			return "nerd-location";
   		case "function":
@@ -196,7 +328,7 @@ NerdClient.prototype.getHighlightCSS = function(type)
   		case "amount":
   			return "nerd-amount";
 		default:
-	  		return "";
+	  		return "nerd-thing";
 	}
 }
 
@@ -204,7 +336,7 @@ NerdClient.prototype.listNerdTypes = function()
 {
 	return ["http://nerd.eurecom.fr/ontology#Thing",
 			"http://nerd.eurecom.fr/ontology#Person",
-			"http://nerd.eurecom.fr/ontology#Organisation",
+			"http://nerd.eurecom.fr/ontology#Organization",
 			"http://nerd.eurecom.fr/ontology#Location",
 			"http://nerd.eurecom.fr/ontology#Function",
 			"http://nerd.eurecom.fr/ontology#Time",

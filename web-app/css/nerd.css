@@ -30,6 +30,17 @@
 	cursor:pointer;
 }
 
+.nerd-disambiguation
+{
+	text-decoration:underline;
+}
+
+.nerd-disambiguation-loading
+{
+	background: url('../images/spinner.gif') center left no-repeat;
+	padding-left:18px;
+}
+
 .nerd-entity a
 {
 	
@@ -63,7 +74,7 @@
 	opacity:0.8;	
 }
 
-.nerd-organisation
+.nerd-organization
 {
 	background-color:yellow;
 	opacity:0.8;

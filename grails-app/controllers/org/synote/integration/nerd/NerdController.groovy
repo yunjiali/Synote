@@ -27,7 +27,6 @@ import fr.eurecom.nerd.client.*
 import fr.eurecom.nerd.client.type.*
 import fr.eurecom.nerd.client.schema.*
 
-@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 class NerdController {
 	
 	def beforeInterceptor = [action: this.&checkNerdEnabled]
@@ -277,6 +276,7 @@ class NerdController {
 	/*
 	 * Save the review (accept or reject the named entity)
 	 */
+	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def saveReviewAjax = {
 		def user = securityService.getLoggedUser()
 		if(!user)
@@ -333,6 +333,7 @@ class NerdController {
 	 * resourceId: the id of the transcript
 	 * extractor: the name of the extractor        
 	 */
+	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])	
 	def nerdit = {
 		//if there is an id, we will use params.id
 		//if no id, we are looking for params.fields
@@ -604,6 +605,7 @@ class NerdController {
 	/*
 	 * list all the named entities about a resource
 	 */
+	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def listne = {
 		
 		def user = securityService.getLoggedUser()

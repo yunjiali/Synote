@@ -12,7 +12,7 @@ class ResourcesJob {
 	def name = "ResourcesSitemap"
 	
     def execute() {
-		log.info("create resources sitemap...")
-		sitemapService.createResourcesSitemap()
+		//log.info("create resources sitemap...")
+		//sitemapService.createResourcesSitemap()
     }
 }

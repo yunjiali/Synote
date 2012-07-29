@@ -367,9 +367,9 @@
 									<div id="nerd_person_count_div"></div>
 									<div id="nerd_person_list_div" class="nerd-entity-line"></div>
 								</div>
-								<div id="nerd_organisation_div" class="nerd-line">
-									<div id="nerd_organisation_count_div"></div>
-									<div id="nerd_organisation_list_div" class="nerd-entity-line"></div>
+								<div id="nerd_organization_div" class="nerd-line">
+									<div id="nerd_organization_count_div"></div>
+									<div id="nerd_organization_list_div" class="nerd-entity-line"></div>
 								</div>
 								<div id="nerd_location_div" class="nerd-line">
 									<div id="nerd_location_count_div"></div>

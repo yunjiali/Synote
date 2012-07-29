@@ -13,7 +13,7 @@ class ReindexJob {
 	
     def execute() {
 		
-		log.info "Start to reindex resources..."
-        resourceSearchService.indexResources()
+		//log.info "Start to reindex resources..."
+        //resourceSearchService.indexResources()
     }
 }

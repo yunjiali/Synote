@@ -1128,7 +1128,7 @@ class PlayerService {
 				//	println "srtContent:"+it
 				//}
 				
-				if(srtContent.length == 3)
+				if(srtContent.length == 3 || srtContent.length ==2)
 				{
 					int seqCount = Integer.parseInt(srtContent[0]) //the index for srt
 					int startTime=0;
@@ -1151,11 +1151,14 @@ class PlayerService {
 						throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID, "Saved draft format error: The time format at index "+ String.valueOf(i)+" is bad formatted.");
 					}
 					
-					String text = srtContent[2];
+					String text = "empty"
+					if(srtContent.length == 3)
+						text = srtContent[2]
+						
 					TranscriptItemSRT srtLine = new TranscriptItemSRT(seqCount, startTime, endTime, text);
 					srtList << srtLine
 				}
-				else
+				else //shouldn't throw exception here, there might be possibility that the text is empty
 				{
 					throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft file format error: The content at index "+ String.valueOf(i)+" is bad formatted.");
 				}

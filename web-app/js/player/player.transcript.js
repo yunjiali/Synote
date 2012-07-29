@@ -189,7 +189,7 @@ var Transcript = Base.extend({
    		}).addClass("transcript_line_content").appendTo(transcript_line);
 	   	//MicroData: add cueText as microdata transcript
 	   	mdHelper.setItemprop(transcript_line_content,"transcript");
-	   	
+	    
 	   	if(recording.canCreateSynmark === "true")
 	   	{
 	   		//Select a text block, users can create a synmark based on the selected text

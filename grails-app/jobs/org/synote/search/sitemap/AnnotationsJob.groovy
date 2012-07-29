@@ -12,7 +12,7 @@ class AnnotationsJob {
 	def name = "AnnotationsSitemap"
 	
     def execute() {
-		log.info("create annotations sitemap...")
-		sitemapService.createAnnotationsSitemap()
+		//log.info("create annotations sitemap...")
+		//sitemapService.createAnnotationsSitemap()
     }
 }

@@ -13,7 +13,7 @@ class ReplayJob {
 	def name = "ReplaySitemap"
 	
     def execute() {
-		log.info("create replay sitemap...")
-		sitemapService.createReplaySitemap()
+		//log.info("create replay sitemap...")
+		//sitemapService.createReplaySitemap()
     }
 }

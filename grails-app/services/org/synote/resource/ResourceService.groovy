@@ -634,38 +634,30 @@ class ResourceService {
 		def srt = null
 		try
 		{
-			def query = [v:videoid, format:fmt, lang:l]
+			def queryTrack = [v:videoid, type:'list']
 			
-			http.get(path:"/api/timedtext", contentType:TEXT, query:query){ resp,reader->
-			
-				/*println "response status: ${resp.statusLine}"
-				println 'Headers: -----------'
-				resp.headers.each { h ->
-				  println " ${h.name} : ${h.value}"
-				}
-				println 'Response data: -----'
-				System.out << reader //stream closed
-				println '\n--------------------'*/
-				
-				String s = reader.text
-				if(s?.size() > 0)
-					srt = s
-				else
+			//send the first request to get the track name for the subtitle
+			http.get(path:"/api/timedtext", contentType:XML, query:queryTrack){ resp1,reader1->
+				String s1 = reader1.text
+				if(s1?.size() > 0)
 				{
-					//try another possiblity
-					def query2 = [v:videoid, fmt:fmt, lang:l]
-					http.get(path:"/api/timedtext", contentType:TEXT, query:query2){ resp2,reader2->
+					//parse the xml
+					def transcript_list = new XmlSlurper().parseText(s1)
+					def trackName = transcript_list.track.@name.text()
+					//send another request
+					def querySRT = [v:videoid, format:fmt, lang:l, name:trackName]
+					http.get(path:"/api/timedtext", contentType:TEXT, query:querySRT){ resp2,reader2->
+							
 						String s2 = reader2.text
 						if(s2?.size() > 0)
 							srt = s2
+						
+						return srt
 					}
 				}
-				
-				return srt
 			}
-			
-			
-		}catch(Exception ex)
+		}
+		catch(Exception ex)
 		{
 			//do nothing
 			println ex.getMessage()

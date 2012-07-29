@@ -398,18 +398,19 @@ class MultimediaResourceController {
 			}
 			return
 		}
-		catch(Exception e)
-		{
-			status.setRollbackOnly()
-			msg = e.getMessage()
-		}
-		finally
-		{
-			render(contentType:"text/json"){
-				error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
-			}
-			return
-		}
+		//catch(Exception e)
+		//{
+		//	status.setRollbackOnly()
+		//	msg = e.getMessage()
+		//	println 	
+		//}
+		//finally
+		//{
+		//	render(contentType:"text/json"){
+		//		error(stat:APIStatusCode.MM_CREATION_ERROR, description:msg)
+		//	}
+		//	return
+		//}
 	}
 	
 	def edit = {

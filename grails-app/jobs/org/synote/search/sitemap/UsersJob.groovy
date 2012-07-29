@@ -13,7 +13,7 @@ class UsersJob {
 	def name = "UsersSitemap"
 	
     def execute() {
-		log.info("create users sitemap...")
-		sitemapService.createUsersSitemap()
+		//log.info("create users sitemap...")
+		//sitemapService.createUsersSitemap()
     }
 }
