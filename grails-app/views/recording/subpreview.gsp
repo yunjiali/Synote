@@ -375,6 +375,14 @@
 									<div id="nerd_location_count_div"></div>
 									<div id="nerd_location_list_div" class="nerd-entity-line"></div>
 								</div>
+								<div id="nerd_product_div" class="nerd-line">
+									<div id="nerd_product_count_div"></div>
+									<div id="nerd_product_list_div" class="nerd-entity-line"></div>
+								</div>
+								<div id="nerd_event_div" class="nerd-line">
+									<div id="nerd_event_count_div"></div>
+									<div id="nerd_event_list_div" class="nerd-entity-line"></div>
+								</div>
 								<div id="nerd_function_div" class="nerd-line">
 									<div id="nerd_function_count_div"></div>
 									<div id="nerd_function_list_div" class="nerd-entity-line"></div>

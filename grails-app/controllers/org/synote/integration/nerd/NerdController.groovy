@@ -132,6 +132,7 @@ class NerdController {
                                    DocumentType.PLAINTEXT,
                                    LanguageType.ENGLISH,
                                    text,
+								   10L,
                                    false); 
 			
 			def jsObj = JSON.parse(result)
@@ -232,6 +233,7 @@ class NerdController {
 								   DocumentType.TIMEDTEXT,
 								   languageType,
 								   text,
+								   10L,
 								   false);
 			
 			def jsObj = JSON.parse(result)

@@ -323,6 +323,10 @@ NerdClient.prototype.getHighlightCSS = function(type)
   			return "nerd-location";
   		case "function":
   			return "nerd-function";
+  		case "product":
+  			return "nerd-product";
+  		case "event":
+  			return "nerd-event";
   		case "time":
   			return "nerd-time";
   		case "amount":
@@ -337,8 +341,15 @@ NerdClient.prototype.listNerdTypes = function()
 	return ["http://nerd.eurecom.fr/ontology#Thing",
 			"http://nerd.eurecom.fr/ontology#Person",
 			"http://nerd.eurecom.fr/ontology#Organization",
+			"http://nerd.eurecom.fr/ontology#Product",
+			"http://nerd.eurecom.fr/ontology#Event",
 			"http://nerd.eurecom.fr/ontology#Location",
 			"http://nerd.eurecom.fr/ontology#Function",
 			"http://nerd.eurecom.fr/ontology#Time",
 			"http://nerd.eurecom.fr/ontology#Amount"]
 }
+//To add a new nerd type:
+//change listNerdTypes function add the URI of the new types
+//change the getHighlightCSS function
+//add new css class to nerd.css
+//add div in subpreview.gsp

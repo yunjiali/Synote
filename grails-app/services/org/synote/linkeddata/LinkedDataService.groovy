@@ -84,13 +84,21 @@ class LinkedDataService {
 		
 		if(!tripleStore)
 		{
-			String assembler = grailsApplication.config.jena.sdb.assembler
+			String assembler = getAssemblerPath()
 			log.debug("assembler:"+assembler)
 			tripleStore = SDBFactory.connectStore(assembler)
 			return tripleStore
 		}
 		else
 			return tripleStore
+	}
+	
+	/*
+	 * Get the assembler path
+	 */
+	def getAssemblerPath()
+	{
+		return SCH.getServletContext()?.getRealPath("/")+grailsApplication.config.jena.sdb.assembler
 	}
     def getBaseURI() {
 		return configurationService.getConfigValue("org.synote.linkeddata.settings.baseURI")+
@@ -915,9 +923,27 @@ class LinkedDataService {
 					{
 						model.add(s_multimedia,p_fragment,o_fragment)
 					}
+					
+					//add creator
+					JenaProperty p_creator = model.createProperty(V.DCTERMS_NS[1]+"creator")
+					JenaResource o_creator = model.createResource(getUserBaseURI()+multimedia.owner?.id)
+					if(!model.contains(s_multimedia,p_creator,o_creator))
+					{
+						model.add(s_multimedia,p_creator,o_creator)
+					}
 				}
 				else
+				{
 					mediaUri = getResourceBaseURI()+multimedia.id
+					//add creator
+					JenaResource s_multimedia =  model.createResource(mediaUri)
+					JenaProperty p_creator = model.createProperty(V.DCTERMS_NS[1]+"creator")
+					JenaResource o_creator = model.createResource(getUserBaseURI()+multimedia.owner?.id)
+					if(!model.contains(s_multimedia,p_creator,o_creator))
+					{
+						model.add(s_multimedia,p_creator,o_creator)
+					}
+				}
 					
 				log.debug("extractions size:"+extractions?.size());
 				

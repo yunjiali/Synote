@@ -342,10 +342,11 @@ class LinkedDataController {
 		}
 		catch(Exception exp)
 		{	
+			exp.printStackTrace()
 			response.contentType = "text/plain"
 			response.outputStream << "Error!"+exp.getMessage()
 			response.outputStream.flush()
-			//throw exp
+			throw exp
 			return
 		}
 		
@@ -382,6 +383,7 @@ class LinkedDataController {
 		}
 		catch(Exception ex)
 		{
+			ex.printStackTrace()
 			response.contentType = "text/plain"
 			response.outputStream << "Error!"+ex.getMessage()
 			throw ex

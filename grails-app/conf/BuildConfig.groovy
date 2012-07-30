@@ -3,6 +3,11 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir	= "target/test-reports"
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+//copy the jena configuration files to the war
+//grails.war.resources = { stagingDir, args ->
+//	copy(file: "sdb-mysql-innodb-prod.ttl", tofile: "${stagingDir}/sdb-mysql-innodb-prod.ttl")
+//}
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits( "global" ) {

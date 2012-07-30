@@ -661,6 +661,7 @@ class ResourceService {
 		{
 			//do nothing
 			println ex.getMessage()
+			ex.printStackTrace()
 			log.debug(ex.getMessage())
 		}
 		finally

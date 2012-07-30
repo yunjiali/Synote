@@ -61,6 +61,11 @@ function initSynotePlayer(recording)
     		$("#nav_forward_btn").bind('click',{},function(){
     			multimedia.forward();
     		});
+    		if(multimedia.autoStart === true)
+    		{
+    			console.log("start play.");
+    			setTimeout('ctrler.start_playback()', 500);
+    		}
     	}
     });
 

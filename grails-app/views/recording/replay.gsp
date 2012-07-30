@@ -268,16 +268,15 @@
 					<meta itemprop="dateModified" content="${new SimpleDateFormat("dd/MM/yyyy").format(recording.lastUpdated)}"/>
 					
 					<div id="multimedia_player_div">
-						<g:if test="${recording.isVideo}">
+						<!-- always use video -->
 							<video id="multimedia_player" width="480" height="320" preload="none">
 								<source src=""/>
 							</video>
-						</g:if>
-						<g:else>
+						<!--  
 							<audio id="multimedia_player" width="100%" height="auto" controls="controls">
 								<source src=""/>
 							</audio>
-						</g:else>
+						-->
 					</div>
 				</div><!-- end player -->
 				<div id="recording_control_div" class="hidden-phone">

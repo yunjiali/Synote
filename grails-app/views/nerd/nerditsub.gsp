@@ -148,7 +148,8 @@ var nerdsrt = function(extractor_name){
 								<td>
 									<img width="120" height="48" alt="${extractor}" src="${resource(dir: 'images/nerd', file: extractor+'.png')}"/>
 								</td>
-								<td style="vertical-align:middle" id="ne_td_${extractor}"><img id="loading_img_${extractor}" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/></td>
+								<td style="vertical-align:middle" id="ne_td_${extractor}"><img id="loading_img_${extractor}" src="${resource(dir:'images/skin',file:'loading_64.gif')}" alt="loading"/>
+								</td>
 							</tr>
 							<script type="text/javascript">
 							$(document).ready(function(){

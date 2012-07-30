@@ -54,7 +54,7 @@ environments {
 			enabled = true
 			sdb{
 				assembler = "sdb-mysql-innodb-prod.ttl"
-				checkFormattedOnStartUp = false
+				checkFormattedOnStartUp = true
 				emptyOnStartUp = false
 			}
         }
@@ -65,7 +65,7 @@ environments {
 			enabled = true
 			sdb{
 				assembler = "sdb-mysql-innodb-dev.ttl"
-				checkFormattedOnStartUp = false
+				checkFormattedOnStartUp = false //Just check! Not reformat!
 				emptyOnStartUp = false //empty the triple store on start up
 			}
 		}
@@ -124,6 +124,7 @@ log4j = {
 			   'org.synote.user.SynoteAPILoginFilter',
 			   'org.synote.search.GoogleCrawlFilter',
 		       'grails.app.service.org.synote.player.server.PlayerService',
+			   'grails.app.service.org.synote.resource.ResourceService',
 		       'grails.app.service.org.synote.search.resource.ResourceSearchService',
 		       'grails.app.service.org.synote.integration.ibmhts.IBMTransJobService',
 			   'grails.app.service.org.synote.search.sitemap.SitemapService',

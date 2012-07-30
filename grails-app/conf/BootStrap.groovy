@@ -4,6 +4,7 @@ import org.synote.utils.DataSourceUtils
 import grails.util.GrailsUtil
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.codehaus.groovy.grails.web.context.ServletContextHolder as SCH
 
 import com.hp.hpl.jena.sdb.Store
 import com.hp.hpl.jena.sdb.StoreDesc
@@ -26,7 +27,7 @@ class BootStrap {
 		if(CH.config.jena.enabled)
 		{
 			//if in production mode, load another file
-			Store store = SDBFactory.connectStore("sdb-mysql-innodb-dev.ttl") ;
+			Store store = SDBFactory.connectStore(linkedDataService.getAssemblerPath()) ;
 			log.info("get triple store")
 			if(CH.config.jena.sdb.checkFormattedOnStartUp)
 			{
@@ -41,7 +42,6 @@ class BootStrap {
 			
 			if(CH.config.jena.sdb.emptyOnStartUp == true)
 			{
-				println "truncate"
 				store.getTableFormatter().truncate()
 				linkedDataService.initPrefixMapping(store)
 			}

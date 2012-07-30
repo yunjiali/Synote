@@ -86,7 +86,7 @@
 /*when a transcript is selected and playing*/
 .transcript-selected
 {
-	background-color:#d1e1fa !important;
+	background-color:#ffff66 !important;
 	cursor:pointer;
 }
 /*when a transcript has just been added*/

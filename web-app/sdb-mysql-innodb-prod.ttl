@@ -4,7 +4,7 @@
 @prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
 
 # MySQL - InnoDB
-# Settings for development environment
+# Settings for production environment
 
 
 <#store> rdf:type sdb:Store ;
@@ -17,6 +17,7 @@
     sdb:sdbType       "MySQL" ;    # Needed for JDBC URL
     sdb:sdbHost       "localhost" ;
     sdb:sdbName       "synote_linkeddata_triple_store" ; #production version of the database
+    sdb:jdbcURL		  "jdbc:mysql://localhost/synote_linkeddata_triple_store?autoReconnect=true";
     sdb:driver        "com.mysql.jdbc.Driver" ;
     sdb:sdbUser		  "synote";
     sdb:sdbPassword	  "synote";
