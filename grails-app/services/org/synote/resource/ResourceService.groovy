@@ -643,7 +643,12 @@ class ResourceService {
 				{
 					//parse the xml
 					def transcript_list = new XmlSlurper().parseText(s1)
-					def trackName = transcript_list.track.@name.text()
+					def track = transcript_list.track.find{it.@lang_code.text() == l}
+					def trackName=""
+					if(track)
+					{
+						trackName = track.@name.text()
+					}
 					//send another request
 					def querySRT = [v:videoid, format:fmt, lang:l, name:trackName]
 					http.get(path:"/api/timedtext", contentType:TEXT, query:querySRT){ resp2,reader2->

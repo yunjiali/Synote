@@ -304,7 +304,7 @@
 				<!-- Transcript -->
 				<div id="transcripts_div" class="tab-pane span-left">
 					<div>
-						<h3 class="heading-inline">Transcript</h3>
+						<h3 class="heading-inline">Subtitle</h3>
 						<div class="pull-right btn-toolbar" style="display:inline">
 							<g:if test="${canEdit}">
 							<div class="btn-group" id="transcript_edit_enter_div">

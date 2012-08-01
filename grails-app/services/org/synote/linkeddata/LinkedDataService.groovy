@@ -974,11 +974,11 @@ class LinkedDataService {
 				   model.add(ne,p_rdf_type,o_nerdType)
 				   log.debug("type");
 				   
-				   JenaProperty p_dc_type = model.createProperty(V.DC_NS[1]+"type")
+				   JenaProperty p_dc_type = model.createProperty(V.RDF_NS[1]+"type")
 				   String dc_type = e.getType()
 				   if(!e.getType())
 				   		dc_type = "Thing" //Literal cannot be null since Jena 2.0
-				   Literal o_dcType = model.createLiteral(dc_type)
+				   JenaResource o_dcType = model.createResource(V.NERD_NS[1]+dc_type)
 				   model.add(ne,p_dc_type,o_dcType)
 				   
 				   JenaProperty p_rdfs_label = model.createProperty(V.RDFS_NS[1]+"label")
@@ -1052,8 +1052,11 @@ class LinkedDataService {
 				   {   
 					   model.setNsPrefix(V.NSA_NS[0],V.NSA_NS[1]) //ninsuna time
 					   //npt, temporalstart, temporalend
-					   JenaResource o_nsa_type = model.createResource(V.NSA_NS[1]+"TemperalFragment")
+					   JenaResource o_nsa_type = model.createResource(V.NSA_NS[1]+"TemporalFragment")
 					   model.add(media,p_rdf_type,o_nsa_type)
+					   
+					   JenaResource o_ma_type = model.createResource(V.MAONT_NS[1]+"MediaFragment")
+					   model.add(media,p_rdf_type,o_ma_type)
 					   
 					   JenaProperty p_nsa_unit = model.createProperty(V.NSA_NS[1]+"temporalUnit")
 					   JenaResource o_nsa_npt = model.createResource(V.NSA_NS[1]+"npt")

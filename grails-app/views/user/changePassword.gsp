@@ -2,16 +2,9 @@
 <head>
 <title><g:message code="org.synote.user.changePassword.title" /></title>
 <meta name="layout" content="main" />
-<link rel="stylesheet" href="${resource(dir: 'css/jquery/aristo/uniform', file: 'uni-form.css')}" media="screen" charset="utf-8"/>
-<link rel="stylesheet" href="${resource(dir: 'css/jquery/aristo/uniform', file: 'default.uni-form.css')}" media="screen" charset="utf-8"/>
-<script type="text/javascript" src="${resource(dir:'js/jquery/uniform',file:'uni-form.jquery.min.js')}"></script>
-<script type="text/javascript" src="${resource(dir:'js/jquery/uniform',file:'uni-form-validation.jquery.min.js')}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$(".uniForm").uniform();
-	$("input[type=password]").wijtextbox();
-	$("#password_submit").button();
-	$("#password_cancel").button();
+	
 });
 </script>
 </head>
@@ -39,7 +32,7 @@ $(document).ready(function(){
 		<p class="formHint">Please enter your password again</p>
 	</div>
 	<div style="padding:4px 0;">
-		<input class="left" id="password_submit" type="button" value="Submit"/>
+		<input class="left" id="password_submit" type="submit" value="Submit"/>
 		<input class="left" id="password_cancel" type="reset" value="Cancel" />
 	</div>
 </g:form>

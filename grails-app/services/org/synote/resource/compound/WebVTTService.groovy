@@ -215,37 +215,102 @@ class WebVTTService {
 		def webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
 		def anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
 		
-		def items = playerService.convertToSRTObjectFromString(srt)
-		items.each{item ->
-			if(item.getText()?.trim().size() >0)
+		String[] srtItems = srt.split("\\n\\n");
+		//println "allsize:"+srtItems.size()
+		if(srtItems.length > 0)
+		{
+			def emptyLines = 0
+			for(int i=0;i<srtItems.length;i++)
 			{
-				def cue = new WebVTTCue(
-					content: item.getText()?.trim(),
-					owner: owner,
-					title:"WebVTTCue",
-					cueIndex:item.getIndex(),
-					cueSettings:"")
-				webVTTResource.addToCues(cue)
+				//split a srt block into 3 parts
+				//first the index
+				//second the time
+				//third the text
+				if(srtItems[i].length() == 0)
+				{
+					continue
+				}
+				String[] srtContent =srtItems[i].split("\\n",3);
+				//println "size:"+srtContent.size()
+				//srtContent.each{
+				//	println "srtContent:"+it
+				//}
 				
-				def sourceStart = item.getIndex()
-				def targetStart = item.getStart()
-				def targetEnd = item.getEnd()
-				anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
-						targetStart: targetStart,
-						targetEnd: targetEnd))
-				
-				WebVTTResource.withTransaction {status->
+				if(srtContent.length == 3 || srtContent.length ==2)
+				{
+					int seqCount = Integer.parseInt(srtContent[0])-emptyLines //the index for srt
+					int startTime=0;
+					int endTime=0;
 					
-					if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+					//Check the srt time
+					String[] times = srtContent[1].split("-->");
+					if(times.length == 2)
 					{
-						 throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
+						startTime = playerService.getSRTFormatTime(times[0]);
+						endTime = playerService.getSRTFormatTime(times[1]);
+						if(endTime == -1 || startTime == -1 || startTime > endTime)
+						{
+							//println "1"
+							throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft format error: The time format at index "+ String.valueOf(i)+" is bad formatted.");
+						}
+					}
+					else
+					{
+						throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID, "Saved draft format error: The time format at index "+ String.valueOf(i)+" is bad formatted.");
 					}
 					
-					if(anno.hasErrors() || !anno.save(flush:true))
+					
+					if(srtContent.length == 3)
 					{
-						throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
+						String text = srtContent[2]
+						if(text?.trim().size() >0)
+						{
+							def cue = new WebVTTCue(
+								content: text.trim(),
+								owner: owner,
+								title:"WebVTTCue",
+								cueIndex:seqCount,
+								cueSettings:"")
+							webVTTResource.addToCues(cue)
+							
+							def sourceStart = seqCount
+							def targetStart = startTime
+							def targetEnd = endTime
+							anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
+									targetStart: targetStart,
+									targetEnd: targetEnd))
+						}
+						else
+							emptyLines++
+					}
+					else if(srtContent.length == 2) //only index and time interval, without text
+					{
+						emptyLines++
 					}
 				}
+				else //shouldn't throw exception here, there might be possibility that the text is empty
+				{
+					throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft file format error: The content at index "+ String.valueOf(i)+" is bad formatted.");
+				}
+			}
+		}
+		else
+		{
+			//Logger.debug("5 return empty transcript");
+			//createEmptyTranscript();
+			throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft file format error: The .srt file is not valid.");
+		}
+		
+		WebVTTResource.withTransaction {status->
+								
+			if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+			{
+				 throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
+			}
+			
+			if(anno.hasErrors() || !anno.save(flush:true))
+			{
+				throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
 			}
 		}
 	}

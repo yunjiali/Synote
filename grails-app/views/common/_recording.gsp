@@ -108,8 +108,8 @@
 	  		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerditsub" id="${row.id}">NERD Subtitle</g:link>
 	  	</div>
 	  	<div class="pull-right" style="margin-right:10px">
-	  	<g:link controller="recording" action="subpreview" id="${row	.id}" class="btn btn-info">
-			Preview Named Entities in Subtitle
+	  	<g:link controller="recording" action="subpreview" id="${row.id}" class="btn btn-info">
+			Preview Named Entities
 		</g:link>
 		</div>
 	 	</g:if>

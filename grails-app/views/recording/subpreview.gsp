@@ -296,7 +296,7 @@
 				</div>
 				<!-- Transcript -->
 				<div id="transcripts_div">
-					<h3 class="heading-inline">Transcript</h3>
+					<h3 class="heading-inline">Subtitle</h3>
 					<div class="pull-right btn-toolbar" style="display:inline">
 						<div class="btn-group" style="margin-bottom:30px;">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Export current transcript as .vtt file">
