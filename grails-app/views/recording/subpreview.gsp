@@ -122,7 +122,7 @@
 		}
 		mdHelper= new MicrodataHelper(true);
 
-		var sparqlEndpoint = g.createLink({controller:'linkedData',action:'sparql'});
+		var sparqlEndpoint = g.createLink({controller:'linkedData',action:'sparql'}).replace("?id=__ID__","");
 		nerdClient = new NerdClient(sparqlEndpoint,'${prefixString}');
 		
 		initSynotePlayer(recording);
@@ -361,39 +361,57 @@
 							<div id="nerd_category_list_div" class="well">
 								<div id="nerd_thing_div" class="nerd-line">
 									<div id="nerd_thing_count_div"></div>
-									<div id="nerd_thing_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_thing_list_div" class="nerd-entity-line">
+										<table id="nerd_thing_table"></table>
+									</div>
 								</div>
 								<div id="nerd_person_div" class="nerd-line">
 									<div id="nerd_person_count_div"></div>
-									<div id="nerd_person_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_person_list_div" class="nerd-entity-line">
+										<table id="nerd_person_table"></table>
+									</div>
 								</div>
 								<div id="nerd_organization_div" class="nerd-line">
 									<div id="nerd_organization_count_div"></div>
-									<div id="nerd_organization_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_organization_list_div" class="nerd-entity-line">
+										<table id="nerd_organization_table"></table>
+									</div>
 								</div>
 								<div id="nerd_location_div" class="nerd-line">
 									<div id="nerd_location_count_div"></div>
-									<div id="nerd_location_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_location_list_div" class="nerd-entity-line">
+										<table id="nerd_location_table"></table>
+									</div>
 								</div>
 								<div id="nerd_product_div" class="nerd-line">
 									<div id="nerd_product_count_div"></div>
-									<div id="nerd_product_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_product_list_div" class="nerd-entity-line">
+										<table id="nerd_product_table"></table>
+									</div>
 								</div>
 								<div id="nerd_event_div" class="nerd-line">
 									<div id="nerd_event_count_div"></div>
-									<div id="nerd_event_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_event_list_div" class="nerd-entity-line">
+										<table id="nerd_event_table"></table>
+									</div>
 								</div>
 								<div id="nerd_function_div" class="nerd-line">
 									<div id="nerd_function_count_div"></div>
-									<div id="nerd_function_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_function_list_div" class="nerd-entity-line">
+										<table id="nerd_function_table"></table>
+									</div>
 								</div>
 								<div id="nerd_time_div" class="nerd-line">
 									<div id="nerd_time_count_div"></div>
-									<div id="nerd_time_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_time_list_div" class="nerd-entity-line">
+										<table id="nerd_time_table"></table>
+									</div>
 								</div>
 								<div id="nerd_amount_div" class="nerd-line">
 									<div id="nerd_amount_count_div"></div>
-									<div id="nerd_amount_list_div" class="nerd-entity-line"></div>
+									<div id="nerd_amount_list_div" class="nerd-entity-line">
+										<table id="nerd_amount_table"></table>
+									</div>
 								</div>
 							</div>	
 						</div>

@@ -1,5 +1,9 @@
 class UrlMappings {
     static mappings = {
+		"/sparql"{
+			controller="linkedData"
+			action="sparql"
+		}
 		"/resources/$id"{
 			controller="linkedData"
 			action="resources"	
@@ -12,6 +16,10 @@ class UrlMappings {
 			controller="linkedData"
 			action="users"
 		}
+		"/resources/string/$id"{
+			controller="linkedData"
+			action="resourcesString"
+		}
 		"/resources/data/$id"{
 			controller="linkedData"
 			action="resourcesData"
@@ -23,10 +31,6 @@ class UrlMappings {
 		"/users/data/$id"{
 			controller="linkedData"
 			action="usersData"
-		}
-		"/query"{
-			controller="linkedData"
-			action="query"	
 		}
 		"/$controller/$action?/$id?"{
 		      constraints {

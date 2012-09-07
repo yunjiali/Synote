@@ -39,21 +39,29 @@ function NerdClient(sparqlEndpoint,prefixString)
 		"   ?entity rdf:type ?type."+
 		" }"+
 		" Group by ?type";
-		
+	this.queryReviewOptional = user.id !== -1?"OPTIONAL{"+
+							"?anno review:hasReview ?rev."+
+							"?rev review:reviewer <"+userBaseURI+user.id+">;"+
+							"review:rating ?rating.}":""; //if not logged, don't display the review data
+							
 	this.queryListNamedEntities = this.queryPrefixString +
-		" SELECT ?entity ?label ?beginIndex ?endIndex ?type ?start ?end"+
+		" SELECT ?idex ?entity ?label ?beginIndex ?endIndex ?type ?start ?end ?rating "+
 		" WHERE"+
 		" {"+
 		"   ?anno rdf:type oac:Annotation ."+
+		"   ?anno dc:identifier ?idex ."+
 		"   ?anno oac:hasTarget ?frag ."+
 		"   <"+resourceBaseURI+recording.id+"> ma:hasFragment ?frag."+
 		"   ?frag nsa:temporalStart ?start."+
 		"   ?frag nsa:temporalEnd ?end."+
 		"   ?anno oac:hasBody ?entity ."+
 		"   ?entity rdfs:label ?label."+
-		"   ?anno str:beginIndex ?beginIndex ."+
-		"   ?anno str:endIndex ?endIndex ."+
-		"   ?entity rdf:type ?type"+
+		"   ?anno opmv:wasDerivedFrom ?string."+
+		"   ?string str:beginIndex ?beginIndex ."+
+		"   ?string str:endIndex ?endIndex ."+
+		"   ?entity rdf:type ?type ."+
+		"   ?type rdfs:label 'nerdType' ."+
+		this.queryReviewOptional+
 		" }"+
 		" order by ?beginIndex";
 	
@@ -202,6 +210,7 @@ NerdClient.prototype.getNamedEntities = function()
 		   			var tIndex = 0;
 		   			
 		   			var newText="";
+		   			var currentRow = 0;
 		   			$.each(data.results.bindings, function(i,result){
 		   				//highlight it in transcript
 		   				while(result.beginIndex.value > charCount)
@@ -234,7 +243,9 @@ NerdClient.prototype.getNamedEntities = function()
 			   			transcript_content.html(newText);
 			   			
 			   			//list them in NERD widget
-			   			var nerd_div = $("#nerd_"+nerdType.toLowerCase()+"_list_div");
+			   			var nerd_table = $("#nerd_"+nerdType.toLowerCase()+"_table");
+			   			//var entity_div = $("<div/>").appendTo(nerd_div);
+			   			
 			   			var entity_span = $("<span/>").addClass("nerd-entity");
 			   			entity_span.bind('click',{result:result},function(event){
 			   				var start = parseInt(result.start.value*1000,10);
@@ -242,10 +253,65 @@ NerdClient.prototype.getNamedEntities = function()
 			   				multimedia.setPosition(start);
 			   			});
 			   			var entity_a = $("<a/>",{text:result.label.value}).appendTo(entity_span);
-			   			nerd_div.append(entity_span);
 			   			nerdClient.displayDisambiguation(entity_span,result.entity.value,result.label.value,nerdType);
+				   		
+				   		var ne_tr = null;
+				   		if(i%2 === 0)
+				   		{
+				   			ne_tr = $("<tr/>",{id:"tr_"+result.idex.value}).appendTo(nerd_table);
+				   			currentRow = result.idex.value;
+				   		}
+				   		else
+				   		{
+				   			var ne_tr = $("#tr_"+currentRow);
+				   			currentRow = 0;
+				   		}
+				   		
+				   		var ne_td = $("<td/>").append(entity_span).appendTo(ne_tr);
+				   		//append the external link
+				   		if(result.entity.type === 'uri')
+				   		{
+				   			var external_a = $("<a/>",{title:result.label.value});
+				   			external_a.html("<i class='icon-link-small'></i>");
+				   			external_a.attr("href",result.entity.value);
+				   			external_a.attr("_blank");
+				   			external_a.appendTo(ne_td);
+				   		} 
+				   		//Add review buttons
+				   		if(user.id !== -1)
+			   			{
+				   			if(result.rating === undefined)
+				   			{
+				   				var entity_rev_div = $("<div/>",{id:"approve_"+result.idex.value}).addClass("btn-group btn-group-nerd").appendTo(ne_td);
+				   				entity_rev_div.html(
+				   					'<button class="btn btn-mini approve" title="approve" data-loading-text="Sending Review..."'+ 
+				   					'id="btn_approve_'+result.idex.value+'"><i class="icon-thumbs-up"></i></button>'+
+									'<button class="btn btn-mini approve" title="reject" id="btn_reject_'+result.idex.value+'"><i class="icon-thumbs-down"></i></button>'
+				   				);
+				   			}
+				   			else if(result.rating.value === "0")
+				   			{
+				   				var entity_rev_div = $("<div/>",{id:"approve_"+result.idex.value}).addClass("btn-group btn-group-nerd").appendTo(ne_td);
+				   				entity_rev_div.html(
+				   					'<button class="btn btn-mini approve" title="approve" data-loading-text="Sending Review..."'+ 
+				   					'id="btn_approve_'+result.idex.value+'"><i class="icon-thumbs-up"></i></button>'+
+									'<button class="btn btn-mini approve btn-danger" disabled="disabled" title="reject" id="btn_reject_'+result.idex.value+'"><i class="icon-thumbs-down"></i></button>'
+				   				);
+				   			}
+				   			else if(result.rating.value === "1")
+				   			{
+				   				var entity_rev_div = $("<div/>",{id:"approve_"+result.idex.value}).addClass("btn-group btn-group-nerd").appendTo(ne_td);
+				   				entity_rev_div.html(
+				   					'<button class="btn btn-mini btn-success approve" disabled="disabled" title="approve" data-loading-text="Sending Review..."'+ 
+				   					'id="btn_approve_'+result.idex.value+'"><i class="icon-thumbs-up"></i></button>'+
+									'<button class="btn btn-mini approve" title="reject" id="btn_reject_'+result.idex.value+'"><i class="icon-thumbs-down"></i></button>'
+				   				);
+				   			}
+				   		}
 		   			});
 		   		}
+		   		
+		   		nerdClient.regReviewEvent();
 		   },
 		   error:function(jqXHR,textStatus,errorThrown)
 		   {
@@ -254,7 +320,7 @@ NerdClient.prototype.getNamedEntities = function()
 		   },
 		   complete:function(jqXHR,textStatus)
 		   {
-			   
+			   //Do nothing
 		   }
 	});		
 }
@@ -307,6 +373,74 @@ NerdClient.prototype.displayDisambiguation = function(tooltip_span, url, title, 
 			}
 		});
 	}
+}
+
+NerdClient.prototype.regReviewEvent = function()
+{
+	$(".approve").click(function(){
+		var review_url = g.createLink({controller:'nerd',action:'saveReviewAjax'});
+		var rating = 0;
+		var idex = "";
+		if($(this).attr("title") == "approve")
+		{
+			rating = 1;
+			idex = $(this).attr("id").replace("btn_approve_",""); //get the extraction id
+		}
+		else
+			idex = $(this).attr("id").replace("btn_reject_","");
+
+		$.ajax({
+			   type: "POST",
+			   url: review_url,
+			   data: {rating:rating,idex:idex}, //default language is English
+			   timeout:60000, // the call will be queued on the server-side, so we need to set it for a longer time
+			   dataType: "json",
+			   //Yunjia: Add a beforeSend function to display the loading message
+			   beforeSend:function(jqXHR, settings)
+			   {
+					//disable the button
+					$("#btn_approve_"+idex).attr("disabled","disabled");
+					$("#btn_reject_"+idex).attr("disabled","disabled");
+			   },
+			   success:function(data,textStatus, jqXHR)
+			   {
+				   	if(data.error !== undefined)
+					{
+						//Show error messages
+						$("#nerd_div_msg").html("<span class='alert alert-error'>"+data.error.description+"</span>");
+				   		$("#nerd_div_msg").show();
+						$("#btn_approve_"+idex).removeAttr("disabled");
+						$("#btn_reject_"+idex).removeAttr("disabled");
+					}
+				   	else
+					{
+						if(rating==0)
+						{
+							$("#btn_approve_"+idex).removeClass("btn-success").removeAttr("disabled");
+				   			$("#btn_reject_"+idex).addClass("btn-danger").attr("disabled","disabled");
+						}
+						else
+						{
+							$("#btn_approve_"+idex).addClass("btn-success").attr("disabled","disabled");
+							$("#btn_reject_"+idex).removeClass("btn-danger").removeAttr("disabled");
+						}
+
+						return false;
+					}
+			   },
+			   error:function(jqXHR,textStatus,errorThrown)
+			   {
+				   	$("#nerd_div_msg").html("<span class='alert alert-error'>"+data.error.description+"</span>");
+				   	$("#nerd_div_msg").show();
+				   	$("#btn_approve_"+idex).removeAttr("disabled");
+					$("#btn_reject_"+idex).removeAttr("disabled");
+			   },
+			   complete:function(jqXHR,textStatus)
+			   {
+					//Do nothing
+			   }
+		});	
+	});
 }
 
 NerdClient.prototype.getHighlightCSS = function(type)

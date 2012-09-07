@@ -638,7 +638,7 @@ class ResourceService {
 			
 			//send the first request to get the track name for the subtitle
 			http.get(path:"/api/timedtext", contentType:XML, query:queryTrack){ resp1,reader1->
-				String s1 = reader1.text
+				String s1 = reader1?.text
 				if(s1?.size() > 0)
 				{
 					//parse the xml
@@ -653,10 +653,9 @@ class ResourceService {
 					def querySRT = [v:videoid, format:fmt, lang:l, name:trackName]
 					http.get(path:"/api/timedtext", contentType:TEXT, query:querySRT){ resp2,reader2->
 							
-						String s2 = reader2.text
+						String s2 = reader2?.text
 						if(s2?.size() > 0)
 							srt = s2
-						
 						return srt
 					}
 				}

@@ -25,7 +25,8 @@
 
 .nerd-entity
 {
-	margin-right:2.0em;
+	margin-right:5px;
+	margin-left:5px;
 	display:inline-block;
 	cursor:pointer;
 }
@@ -55,6 +56,22 @@
 {
 	line-height:2em;
 }
+
+.nerd-entity-line table
+{
+	width:100%;
+}
+
+.nerd-entity-line table td
+{
+	width:50%;
+}
+
+.btn-nerd-approve
+{
+	margin-right:5px;	
+}
+
 /*multiple types are overlapped*/
 .nerd-multiple
 {

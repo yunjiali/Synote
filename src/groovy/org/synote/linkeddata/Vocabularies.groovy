@@ -25,6 +25,7 @@ class Vocabularies {
 	static final String[] NERD_NS=["nerd",'''http://nerd.eurecom.fr/ontology#'''] //NERD ontology
 	static final String[] STR_NS=["str",'''http://nlp2rdf.lod2.eu/schema/string/'''] //lod2 String ontology, see http://nlp2rdf.org/nif-1-0
 	static final String[] OPMV_NS=["opmv",'''http://purl.org/net/opmv/ns#'''] //Open Provenance Model Vocabulary
+	static final String[] TIME_NS=["time",'''http://www.w3.org/2006/time#'''] //Time ontology
 	
 	/*
 	 * Define properties in form of XX_PropertyName:
@@ -51,6 +52,7 @@ class Vocabularies {
 		vocabularies << NERD_NS
 		vocabularies << STR_NS
 		vocabularies << OPMV_NS
+		vocabularies << TIME_NS
 		
 		return vocabularies
 	}

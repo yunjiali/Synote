@@ -280,6 +280,12 @@ function isValidURL(str) {
 	
 };
 
+function isiPad()
+{
+	var isiPad = (navigator.userAgent.match(/iPad/i) == null)?false:true;
+	return isiPad;
+}
+
 //get url variables
 $.extend({
 	  getUrlVars: function(){

@@ -82,7 +82,7 @@ $(document).ready(function(){
 			<hr/>
 			<h3>Content Preview</h3>
 			<div>
-				<g:printFullTextFromResource resource="${resource}"/>
+				<g:printFullTextFromResource resource="${res}"/>
 			</div>
 			<br/>
 			<div>
@@ -115,16 +115,16 @@ $(document).ready(function(){
 											<div id="msg_${n.idex.value}"></div>
 											<div id="approve_${n.idex.value}" class="btn-group btn-group-nerd">
 												<g:if test="${n.rating == null}">
-													<button class="btn approve" title="approve" data-loading-text="Sending Review..." id="btn_approve_${n.idex.value}"><i class="icon-thumbs-up"></i>Approve</button>
-													<button class="btn approve" title="reject" id="btn_reject_${n.idex.value}"><i class="icon-thumbs-down"></i>Reject</button>
+													<button class="btn approve" title="approve" data-loading-text="Sending Review..." id="btn_approve_${n.idex.value}"><i class="icon-thumbs-up"></i></button>
+													<button class="btn approve" title="reject" id="btn_reject_${n.idex.value}"><i class="icon-thumbs-down"></i></button>
 												</g:if>
 												<g:elseif test="${n.rating.value == '1'}">
-													<button class="btn btn-success approve" disabled="disabled" title="approve" data-loading-text="Sending Review..." id="btn_approve_${n.idex.value}"><i class="icon-thumbs-up"></i>Approve</button>
-													<button class="btn approve" title="reject" id="btn_reject_${n.idex.value}"><i class="icon-thumbs-down"></i>Reject</button>
+													<button class="btn btn-success approve" disabled="disabled" title="approve" data-loading-text="Sending Review..." id="btn_approve_${n.idex.value}"><i class="icon-thumbs-up"></i></button>
+													<button class="btn approve" title="reject" id="btn_reject_${n.idex.value}"><i class="icon-thumbs-down"></i></button>
 												</g:elseif>
 												<g:elseif test="${n.rating.value == '0'}">
-													<button class="btn approve" title="approve" data-loading-text="Sending Review..." id="btn_approve_${n.idex.value}"><i class="icon-thumbs-up"></i>Approve</button>
-													<button class="btn btn-danger approve" disabled="disabled" title="reject" id="btn_reject_${n.idex.value}"><i class="icon-thumbs-down"></i>Reject</button>
+													<button class="btn approve" title="approve" data-loading-text="Sending Review..." id="btn_approve_${n.idex.value}"><i class="icon-thumbs-up"></i></button>
+													<button class="btn btn-danger approve" disabled="disabled" title="reject" id="btn_reject_${n.idex.value}"><i class="icon-thumbs-down"></i></button>
 												</g:elseif>
 											</div>
 											<div style="display:inline;padding-top:5px;">
@@ -138,7 +138,6 @@ $(document).ready(function(){
 													<i class='icon-link-small'></i>
 												</a>
 												is a(n) ${n.nerdtype.value == ''?'Thing':n.nerdtype.value?.split('#')[n.nerdtype.value?.split('#')?.size()-1]} 
-												${n.type.value ==''?'':'('+n.type.value+')'}
 											</g:else>
 											</div>
 										</div>

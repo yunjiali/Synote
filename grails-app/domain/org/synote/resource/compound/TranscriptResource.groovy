@@ -2,8 +2,12 @@ package org.synote.resource.compound
 
 import org.synote.resource.single.text.TranscriptTextResource
 
+
 class TranscriptResource extends CompoundResource{
 
+	/*
+	* The content is Deprecated. But this class is still used as the superclass of WebVTTResource
+	*/
 	static searchable =
 	{
 		only:['transcript']

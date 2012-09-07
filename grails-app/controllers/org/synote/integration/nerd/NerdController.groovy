@@ -625,7 +625,8 @@ class NerdController {
 			return
 		}
 		
-		def resource = Resource.get(params.id.toLong())
+		//Here it must be a compouned resource,i.e. TranscriptResource, Synmark or MultimediaResource
+		def resource = CompoundResource.get(params.id.toLong())
 		if(!resource)
 		{
 			flash.error = "Cannot find the resource with id ${params.id}"
@@ -650,6 +651,6 @@ class NerdController {
 		//	println "##################:"+z.rating?.value
 		//}
 		
-		return [nes:nes,resource:resource]
+		return [nes:nes,res:resource]
 	}
 }

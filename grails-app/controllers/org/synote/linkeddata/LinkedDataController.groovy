@@ -6,6 +6,7 @@ import org.synote.resource.Resource
 import javax.servlet.http.HttpServletResponse
 import org.synote.resource.compound.MultimediaResource
 import org.synote.resource.compound.CompoundResource
+import org.synote.resource.single.text.TextResource
 import org.synote.resource.single.text.MultimediaTag
 import org.synote.resource.single.text.MultimediaTextNote
 import org.synote.resource.single.text.SynmarkTag
@@ -300,32 +301,93 @@ class LinkedDataController {
 	}
 	
 	/*
-	 * Display a query page
+	 * ResourcesString
+	 * 
+	 * returns the string represents the resource. Used only currently for NIF String Ontology
 	 */
-	def query = {
-		def prefixList = V.getVocabularies()
-		StringBuilder builder = new StringBuilder()
-		prefixList.each{p->
-			builder.append(("PREFIX "+p[0]+":"+"<"+p[1]+">").encodeAsHTML())
-			builder.append("\n")	
-		}
-		return [prefixString:builder.toString()]
-	}
-	
-	/*
-	 * the sparql endpoint for Synote, implemented by Jena ARQ
-	 */
-	def sparql = {
-		//use result formatter to get the correct response type
-		if(!params.query)
+	def resourcesString = {
+		def resource = Resource.findById(params.id?.toString())
+		if(!resource)
 		{
-			response.status = 200
+			response.sendError(404)
 			response.contentType="text/plain"
-			response.outputStream << "Query string is empty"
 			response.outputStream.flush()
 			return
 		}
 		
+		//Currently, no TextResource here
+		if(resource.instanceOf(MultimediaResource) || resource.instanceOf(SynmarkResource) || resource.instanceOf(WebVTTResource))
+		{
+			withFormat{
+				html{
+					//println "here1"
+					//println resource.toNIFString()
+					//response.status = 200
+					//response.contentType="text/html"
+					//response << resource.toNIFString()
+					//response.outputStream.flush()
+					render resource.toNIFString()
+					return
+				}
+				rdf{
+					println "rdf"
+					try
+					{
+						linkedDataService.buildStringData(response.outputStream, resource)
+						response.contentType="application/rdf+xml"
+						println "return rdf"
+					}
+					catch(RDFGenerationException rdfEx)
+					{
+						log.debug rdfEx.getMessage()
+						response.sendError(404)
+						response.contentType="text/plain"
+						response.outputStream << rdfEx.getMessage()
+					}
+					finally
+					{
+						response.outputStream.flush()
+						return
+					}
+				}
+			}
+		}
+		else
+		{
+			response.sendError(404)
+			response.contentType="text/plain"
+			response.outputStream.flush()
+			return
+		}
+	}
+	
+	/*
+	 * the sparql endpoint for Synote, implemented by Jena ARQ
+	 * 
+	 * Where we use sparql query in Synote?
+	 * player.nerd.js
+	 */
+	def sparql = {
+		
+		//ask for the page
+		//println params.query
+		if(!params.query)
+		{
+			/*response.status = 200
+			response.contentType="text/plain"
+			response.outputStream << "Query string is empty"
+			response.outputStream.flush()
+			return*/
+			def prefixList = V.getVocabularies()
+			StringBuilder builder = new StringBuilder()
+			prefixList.each{p->
+				builder.append(("PREFIX "+p[0]+":"+"<"+p[1]+">").encodeAsHTML())
+				builder.append("\n")
+			}
+			return [prefixString:builder.toString()]
+		}
+		
+		//use result formatter to get the correct response type
 		String queryString = params.query
 		if(!params.output)
 			params.output = "json"
@@ -333,12 +395,12 @@ class LinkedDataController {
 		def store = linkedDataService.getSDBInstance()
 		//Model model = SDBFactory.connectDefaultModel(store)
 		Dataset ds = DatasetStore.create(store)
-		Query query
+		Query sparqlQuery
 		QueryExecution qexec
 		try
 		{
-			query = QueryFactory.create(queryString)
-			qexec = QueryExecutionFactory.create(query, ds)
+			sparqlQuery = QueryFactory.create(queryString)
+			qexec = QueryExecutionFactory.create(sparqlQuery, ds)
 		}
 		catch(Exception exp)
 		{	
@@ -352,33 +414,73 @@ class LinkedDataController {
 		
 		try
 		{
-			ResultSet results = null
-			results = qexec.execSelect()
-			
-			if(results == null)
+			if(sparqlQuery.isSelectType())
 			{
-				response.contentType = "text/plain"
-				response.outputStream << "No result is found."
+				ResultSet results = null
+				results = qexec.execSelect()
+				
+				if(results == null)
+				{
+					response.contentType = "text/plain"
+					response.outputStream << "No result is found."
+				}
+				else
+				{
+					switch (params.output) {
+						case "json":
+							response.contentType = "application/json"
+							ResultSetFormatter.outputAsJSON(response.outputStream,results)
+							break
+						case "htmltab":
+							ResultSetFormatter.outputAsJSON(response.outputStream, results);
+							break
+						case "rdfxml":
+							response.contentType = "application/rdf+xml"
+							ResultSetFormatter.outputAsRDF(response.outputStream,results)
+							break
+						default:
+							response.contentType = "application/json"
+							ResultSetFormatter.output(response.outputStream,results,ResultSetFormat.syntaxText)
+							break
+					}
+				}
+			}
+			else if(sparqlQuery.isDescribeType() || sparqlQuery.isConstructType())
+			{
+				Model results = null
+				if(sparqlQuery.isDescribeType())
+				{
+					results = qexec.execDescribe()
+				}
+				else
+				{
+					results = qexec.execConstruct()	
+				}
+				
+				if(results == null)
+				{
+					response.contentType = "text/plain"
+					response.outputStream << "No result is found"	
+				}
+				else
+				{
+					switch (params.output) {
+						case "rdfxml":
+							response.contentType = "application/rdf+xml"
+							//response.setHeader("Content-disposition", "attachment;filename=sparql")
+							results.write(response.outputStream,"RDF/XML")
+							break
+						default:
+							response.contentType = "text/rdf+n3"
+							//response.setHeader("Content-disposition", "attachment;filename=sparql.n3")
+							results.write(response.outputStream,"N3")
+							break
+					}
+				}
 			}
 			else
 			{
-				switch (params.output) {
-					case "json":
-						response.contentType = "application/json"
-						ResultSetFormatter.outputAsJSON(response.outputStream,results)
-						break
-					case "htmltab":
-						ResultSetFormatter.outputAsJSON(response.outputStream, results);
-						break
-					case "rdfxml":
-						response.contentType = "application/rdf+xml"
-						ResultSetFormatter.outputAsRDF(response.outputStream,results)
-						break
-					default:
-						response.contentType = "application/json"
-						ResultSetFormatter.output(response.outputStream,results,ResultSetFormat.syntaxText)
-						break
-				}
+				throw new RDFGenerationException("Cannot recognise the sparql query.")	
 			}
 		}
 		catch(Exception ex)

@@ -34,8 +34,11 @@ $(document).ready(function(){
 		{
 			alert("The query is empty!");
 		}
+
 		var queryString = encodeURIComponent($.trim($("#query").val()));
-		var query_url = g.createLink({controller:'linkedData',action:'sparql'});
+		//var p= {query: queryString, output:$("#output").val()};
+		//Don't know why, but createLink returns "?id=__ID__" at the back, so we need to replace it.
+		var query_url = g.createLink({controller:'linkedData',action:'sparql'}).replace("?id=__ID__","");
 		query_url +="?query="+ queryString+"&output="+$("#output").val();
 
 		$.ajax({
@@ -67,6 +70,12 @@ $(document).ready(function(){
 					}
 					
 				}
+				else if($("#output").val() == "n3")
+				{	
+					console.log("ok");
+					var n3Str = data.replace(/>/g,"&gt;").replace(/</g,"&lt;").replace(/\"/g,"&quot;");
+					$("#queryResults").html(n3Str);	
+				}
 				else //Add more results later
 				{
 					$("#queryResults").html(data);
@@ -79,7 +88,7 @@ $(document).ready(function(){
 			complete:function(jqXHR,textStatus)
 			{
 				$("#loading_img").hide();
-				$("#query_form_submit").button("reset");
+				$("#query_form_submit").button('reset');
 			}
 		});
 		return false;
@@ -118,6 +127,7 @@ SELECT * WHERE {
 			              <option value="json">JSON</option>
 			              <option value="rdfxml">RDF/XML</option>
 			              <option value="htmltab" selected="selected">HTML Table</option>
+			              <option value="n3">N3</option>
 			            </select>
 					</div>	
 				</div>

@@ -44,6 +44,30 @@ class SynmarkResource extends CompoundResource{
 		return synmarkStr
 	}
 
+	public String toNIFString()
+	{
+		StringBuilder str = new StringBuilder()
+		if(title)
+		{
+			str.append("<h1>"+title+"</h1>")	
+		}
+		
+		if(tags)
+		{
+			str.append("<span>")
+			tags.each {tag ->
+				str.append(tag.content+" ")
+			}
+			str.append("</span>")
+		}
+		if(note)
+		{
+			str.append("<br/>"+"<p>"+note.content+"</p>")
+		}
+		return str.toString()
+		
+	}
+	
 	def propertiesToString ={params ->
 
 		def fields = params.findAll{it.key.startsWith("synmark_") == true}

@@ -32,12 +32,14 @@ class NerdService {
 				return ExtractorType.EVRI
 			case "extractiv":
 				return ExtractorType.EXTRACTIV
-			case "ontotext":
+			case "lupedia":
 				return ExtractorType.LUPEDIA
 			case "opencalais":
 				return ExtractorType.OPENCALAIS
 			case "saplo":
 				return ExtractorType.SAPLO
+			case "uep":
+				return ExtractorType.UEP
 			case "wikimeta":
 				return ExtractorType.WIKIMETA
 			case "yahoo":
@@ -73,11 +75,13 @@ class NerdService {
 			case ExtractorType.EXTRACTIV:
 				return "extractiv"
 			case ExtractorType.LUPEDIA:
-				return "ontotext"
+				return "lupedia"
 			case ExtractorType.OPENCALAIS:
 				return "opencalais"
 			case ExtractorType.SAPLO:
 				return "saplo"
+			case ExtractorType.UEP:
+				return "uep"
 			case ExtractorType.WIKIMETA:
 				return "wikimeta"
 			case ExtractorType.YAHOO:
@@ -122,6 +126,43 @@ class NerdService {
 		return [text:text,field:field]
 	}
 	
+	/*
+	 * Given the extractor's name as string, return the URI of the extractor, such as:
+	 * http://nerd.eurecome.fr, http://www.zemanta.com
+	 */
+	def getExtractorURI(String extractor_name)
+	{
+		switch(extractor_name?.toLowerCase()){
+			case "alchemyapi":
+				return "http://www.alchemyapi.com/"
+			case "spotlight":
+				return "http://spotlight.dbpedia.org/"
+			case "evri":
+				return "http://www.evri.com/"
+			case "extractiv":
+				return "http://extractiv.com/"
+			case "lupedia":
+				return "http://lupedia.ontotext.com/"
+			case "ontotext":
+				return "http://lupedia.ontotext.com/"
+			case "opencalais":
+				return "http://www.opencalais.com/"
+			case "saplo":
+				return "http://saplo.com/"
+			case "uep": //Can't find it
+				return "http://nerd.eurecom.fr/"
+			case "wikimeta":
+				return "http://www.wikimeta.com/"
+			case "yahoo":
+				return "http://www.yahoo.com/"
+			case "zemanta":
+				return "http://www.zemanta.com/"
+			case "combined":
+				return "http://nerd.eurecom.fr/"
+			default:
+				return "http://nerd.eurecom.fr/"
+		}
+	}
 	
 	/*
 	 * return the Extraction object defined in fr.eurecom.nerd.client.schema.Extraction from json response
@@ -134,5 +175,14 @@ class NerdService {
 		Type listType = new TypeToken<List<Extraction>>(){}.getType()
 		List<Extraction> extractions = gson.fromJson(jsonExtraction, listType)
 		return extractions
+	}
+	
+	/*
+	 * Get the OffsetString defined in NIF
+	 */
+	def getNIFOffsetString(Extraction e)
+	{
+		String strOffset = "offset_"+e.getStartChar()+"_"+e.getEndChar()+"_"+e.getEntity()
+		return URLEncoder.encode(strOffset , "UTF-8").replaceAll("\\+","%20")
 	}
 }

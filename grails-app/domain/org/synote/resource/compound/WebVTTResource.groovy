@@ -18,4 +18,18 @@ class WebVTTResource extends TranscriptResource {
 	static constraints = {
     	fileHeader(nullable:false,blank:false,size:1..65536)
 	}
+	
+	public String toNIFString()
+	{
+		StringBuilder str = new StringBuilder()
+		
+		if(cues)
+		{
+			cues.each {cue ->
+				str.append(cue.content+" ")
+			}
+		}
+		return str.toString()
+		
+	}
 }
