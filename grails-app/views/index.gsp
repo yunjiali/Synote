@@ -155,7 +155,8 @@ $(document).ready(function(){
 				</div>
 				<div class="span3">
 					<h3>Mobile Access</h3>
-					<p>Check your annotations and transcript on mobile devices, such as iPhone, iPad and Android tablet.</p>
+					<p>Check your annotations and transcript on mobile devices, such as iPhone, iPad and Android tablet.
+						<a href="http://users.ecs.soton.ac.uk/wj1e11/synotemobile/" target="_blank">Go to the demo</a></p>
 				</div>
 			</div>
 		</div>

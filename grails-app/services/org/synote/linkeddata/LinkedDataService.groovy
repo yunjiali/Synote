@@ -981,22 +981,19 @@ class LinkedDataService {
 	   */
 	  def synchronized saveNERDToTripleStroe(extractions,multimedia,resource,synpoint,extractor)
 	  {
-  			if(grailsApplication.config.jena.enabled != true)
+		  	if(grailsApplication.config.jena.enabled != true)
 			{
 				return false
 			}
-			
 			if(!multimedia || !resource)
 			{
 				return false	
 			}
-			
 			//No extractions
 			if(extractions?.size() <=0)
 			{
 				return false
 			}
-					
 			def store = getSDBInstance()
 			Model model = SDBFactory.connectDefaultModel(store)
 			store.getLoader().setChunkSize(5000)
@@ -1062,7 +1059,7 @@ class LinkedDataService {
 				   
 				   if(checkDuplicateNE(e, extractor,resource))
 				   {
-					   log.debug("duplicated:"+e.getEntity())
+					   log.debug("#######duplicated:###########"+e.getEntity())
 					   continue
 				   }
 				   
@@ -1109,6 +1106,7 @@ class LinkedDataService {
 				   model.add(ext_type,p_rdfs_label,o_label_extractorType)
 				   log.debug("extractor type")
 				   
+				   //?ne rdfs:label entity_string
 				   Literal o_entityName = model.createLiteral(e.getEntity())
 				   model.add(ne,p_rdfs_label,o_entityName)
 				   log.debug("label");
@@ -1191,6 +1189,10 @@ class LinkedDataService {
 					   //opmv:wasDerivedFrom
 					   JenaResource str_offset = model.createResource(stringURI+"#"+nerdService.getNIFOffsetString(e));
 					   model.add(s_annotation,p_opmv_derivedFrom, str_offset)
+					   
+					   //?offsetbasedstring str:sourceString entity_string
+					   JenaProperty p_str_sourceString = model.createProperty(V.STR_NS[1]+"sourceString")
+					   model.add(str_offset,p_str_sourceString,o_entityName)
 					   
 					   //strOffset is a str:OffsetBasedString
 					   JenaResource s_str_OffsetBasedString = model.createResource(V.STR_NS[1]+"OffsetBasedString")

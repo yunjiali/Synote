@@ -151,10 +151,10 @@
           <a class="brand" href="#">Named Entities Preview</a>
 				<g:isLoggedIn>
 				<div class="btn-group pull-right">
-					<a class="btn btn-success" href="#">
+					<g:link class="btn btn-success" controller="user" action="showUserProfile" title="Show user profile">
 						<i class="icon-user icon-white"></i>
 						<g:loggedInUsername />
-					</a>
+					</g:link>
 					<a href="#" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
 						<span class="caret"></span>
 					</a>

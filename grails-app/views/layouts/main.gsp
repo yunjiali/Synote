@@ -5,11 +5,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="author" content="Yunjia Li"/>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'main.css')}" />
 	<link rel="shortcut icon" href="${resource(dir: 'images', file: 'synote_icon.ico')}" type="image/x-icon" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
 	<script id="scriptInit" type="text/javascript">
 		//In case I forget to remove console.log in IE
 		var alertFallback = true;
@@ -36,10 +36,10 @@
 				<div class="nav-collapse">
 					<g:isLoggedIn>
 					<div class="btn-group pull-right">
-						<a class="btn btn-success" href="#">
+						<g:link class="btn btn-success" controller="user" action="showUserProfile" title="Show user profile">
 							<i class="icon-user icon-white"></i>
 							<g:loggedInUsername />
-						</a>
+						</g:link>
 						<a href="#" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
 							<span class="caret"></span>
 						</a>
@@ -53,10 +53,10 @@
             			</ul>
 					</div>
 					<div class="btn-group pull-right">
-						<a class="btn" href="#">
+						<g:link class="btn" controller="multimediaResource" action="create" title="create a recording">
 							<i class="icon-plus-sign"></i>
 							Create
-						</a>
+						</g:link>
 						<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
 						</a>

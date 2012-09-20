@@ -308,7 +308,16 @@ class MultimediaResourceController {
 				multimediaResource.addToTags(new MultimediaTag(owner: user,content:t.trim()))
 		}
 		
-		multimediaResource.isVideo = params.isVideo?Boolean.valueOf(params.isVideo):true
+		//By default, it is a video
+		if(params.isVideo ==  null)
+		{
+			multimediaResource.isVideo =true
+		}
+		else
+		{
+			multimediaResource.isVideo = Boolean.valueOf(params.isVideo)
+		}
+		
 		multimediaResource.duration = params.duration?Integer.valueOf(params.duration):null
 		
 		//save or generate thumbnail
@@ -462,13 +471,16 @@ class MultimediaResourceController {
 		multimediaResource.perm = PermissionValue.findByVal(params.perm?.toString())
 		
 		//multimedia description
-		if(multimediaResource.note == null)
+		if(params.note && params.note?.trim().size()>0)
 		{
-			multimediaResource.note = new MultimediaTextNote(owner:owner, content:params.note)
-		}
-		else
-		{
-			multimediaResource.saveNote(params.note)	
+			if(multimediaResource.note == null)
+			{
+				multimediaResource.note = new MultimediaTextNote(owner:owner, content:params.note)
+			}
+			else
+			{
+				multimediaResource.saveNote(params.note)	
+			}
 		}
 			
 		//thumbnail pictures, duration and isVideo
@@ -515,9 +527,9 @@ class MultimediaResourceController {
 		
 				if(multimediaResource.hasErrors() || !multimediaResource.save())
 				{
-					//multimediaResource.errors.allErrors.each {
-				     //   println it
-				    //}
+					multimediaResource.errors.allErrors.each {
+				        println it
+				    }
 					log.error "Cannot update multimedia ${multimediaResource.title}"
 					throw new ResourceException("Cannot update multimediaResource ${multimediaResource.title}")
 				}

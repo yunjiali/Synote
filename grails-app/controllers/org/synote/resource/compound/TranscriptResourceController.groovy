@@ -8,7 +8,9 @@ import org.synote.permission.PermService
 import org.synote.player.client.WebVTTCueData
 import org.synote.player.client.WebVTTData
 import org.synote.player.client.TimeFormat
+import org.synote.api.APIStatusCode
 
+import org.synote.player.client.PlayerException
 
 class TranscriptResourceController {
 
@@ -89,5 +91,116 @@ class TranscriptResourceController {
 	   }
 	   def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 	   return [cueList:jqGridData, params:params, multimedia:multimedia,transcript:transcript]
+   }
+   
+   @Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+   def upload = {
+	   if(!params.id)
+	   {
+		   flash.error = "Cannot find the recording."
+		   redirect(controller:'user',action:'index')
+		   return
+	   }
+	   
+	   def multimedia = MultimediaResource.get(params.id?.toLong())
+	   if(!multimedia)
+	   {
+		   flash.error = "Cannot find the reocording id."
+		   redirect(controller:'user',action:'index')
+		   return
+	   }
+	   
+	   def perm = permService.getPerm(multimedia)
+	   if(perm?.val <=0)
+	   {
+		   flash.error = "Permission Denied!"
+		   redirect(controller:'user',action:'index')
+		   return
+	   }
+	   
+	   return [multimedia:multimedia]
+   }
+   
+   def handleUpload= {
+	   
+	   println "handle upload"
+	   if(!params.mmid|| !params.file || !params.format)
+	   {
+		   def msg = "Paramterms are missing."
+		   render(contentType:"text/json"){
+			   error(stat:APIStatusCode.PARAMS_MISSING, description:msg)
+		   }
+		   return
+	   }
+	   
+	   def multimedia = MultimediaResource.findById(params.mmid)
+	   if(!multimedia)
+	   {
+		   	def msg = "Cannot find the reocording with id ${params.id}."
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_NOT_FOUND, description:msg)
+			}
+			return
+	   }
+	   
+	   def perm = permService.getPerm(multimedia)
+	   if(perm?.val <=0)
+	   {
+		   	def msg = "Permission Denied"
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.MM_PERMISSION_DENIED, description:msg)
+			}
+			return
+	   }
+	   
+	   if(params.format != "srt" && params.format !="webvtt")
+	   {
+		   def msg = "Format ${params.format} is invalid."
+		   render(contentType:"text/json"){
+			   error(stat:APIStatusCode.PARAMS_INVALID, description:msg)
+		   }
+		   return
+	   }
+	   
+	   try
+	   {
+		   String text = request.getFile('file').inputStream?.text
+		   def currentVTT = webVTTService.getWebVTTResource(String.valueOf(multimedia.id), "")
+		   if(params.format == "srt")
+		   {
+			   //check if srt file is valid
+			   webVTTService.createWebVTTResourceFromSRT(multimedia, text)
+		   }
+		   else if(params.format == "webvtt")
+		   {
+			   //check if webvtt file is valid
+			   webVTTService.createWebVTTResourceFromVTT(multimedia, text)
+		   }
+		   
+		   //delete the old transcript
+		   if(currentVTT != null)
+		   {
+			   log.debug("Delete old transcript")
+			   currentVTT.delete()   
+		   }
+		   
+		   def msg= "Transcript has been successful uploaded."
+		   render(contentType:"text/json"){
+			   success(stat:APIStatusCode.SUCCESS, description:msg)
+		   }
+		   return
+	   }
+	   catch(PlayerException pex)
+	   {
+		   def msg = pex.getMessage()
+		   render(contentType:"text/json"){
+			   error(stat:APIStatusCode.INTERNAL_ERROR, description:msg)
+		   }
+		   return
+	   }
+	   catch(Exception ex)
+	   {
+			ex.printStackTrace()   
+	   }
    }
 }

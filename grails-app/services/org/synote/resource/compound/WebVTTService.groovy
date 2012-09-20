@@ -215,8 +215,13 @@ class WebVTTService {
 		def webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
 		def anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
 		
-		String[] srtItems = srt.split("\\n\\n");
+		//both \n\n and \r\n\r\n could be separators of srt items
+		String[] srtItems1 = srt.split("\\r\\n\\r\\n");
+		String[] srtItems2 = srt.split("\\n\\n");
+		String[] srtItems = srtItems1?.size() >= srtItems2?.size()?srtItems1:srtItems2
+		
 		//println "allsize:"+srtItems.size()
+		
 		if(srtItems.length > 0)
 		{
 			def emptyLines = 0
@@ -238,12 +243,12 @@ class WebVTTService {
 				
 				if(srtContent.length == 3 || srtContent.length ==2)
 				{
-					int seqCount = Integer.parseInt(srtContent[0])-emptyLines //the index for srt
+					int seqCount = Integer.parseInt(srtContent[0]?.trim())-emptyLines //the index for srt
 					int startTime=0;
 					int endTime=0;
 					
 					//Check the srt time
-					String[] times = srtContent[1].split("-->");
+					String[] times = srtContent[1]?.trim().split("-->");
 					if(times.length == 2)
 					{
 						startTime = playerService.getSRTFormatTime(times[0]);
@@ -262,7 +267,7 @@ class WebVTTService {
 					
 					if(srtContent.length == 3)
 					{
-						String text = srtContent[2]
+						String text = srtContent[2]?.trim()
 						if(text?.trim().size() >0)
 						{
 							def cue = new WebVTTCue(
@@ -312,6 +317,144 @@ class WebVTTService {
 			{
 				throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
 			}
+		}
+	}
+	
+	/*
+	 * Create WebVTTResource from vttStr
+	 */
+	def createWebVTTResourceFromVTT(MultimediaResource multimedia,String vttStr) throws PlayerException
+	{
+		def user = securityService.getLoggedUser()
+		if(!user)
+		{
+			throw new PlayerException(APIStatusCode.AUTHENTICATION_FAILED,"User authentication failed.");
+		}
+		def owner = multimedia.owner
+		
+		def webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
+		def anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
+		
+		String[] cueItems = vttStr.split("\\r\\n\\r\\n");
+		if(cueItems.length > 0)
+		{
+			//starts from 1, because 0 is the file heading "WebVTT"
+			//if(cueItems[0] something)
+			//println "###############"
+			//println cueItems[0]
+			//println cueItems[1]
+			def emptyLines = 0
+			for(int i=1;i<cueItems.length;i++)
+			{
+				//split a srt block into 3 parts
+				//first the index
+				//second the time
+				//third the text
+				if(cueItems[i].length() == 0)
+				{
+					continue
+				}
+				String[] cueContent =cueItems[i].split("\\r\\n",3);
+				
+				if(cueContent.length == 3)
+				{
+					int seqCount = Integer.parseInt(cueContent[0]) //the index for srt
+					int startTime=0;
+					int endTime=0;
+					String cueSettings=""
+					
+					//Check the srt time
+					String[] times = cueContent[1].split("-->");
+					
+					if(times.length == 2)
+					{
+						startTime = TimeFormat.getInstance().getWebVTTFormatTime(times[0]);
+						//endTime+cueSettings, we need to separate them
+						String[] etAndSettings = times[1].trim().split("\\s",2)
+						if(etAndSettings.size() == 2)
+						{
+							//println "split 1"
+							//println "0:"+etAndSettings[0]
+							//println "1:"+etAndSettings[1]
+							if(etAndSettings[0] && etAndSettings[0].size() >0) //endtime and cueSettings both are existing
+							{
+								endTime = TimeFormat.getInstance().getWebVTTFormatTime(etAndSettings[0])
+								cueSettings = etAndSettings[1]
+							}
+							//println "st:"+startTime
+							//println "et:"+endTime
+						}
+						else if(etAndSettings.size() == 1) //only endtime
+						{
+							endTime = TimeFormat.getInstance().getWebVTTFormatTime(etAndSettings[0].trim())
+						}
+						else
+						{
+							throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft format error: The string ${times[1]} at index "+ String.valueOf(i)+" is bad formatted.");
+						}
+						if(endTime == -1 || startTime == -1 || startTime > endTime)
+						{
+							//println "1"
+							throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft format error: The time format at index "+ String.valueOf(i)+" is bad formatted.");
+						}
+					}
+					else
+					{
+						throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID, "Saved draft format error: The time format at index "+ String.valueOf(i)+" is bad formatted.");
+					}
+					
+					String text = cueContent[2]?.trim()
+					if(text?.trim().size() >0)
+					{
+						def cue = new WebVTTCue(
+							content: text.trim(),
+							owner: owner,
+							title:"WebVTTCue",
+							cueIndex:seqCount,
+							cueSettings:"")
+						webVTTResource.addToCues(cue)
+						
+						def sourceStart = seqCount
+						def targetStart = startTime
+						def targetEnd = endTime
+						anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
+								targetStart: targetStart,
+								targetEnd: targetEnd))
+					}
+					else
+						emptyLines++
+					//WebVTTCueData cue = new WebVTTCueData(seqCount, startTime, endTime, text,cueSettings,null)
+					//cueList << cue
+				}
+				else if(cueContent.length == 2) //only index and time interval, without text
+				{
+					emptyLines++
+				}
+				else
+				{
+					throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft file format error: The content at index "+ String.valueOf(i)+" is bad formatted.");
+				}
+			}
+			
+			WebVTTResource.withTransaction {status->
+				
+				if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+				{
+					throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
+				}
+				
+				if(anno.hasErrors() || !anno.save(flush:true))
+				{
+					throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
+				}
+			}
+			return
+		}
+		else
+		{
+			//Logger.debug("5 return empty transcript");
+			//createEmptyTranscript();
+			throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft file format error: The .srt file is not valid.");
 		}
 	}
    /*
@@ -654,7 +797,7 @@ class WebVTTService {
 	    //parse the cueText and get the speaker string
 	   String rel = "(<v.(.*?)>)?(.*)"
 	   Pattern p = Pattern.compile(rel,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-	   Matcher m = p.matcher(cueText);
+	   Matcher m = p.matcher(cueText.replace("</v>", ""));
 	   if (m.find())
 	   {
 		   String text = null

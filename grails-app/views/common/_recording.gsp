@@ -94,8 +94,13 @@
 	  				<li class="divider"></li>
 	  				</g:if>
 	  				<li><g:link controller="transcriptResource" action="list" id="${row.id}">Show Transcript</g:link></li>
+	  				<g:if test="${editable}">
+	  				<li><g:link controller="transcriptResource" action="upload" id="${row.id}">Upload Transcript</g:link></li>
+	  				</g:if>
 	  				<li><g:link controller="synmarkResource" action="list" id="${row.id}">Show Synmarks</g:link></li>
+	  				<!-- 
 	  				<li><g:link controller="nerd" action="listne" id="${row.id}">Review Named Entities</g:link></li>
+	  				-->
 	  				<li class="divider"></li>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
@@ -126,6 +131,9 @@
 	 	<g:if test="${viewTranscriptsEnabled}">
 	 	<div class="pull-right" style="margin-right:10px;">
 	 		<g:link class="btn pull-right" controller="transcriptResource" action="list" id="${row.id}">View Transcripts</g:link>
+	 	</div>
+	 	<div class="pull-right" style="margin-right:10px;">
+	 		<g:link class="btn pull-right btn-primary" controller="transcriptResource" action="upload" id="${row.id}">Upload Transcript</g:link>
 	 	</div>
 	 	</g:if>
 	</div>

@@ -26,10 +26,11 @@
 
 function NerdClient(sparqlEndpoint,prefixString)
 {
+	
 	this.sparqlEndpoint = sparqlEndpoint;
 	this.queryPrefixString = prefixString;
 	this.queryEntitesCountByCategory = this.queryPrefixString +
-		" SELECT ?type (COUNT(distinct ?entity) as ?eCount)"+
+		" SELECT ?type (COUNT(?entity) as ?eCount)"+
 		" WHERE"+
 		" {"+
 		"  ?anno rdf:type oac:Annotation ."+
@@ -37,6 +38,7 @@ function NerdClient(sparqlEndpoint,prefixString)
 		"   <"+resourceBaseURI+recording.id+"> ma:hasFragment ?frag."+
 		"   ?anno oac:hasBody ?entity ."+
 		"   ?entity rdf:type ?type."+
+		"   ?type rdfs:label 'nerdType'."+
 		" }"+
 		" Group by ?type";
 	this.queryReviewOptional = user.id !== -1?"OPTIONAL{"+
@@ -45,7 +47,7 @@ function NerdClient(sparqlEndpoint,prefixString)
 							"review:rating ?rating.}":""; //if not logged, don't display the review data
 							
 	this.queryListNamedEntities = this.queryPrefixString +
-		" SELECT ?idex ?entity ?label ?beginIndex ?endIndex ?type ?start ?end ?rating "+
+		" SELECT Distinct ?idex ?entity ?label ?beginIndex ?endIndex ?type ?start ?end ?rating "+
 		" WHERE"+
 		" {"+
 		"   ?anno rdf:type oac:Annotation ."+
@@ -55,7 +57,8 @@ function NerdClient(sparqlEndpoint,prefixString)
 		"   ?frag nsa:temporalStart ?start."+
 		"   ?frag nsa:temporalEnd ?end."+
 		"   ?anno oac:hasBody ?entity ."+
-		"   ?entity rdfs:label ?label."+
+		//"   ?entity rdfs:label ?label."+
+		"   ?string str:sourceString ?label."+
 		"   ?anno opmv:wasDerivedFrom ?string."+
 		"   ?string str:beginIndex ?beginIndex ."+
 		"   ?string str:endIndex ?endIndex ."+
@@ -177,6 +180,22 @@ NerdClient.prototype.getEntitesCountByCategory = function()
 						text: nerdType+ " ("+count+" entities)"
 					}).addClass("nerd-label "+highlightClass);
 					type_span.appendTo(nerd_div);
+					
+					//initialise the table
+					var nerd_table = $("#nerd_"+nerdType.toLowerCase()+"_table");
+					var row_count = parseInt(count / 2);
+					if(count%2!==0)
+					{
+						row_count++;
+					}
+					
+					for(var r=0;r<=row_count;r++)
+					{
+						var row_tr = $("<tr/>").appendTo(nerd_table);
+						//Add an empty class, when a named entity is filled in this td, we will remove this class
+						var first_td = $("<td/>").addClass("empty").appendTo(row_tr);
+						var second_td = $("<td/>").addClass("empty").appendTo(row_tr);
+					}
 		   		});
 		   },
 		   error:function(jqXHR,textStatus,errorThrown)
@@ -210,7 +229,6 @@ NerdClient.prototype.getNamedEntities = function()
 		   			var tIndex = 0;
 		   			
 		   			var newText="";
-		   			var currentRow = 0;
 		   			$.each(data.results.bindings, function(i,result){
 		   				//highlight it in transcript
 		   				while(result.beginIndex.value > charCount)
@@ -255,26 +273,14 @@ NerdClient.prototype.getNamedEntities = function()
 			   			var entity_a = $("<a/>",{text:result.label.value}).appendTo(entity_span);
 			   			nerdClient.displayDisambiguation(entity_span,result.entity.value,result.label.value,nerdType);
 				   		
-				   		var ne_tr = null;
-				   		if(i%2 === 0)
-				   		{
-				   			ne_tr = $("<tr/>",{id:"tr_"+result.idex.value}).appendTo(nerd_table);
-				   			currentRow = result.idex.value;
-				   		}
-				   		else
-				   		{
-				   			var ne_tr = $("#tr_"+currentRow);
-				   			currentRow = 0;
-				   		}
-				   		
-				   		var ne_td = $("<td/>").append(entity_span).appendTo(ne_tr);
+				   		var ne_td = nerd_table.find(".empty:first").append(entity_span).removeClass("empty");
 				   		//append the external link
 				   		if(result.entity.type === 'uri')
 				   		{
 				   			var external_a = $("<a/>",{title:result.label.value});
 				   			external_a.html("<i class='icon-link-small'></i>");
 				   			external_a.attr("href",result.entity.value);
-				   			external_a.attr("_blank");
+				   			external_a.attr("target","_blank");
 				   			external_a.appendTo(ne_td);
 				   		} 
 				   		//Add review buttons

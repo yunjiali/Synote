@@ -132,7 +132,7 @@ class NerdController {
                                    DocumentType.PLAINTEXT,
                                    LanguageType.ENGLISH,
                                    text,
-								   10L,
+								   20L,
                                    false); 
 			
 			def jsObj = JSON.parse(result)
@@ -233,7 +233,7 @@ class NerdController {
 								   DocumentType.TIMEDTEXT,
 								   languageType,
 								   text,
-								   10L,
+								   20L,
 								   false);
 			
 			def jsObj = JSON.parse(result)
@@ -241,26 +241,32 @@ class NerdController {
 			//save json to triple store
 			//println "before"
 			def extractions = nerdService.getExtractionFromJSON(result)
+			extractions.each{ex->
+				println "startNPT:"+ex.getStartNPT()
+				println "endNPT:"+ex.getEndNPT()	
+			}
 			//def synpoint = resourceService.getSynpointByResource(resource)
 			//def multimedia = resourceService.getMultimediaByResource(resource)
 			
 			def synpoints = Synpoint.findAllByAnnotation(anno)
 			
+			int countintriple = 0
 			synpoints.each{syn->
 				//TODO: if two synpoints have exactly the same start and end time
 				def exts = extractions.findAll{ ext->
-					(((int)(ext.getStartNPT()*1000)) == syn.targetStart) && 
-					(((int)(ext.getEndNPT()*1000)) == syn.targetEnd)
+					(((int)(ext.getStartNPT()*1000)) -syn.targetStart).abs() <=100 && 
+					(((int)(ext.getEndNPT()*1000)) - syn.targetEnd).abs() <=100
 				}
 				//println "exts size:"+exts?.size()
 				if(exts?.size() >0)
 				{
+					countintriple+=exts.size()
 					def cue = WebVTTCue.findByCueIndexAndWebVTTFile(syn.sourceStart,vtt)
 					linkedDataService.saveNERDToTripleStroe(exts,multimedia,cue,syn,params.extractor)
 				}
 			}
 			
-			//println "afters"
+			//println "££££££££££finalcounts:${countintriple}££££££££££"
 			render JSON.parse(result) as JSON
 			return
 		}

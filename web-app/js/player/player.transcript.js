@@ -455,6 +455,7 @@ var Transcript = Base.extend({
 		if($("#transcript_speaker").val() !== undefined && $("#transcript_speaker").val() !== "" && $.trim($("#transcript_speaker").val()).length>0)
 			cue.cueText = "<v. "+$("#transcript_speaker").val()+">";
 		cue.cueText += $("#transcript_content").val();
+		cue.cueText += "</v>";
 		cue.index = transcript.newId++;
 		
 		//Generate thumbnail picture
@@ -557,6 +558,7 @@ var Transcript = Base.extend({
 		if($("#transcript_speaker").val() !== undefined && $("#transcript_speaker").val() !== "" && $.trim($("#transcript_speaker").val()).length>0)
 			newCue.cueText = "<v. "+$("#transcript_speaker").val()+">";
 		newCue.cueText += $("#transcript_content").val();
+		newCue.cueText += "</v>";
 		//if the time has changed a lot, we need a new thumbnail picture
 		var oldMiddle = (cue.start+cue.end)/2;
 		//recording.thumbnail == null means the synote multimedia service cannot generate the thumbnail picture, so we give up

@@ -180,15 +180,21 @@ $(document).ready(function(){
 				{
 					if(data.isVideo === true)
 					{
-						$("#isVideo_true").attr("checked","checked").attr("disabled","disabled");
-						$("#isVideo_false").attr("disabled","disabled");
+						$("#isVideo_true").attr("checked","checked");//.attr("disabled","disabled");
+						//$("#isVideo_false").attr("disabled","disabled");
 					}
+					else
+					{
+						//$("#isVideo_true").attr("disabled","disabled");
+						$("#isVideo_false").attr("checked","checked");//.attr("disabled","disabled");
+					}
+					
 				}
 
 				//Add title if exists
 				if(data.title !== undefined && data.title != null)
 				{
-					$("#title").val(title);
+					$("#title").val(data.title);
 				}
 			}
 			else

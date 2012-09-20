@@ -66,7 +66,7 @@ function initSynotePlayer(recording)
     		{	
     			if(multimedia.autoStart === true)
     			{
-    				console.log("start play.");
+    				//console.log("start play.");
     				setTimeout('ctrler.start_playback()', 500);
     			}
     		}
