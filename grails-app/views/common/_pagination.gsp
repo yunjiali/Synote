@@ -24,7 +24,9 @@
 					<g:set var="pages" value="${(total-6..total)}"/>
 				</g:elseif>
 				<g:else>
-					<g:set var="pages" value="${(cPage-3..cPage+3)}"/>
+					<g:set var="startPage" value="${cPage-3}" />
+					<g:set var="endPage" value="${cPage+3}" />
+					<g:set var="pages" value="${(startPage..endPage)}"/>
 				</g:else>
 			</g:else>
 			<g:each var="i" in="${pages}">

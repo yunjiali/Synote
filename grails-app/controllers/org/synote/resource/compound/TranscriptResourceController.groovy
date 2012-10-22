@@ -123,7 +123,7 @@ class TranscriptResourceController {
    
    def handleUpload= {
 	   
-	   println "handle upload"
+	   //println "handle upload"
 	   if(!params.mmid|| !params.file || !params.format)
 	   {
 		   def msg = "Paramterms are missing."
@@ -188,6 +188,7 @@ class TranscriptResourceController {
 		   render(contentType:"text/json"){
 			   success(stat:APIStatusCode.SUCCESS, description:msg)
 		   }
+		   println "returned"
 		   return
 	   }
 	   catch(PlayerException pex)

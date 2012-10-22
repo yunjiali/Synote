@@ -111,6 +111,7 @@ class MultimediaResourceController {
 		{
 			def multimediaList = resourceService.getMultimediaAsJSON(params) as Map
 			def viewList = resourceService.getMostViewedMultimedia(5) as Map
+			//println multimediaList.total
 			return [multimediaList:multimediaList, viewList:viewList, params:params]
 		}
 		catch(org.hibernate.QueryException qex) //In case the query params not found

@@ -86,6 +86,8 @@ $(document).ready(function(){
 			complete:function(jqXHR,textStatus)
 			{
 				$("#form_loading_div").hide();
+				$("#transcriptUploadingForm_submit").button("reset");
+				
 			}
 		});
 		//Don't forget return false

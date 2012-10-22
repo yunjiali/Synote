@@ -27,12 +27,14 @@ import org.synote.resource.single.text.*
 import org.synote.resource.single.binary.*
 import org.synote.user.User
 import org.synote.user.SecurityService
+import org.synote.resource.SynotemmService
 import org.synote.annotation.Annotation
 import org.synote.annotation.ResourceAnnotation
 import org.synote.annotation.synpoint.Synpoint
 import org.synote.user.profile.UserProfile
 import org.synote.user.profile.ProfileEntry
 import org.synote.permission.PermService
+import org.synote.resource.service.ThumbnailsJob
 
 import org.synote.permission.PermissionValue
 import org.synote.permission.Permission
@@ -51,6 +53,7 @@ class WebVTTService {
 	
 	def playerService
 	def securityService
+	def synotemmService
     /*
 	* validate the vtt json objects
 	*/
@@ -317,7 +320,17 @@ class WebVTTService {
 			{
 				throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
 			}
+			
+			//If multimedia is video,generate thumbnail pictures
+			if(multimedia.isVideo == true)
+			{
+				webVTTResource.refresh()
+				ThumbnailsJob.triggerNow([vtt:webVTTResource, multimedia:multimedia])
+				//synotemmService.generateWebVTTThumbnails(webVTTResource, multimedia)
+			}
 		}
+		
+		return
 	}
 	
 	/*
@@ -339,10 +352,6 @@ class WebVTTService {
 		if(cueItems.length > 0)
 		{
 			//starts from 1, because 0 is the file heading "WebVTT"
-			//if(cueItems[0] something)
-			//println "###############"
-			//println cueItems[0]
-			//println cueItems[1]
 			def emptyLines = 0
 			for(int i=1;i<cueItems.length;i++)
 			{
@@ -373,9 +382,6 @@ class WebVTTService {
 						String[] etAndSettings = times[1].trim().split("\\s",2)
 						if(etAndSettings.size() == 2)
 						{
-							//println "split 1"
-							//println "0:"+etAndSettings[0]
-							//println "1:"+etAndSettings[1]
 							if(etAndSettings[0] && etAndSettings[0].size() >0) //endtime and cueSettings both are existing
 							{
 								endTime = TimeFormat.getInstance().getWebVTTFormatTime(etAndSettings[0])
@@ -447,7 +453,16 @@ class WebVTTService {
 				{
 					throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
 				}
+				
+				//If multimedia is video,generate thumbnail pictures
+				if(multimedia.isVideo == true)
+				{
+					webVTTResource.refresh()
+					ThumbnailsJob.triggerNow([vtt:webVTTResource, multimedia:multimedia])
+					//synotemmService.generateWebVTTThumbnails(webVTTResource, multimedia)
+				}
 			}
+			
 			return
 		}
 		else

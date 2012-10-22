@@ -68,7 +68,7 @@ class ResourceService {
 		def multimediaResourceList = databaseService.listMultimedia(gParams)
 		int count = databaseService.countMultimediaList(gParams)
 				
-		def numberOfPages = Math.ceil(count / maxRows)
+		def numberOfPages = Math.ceil(count / maxRows).toInteger()
 		
 		
 		def results = []
