@@ -59,13 +59,13 @@ class ApiController {
 			if(exception instanceof SynoteAPIException)
 			{
 				log.debug("SynoteAPIException:"+exception.getMessage())
-				println "api exception"
+				//println "api exception"
 				redirect(action:'error', params:[stat:exception.getStatusCode(),desc:exception.getMessage(),format:format])
 			}
 			else if(exception instanceof BadCredentialsException)
 			{
 				log.debug("BadCredentialsException:"+exception.getMessage())
-				println "bad creditials"
+				//println "bad creditials"
 				redirect(action:'error', params:[stat:APIStatusCode.AUTHENTICATION_FAILED,desc:exception.getMessage(),format:format])
 			}
 		}
