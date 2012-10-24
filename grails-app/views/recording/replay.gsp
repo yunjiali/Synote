@@ -232,7 +232,7 @@
 		<div id="multimedia_title_div">
 			<div>
 				<h2 id="recording_title_h2" itemprop="name">${recording.title}</h2>
-				<div id="recording_owner_div" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${g.getUserURI(recording.owner?.id.toString())}">
+				<div id="recording_owner_div" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${syn.getUserURI([userId:recording.owner?.id.toString()])}">
 					<meta itemprop="familyName" content="${recording.owner?.firstName}"/>
 					<meta itemprop="givenName" content="${recording.owner?.lastName}"/>
 					<meta itemprop="email" content="${recording.owner?.email}"/>

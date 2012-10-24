@@ -30,7 +30,7 @@
 	<div id="multimedia_player_div">
 	</div>
 </div>
-<div id="recording_owner_div" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${g.getUserURI(recording.owner?.id.toString())}">
+<div id="recording_owner_div" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${syn.getUserURI([userId:recording.owner?.id.toString()])}">
 		by <g:link controller="user" action="show" id="${recording.owner?.id}" elementId="recording_owner_a" itemprop="name">
 						${recording.owner?.userName}</g:link>
 		<meta itemprop="familyName" content="${recording.owner?.firstName}"/>
@@ -43,7 +43,7 @@
 		<g:set var="cue" value="${synpoint.annotation.source.cues?.find{it.cueIndex == synpoint.sourceStart}}" />
 		<g:set var="text" value="${cue?.content}" />
 		<div class="transcript mediaObject" 
-			itemscope="itemscope" itemtype="${mmType}" itemid="${g.getResourceURIWithFragment(recording.id.toString(),synpoint)}">
+			itemscope="itemscope" itemtype="${mmType}" itemid="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}">
 			<g:if test="${printStartTime}">
 				<span class="firstWord"><g:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}"/></span>
 			</g:if>
@@ -56,7 +56,7 @@
 		<g:set var="presentation" value="${synpoint.annotation.source}" />
 		<g:set var="slide" value="${presentation.slides.find {slide -> slide.index == synpoint.sourceStart}}" />
 		<div class="slide" class="mediaObject" 
-			itemscope="itemscope" itemtype="${mmType}" itemid="${g.getResourceURIWithFragment(recording.id.toString(),synpoint)}">
+			itemscope="itemscope" itemtype="${mmType}" itemid="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}">
 			<meta itemprop="image" content="${slide?.url}"/>
 			<div class="title">
 				<g:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
@@ -72,7 +72,7 @@
 	</g:elseif>
 	<g:elseif test="${synpoint.annotation.source.instanceOf(SynmarkResource)}">
 		<g:set var="synmark" value="${synpoint.annotation.source}" />
-		<div class="synmark mediaObject" itemscope="itemscope" itemtype="${mmType}" itemid="${g.getResourceURIWithFragment(recording.id.toString(),synpoint)}">
+		<div class="synmark mediaObject" itemscope="itemscope" itemtype="${mmType}" itemid="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}">
 			<div class="title">
 				<g:if test="${settings.timing}">
 					<g:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />

@@ -334,41 +334,41 @@ class SynoteTagLib {
 	}
 	
 	//###########################################linked data tags#######################################
-	def getUserURI = {userId->
+	def getUserURI = {attrs->
 		//println "userId:"+userId
-		if(userId)
+		if(attrs.userId)
 		{
-			return linkedDataService.getUserBaseURI()+userId
+			out << linkedDataService.getUserBaseURI()+attrs.userId
 		}
 	}
 	
-	def getUserDataURI = {userId->
-		if(userId)
+	def getUserDataURI = {attrs->
+		if(attrs.userId)
 		{
-			return linkedDataService.getUserDataBaseURI()+userId
+			out << linkedDataService.getUserDataBaseURI()+attrs.userId
 		}
 	}
 	
-	def getResourceURI = {resourceId->
-		if(resourceId)
+	def getResourceURI = {attrs->
+		if(attrs.resourceId)
 		{
-			return linkedDataService.getResourceBaseURI()+resourceId
+			out << linkedDataService.getResourceBaseURI()+attrs.resourceId
 		}
 	}
 	
-	def getResourceURIWithFragment = {resourceId,synpoint->
+	def getResourceURIWithFragment = {attrs->
 		String resourceURI = ""
-		if(resourceId)
+		if(attrs.resourceId)
 		{
-			resourceURI = linkedDataService.getResourceBaseURI()+resourceId
+			resourceURI = linkedDataService.getResourceBaseURI()+attrs.resourceId
 		}
-		return utilsService.attachFragmentToURI(resourceURI,linkedDataService.getFragmentStringFromSynpoint(synpoint))
+		out << utilsService.attachFragmentToURI(resourceURI,linkedDataService.getFragmentStringFromSynpoint(attrs.synpoint))
 	}
 	
-	def getResourceDataURI = {resourceId->
-		if(resourceId)
+	def getResourceDataURI = {attrs->
+		if(attrs.resourceId)
 		{
-			return linkedDataService.getResourceDataBaseURI()+resourceId
+			out << linkedDataService.getResourceDataBaseURI()+attrs.resourceId
 		}
 	}
 }
