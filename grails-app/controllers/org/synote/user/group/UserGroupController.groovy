@@ -1,6 +1,6 @@
 package org.synote.user.group
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 import org.synote.user.*
 import org.synote.user.group.*
 import org.synote.permission.*

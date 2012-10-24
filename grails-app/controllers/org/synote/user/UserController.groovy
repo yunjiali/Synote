@@ -1,6 +1,6 @@
 package org.synote.user
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 import org.synote.user.UserRole
 import org.synote.annotation.ResourceAnnotation;
 import org.synote.resource.compound.*
@@ -198,7 +198,7 @@ class UserController {
 			user.confirmedPassword = securityService.encodePassword(user.userName, params.confirmNewPassword)
 		}
 
-		//Because we are using Acegi. When you get UserDomain: authenticateService.userDomain(),
+		//Because we are using Acegi. When you get UserDomain: springSecurityService.userDomain(),
 		//the user object is actually locked. So we need to use another way around
 		if (user.hasErrors() || !user.merge(flush:true))
 		{

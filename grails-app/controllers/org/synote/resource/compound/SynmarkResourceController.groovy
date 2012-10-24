@@ -1,6 +1,6 @@
 package org.synote.resource.compound
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 import org.synote.resource.ResourceService
 import org.synote.permission.PermService
 

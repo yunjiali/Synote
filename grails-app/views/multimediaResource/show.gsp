@@ -79,7 +79,7 @@
 				${fieldValue(bean: multimediaResource, field: 'owner')}
 				</td>
 			</tr>
-			<g:isOwnerOrAdmin owner="${multimediaResource?.owner.id}">
+			<syn:isOwnerOrAdmin owner="${multimediaResource?.owner.id}">
 				<tr class="ui-widget-content prop">
 					<td class="name" style="vertical-align: top;">Group Permissions:</td>
 					<td>
@@ -91,33 +91,33 @@
 							</g:each>
 					</td>
 				</tr>
-			</g:isOwnerOrAdmin>
+			</syn:isOwnerOrAdmin>
 		</tbody>
 	</table>
 	<div class="prepend-top append-bottom">
 	<div class="span-20">
 		<g:link class="replay" controller="recording" action="replay_old" id="${multimediaResource?.id}" elementId="recording_replay" title="Replay recording">Replay</g:link>
 		<g:link class="print" controller="recording" action="print" id="${multimediaResource?.id}" elementId="recording_print" title="Display the recording in accessible style">Print Friendly</g:link>
-		<g:isOwnerOrAdmin owner="${multimediaResource?.owner?.id}">
+		<syn:isOwnerOrAdmin owner="${multimediaResource?.owner?.id}">
 			<g:link controller="multimediaResource" action="edit" id="${multimediaResource?.id}" elementId="recording_edit" title="Edit recording">Edit</g:link>
 			<g:link controller="multimediaResource" action="delete" id="${multimediaResource?.id}" elementId="recording_delete" onclick="return confirm('Are you sure?');" title="Delete recording">Delete</g:link>
-		</g:isOwnerOrAdmin>
+		</syn:isOwnerOrAdmin>
 	</div>
 	<div class="span-4 right" id="more_action_tab">
 		<!-- More action list -->
 		<g:if test="${multimediaResource.perm?.val >= org.synote.permission.PermissionValue.findByName('ANNOTATE').val}">
-			<g:twitterEnabled>
+			<syn:twitterEnabled>
 				<g:link class="tweetUpload" elementId="recording_twitter" controller="twitter" action="create" id="${multimediaResource?.id}" title="Upload the Tweets as Synmarks">Upload Tweets</g:link></span>
-			</g:twitterEnabled>
+			</syn:twitterEnabled>
 		</g:if>
-		<g:isOwnerOrAdmin owner="${multimediaResource?.owner?.id}">
-			<g:ibmhtsEnabled>
-				<g:ibmhtsAddingJobEnabled>
+		<syn:isOwnerOrAdmin owner="${multimediaResource?.owner?.id}">
+			<syn:ibmhtsEnabled>
+				<syn:ibmhtsAddingJobEnabled>
 					<g:link class="generateTranscript" action="generateTranscript" id="${multimediaResource?.id}"
 							title="Generate transcript using IBM Transcript service">Generate Transcript</g:link>
-				</g:ibmhtsAddingJobEnabled>
-			</g:ibmhtsEnabled>
-		</g:isOwnerOrAdmin>
+				</syn:ibmhtsAddingJobEnabled>
+			</syn:ibmhtsEnabled>
+		</syn:isOwnerOrAdmin>
 	</div>
 	</div>
 </div>

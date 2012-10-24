@@ -85,15 +85,15 @@ function joinFormatter(cellvalue,options,rowObject)
 </script>
 </head>
 <body>
-<g:isLoggedIn>
+<syn:isLoggedIn>
 	<g:set var="isLoggedIn" value="true" />
 	<div class="span-24" id="user_nav">
 		<g:render template="/common/userNav"/>
 	</div>
-</g:isLoggedIn>
-<g:isNotLoggedIn>
+</syn:isLoggedIn>
+<syn:isNotLoggedIn>
 	<g:set var="isLoggedIn" value="false" />
-</g:isNotLoggedIn>
+</syn:isNotLoggedIn>
 <div class="span-24" id="user_content">
 	<h1>Group List</h1>
 	<g:render template="/common/message" />

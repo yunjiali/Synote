@@ -37,11 +37,11 @@
 </script>
 </head>
 <body>
-<g:isLoggedIn>
+<syn:isLoggedIn>
 <div class="span-24" id="user_nav">
 	<g:render template="/common/userNav"/>
 </div>
-</g:isLoggedIn>
+</syn:isLoggedIn>
 <div class="span-24" id="user_content">
 	<div class="span-22 prepend-1 append-1">
 	<h1>Show Group</h1>

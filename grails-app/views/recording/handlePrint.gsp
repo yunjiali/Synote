@@ -13,11 +13,11 @@
 	type="image/x-icon" />
 </head>
 <body>
-<g:isLoggedIn>
+<syn:isLoggedIn>
 <div class="span-24" id="user_nav">
 	<g:render template="/common/userNav"/>
 </div>
-</g:isLoggedIn>
+</syn:isLoggedIn>
 <h1>
 ${recording.title}
 </h1>
@@ -32,13 +32,13 @@ ${recording.title}
 		<g:set var="text"
 			value="${text.replace('\r\n', '<br/>').replace('\n', '<br/>')}" />
 		<g:if test="${printStartTime}">
-			<span class="firstWord"><g:formatTime
+			<span class="firstWord"><syn:formatTime
 				startTime="${synpoint.targetStart}" /></span>
 		</g:if>
 		<span class="transcript">
 		${text}
 		</span>
-		<g:printEndTime synpoint="${synpoint}" synpoints="${synpoints}"
+		<syn:printEndTime synpoint="${synpoint}" synpoints="${synpoints}"
 			ends="${ends}" />
 		<g:set var="printStartTime" value="${false}" />
 	</g:if>
@@ -48,7 +48,7 @@ ${recording.title}
 		<g:set var="slide"
 			value="${presentation.slides.find {slide -> slide.index == synpoint.sourceStart}}" />
 		<div class="slide">
-		<div class="title"><g:formatTime
+		<div class="title"><syn:formatTime
 			startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
 		<g:if test="${presentation.title}">
 			${presentation.title} -
@@ -68,7 +68,7 @@ ${recording.title}
 		<g:set var="synmark" value="${synpoint.annotation.source}" />
 		<div class="synmark">
 		<div class="title"><g:if test="${settings.timing}">
-			<g:formatTime startTime="${synpoint.targetStart}"
+			<syn:formatTime startTime="${synpoint.targetStart}"
 				endTime="${synpoint.targetEnd}" />
 		</g:if> <g:if test="${settings.title}">
 			<g:if test="${synmark.title}">

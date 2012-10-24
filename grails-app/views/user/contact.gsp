@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="body" itemscope itemtype="http://schema.org/ContactPage">
-	<g:getContentFromConfig name="org.synote.metadata.contact.page.content"/>
+	<syn:getContentFromConfig name="org.synote.metadata.contact.page.content"/>
 	
 </body>
 </html>

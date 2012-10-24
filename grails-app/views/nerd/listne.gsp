@@ -82,7 +82,7 @@ $(document).ready(function(){
 			<hr/>
 			<h3>Content Preview</h3>
 			<div>
-				<g:printFullTextFromResource resource="${res}"/>
+				<syn:printFullTextFromResource resource="${res}"/>
 			</div>
 			<br/>
 			<div>

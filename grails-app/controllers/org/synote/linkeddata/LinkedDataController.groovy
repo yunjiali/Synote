@@ -87,7 +87,7 @@ class LinkedDataController {
 			{
 				def redirectURL = null
 				//if request for webvtt, we can just return the webvtt file
-				withFormat{
+				request.withFormat{
 					vtt{
 						if(resource.instanceOf(WebVTTResource) || resource.instanceOf(WebVTTCue))
 						{
@@ -151,7 +151,7 @@ class LinkedDataController {
 			{
 				def redirectURL = null
 				//if request for webvtt, we can just return the webvtt file
-				withFormat{
+				request.withFormat{
 					rdf {
 						//303 Redirect to data
 						redirectURL = g.createLink(action:'annotationsData',id:params.id).toString()
@@ -195,7 +195,7 @@ class LinkedDataController {
 			def redirectURL = null
 			
 			//if request for webvtt, we can just return the webvtt file
-			withFormat{
+			request.withFormat{
 				rdf {
 					//303 Redirect to data
 					redirectURL = g.createLink(action:'usersData',id:params.id).toString()
@@ -318,7 +318,7 @@ class LinkedDataController {
 		//Currently, no TextResource here
 		if(resource.instanceOf(MultimediaResource) || resource.instanceOf(SynmarkResource) || resource.instanceOf(WebVTTResource))
 		{
-			withFormat{
+			request.withFormat{
 				html{
 					//println "here1"
 					//println resource.toNIFString()

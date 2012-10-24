@@ -33,13 +33,13 @@
 			<label for="shared">Shared:</label>
 			<g:checkBox name="shared" value="${userGroup?.shared}" title="Checked if it is shared"></g:checkBox>
 		</div>
-		<g:isAdminLoggedIn>
+		<syn:isAdminLoggedIn>
 		<div class="ctrlHolder inlineLabels">
 			<label for="ownerUserName">Owner:</label>
 			<input type="text" id="ownerUserName" name="ownerUserName"
 						value="${ownerUserName}" />
 		</div>
-		</g:isAdminLoggedIn>
+		</syn:isAdminLoggedIn>
 		<div class="prepend-top append-bottom">
 			<input id="groupCreateForm_submit" type="submit" value="Create" />
 			<input id="groupCreateForm_reset" type="reset" value="Reset" />

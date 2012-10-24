@@ -3,6 +3,9 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir	= "target/test-reports"
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+//ivy cache location
+grails.dependency.cache.dir = "${userHome}/.grails/ivy-cache/${grailsVersion}" 
+
 //copy the jena configuration files to the war
 //grails.war.resources = { stagingDir, args ->
 //	copy(file: "sdb-mysql-innodb-prod.ttl", tofile: "${stagingDir}/sdb-mysql-innodb-prod.ttl")

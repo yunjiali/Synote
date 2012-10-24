@@ -2,11 +2,13 @@ package org.synote.user
 
 import org.synote.user.User
 import org.synote.user.UserRole
-import org.synote.user.SynoteAuthenticationProvider
+import org.synote.user.UserRolePeople
 import org.synote.config.ConfigurationService
 
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken as AuthToken
-import org.springframework.security.context.SecurityContextHolder as SCH
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken as AuthToken
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils as SSU
+
 
 /**
  * Registration controller.
@@ -16,8 +18,8 @@ class RegisterController {
 	
 	def beforeInterceptor = [action: this.&allowRegistering]
 	
-	def authenticateService
-	def synoteAuthenticationProvider
+	def springSecurityService
+	//def synoteAuthenticationProvider
 	def emailerService
 	def configurationService
 
@@ -38,7 +40,7 @@ class RegisterController {
 	def index = {
 
 		// skip if already logged in
-		if (authenticateService.isLoggedIn()) {
+		if (springSecurityService.isLoggedIn()) {
 			redirect(controller:"user", action:"index")
 			return
 		}
@@ -59,7 +61,7 @@ class RegisterController {
 	def save = {
 
 		// skip if already logged in
-		if (authenticateService.isLoggedIn()) {
+		if (springSecurityService.isLoggedIn()) {
 			redirect(controller:"user", action:"index")
 			return
 		}
@@ -67,8 +69,9 @@ class RegisterController {
 		def person = new User()
 		person.properties = params
 
-		def config = authenticateService.securityConfig
-		def defaultRole = config.security.defaultRole
+		def config = SSU.getSecurityConfig()
+		//currently there is only onedefautrole
+		def defaultRole = SSU.getSecurityConfig().ui.register.defaultRoleNames[0]
 
 		if(!params.termsAndConditions)
 		{
@@ -77,11 +80,13 @@ class RegisterController {
 			return
 		}
 		//check if the registration username has already existed
+		//println 'User name ${params.userName} has already been taken. Please choose another user name1.'
+		//println "User name ${params.userName} has already been taken. Please choose another user name2."
 		def p = User.findByUserName(params.userName)
 		if(p != null)
 		{
 			person.password = ''
-			flash.error = 'User name ${params.userName} has already been taken. Please choose another user name.'
+			flash.error = "User name ${params.userName} has already been taken. Please choose another user name."
 			render view: 'index', model: [user: person]
 			return
 		}
@@ -110,42 +115,43 @@ class RegisterController {
 			return
 		}
 
-		def pass = authenticateService.encodePassword(person.userName.toLowerCase()+person.password)
+		def pass = springSecurityService.encodePassword(person.userName.toLowerCase()+person.password)
 		person.password = pass
 		person.enabled = true
 		person.lastLogin = new Date()
 		if (person.save()) {
-			role.addToPeople(person)
-			if (config.security.useMail) 
-			{
-				String emailContent = """You have signed up for an account at:
+			UserRolePeople.create person,role
+			//Don't use email
+			//if (.security.useMail) 
+			//{
+			//	String emailContent = """You have signed up for an account at:
 
-				 ${request.scheme}://${request.serverName}:${request.serverPort}${request.contextPath}
-				
-				 Here are the details of your account:
-				 -------------------------------------
-				 LoginName: ${person.username}
-				 Email: ${person.email}
-				 Full Name: ${person.userRealName}
-				 Password: ${params.passwd}
-				"""
+			//	 ${request.scheme}://${request.serverName}:${request.serverPort}${request.contextPath}
+			//	
+			//	 Here are the details of your account:
+			//	 -------------------------------------
+			//	 LoginName: ${person.username}
+			//	 Email: ${person.email}
+			//	 Full Name: ${person.userRealName}
+			//	 Password: ${params.passwd}
+			//	"""
 
-				def email = [
-					to: [person.email], // 'to' expects a List, NOT a single email address
-					subject: "[${request.contextPath}] Account Signed Up",
-					text: emailContent // 'text' is the email body
-				]
-				emailerService.sendEmails([email])
-			}
+			//	def email = [
+			//		to: [person.email], // 'to' expects a List, NOT a single email address
+			//		subject: "[${request.contextPath}] Account Signed Up",
+			//		text: emailContent // 'text' is the email body
+			//	]
+			//	emailerService.sendEmails([email])
+			//}
 
 			person.save(flush: true)
 
-			def auth = new AuthToken(person.userName, params.password)
-			def authtoken = synoteAuthenticationProvider.authenticate(auth)
-			SCH.context.authentication = authtoken
+			//def auth = new AuthToken(person.userName, params.password)
+			//def authtoken = synoteAuthenticationProvider.authenticate(auth)
+			//SCH.context.authentication = authtoken
 			
-			flash.message="User ${person.userName} was successfully registered."
-			redirect(controller:"user", action:"index")
+			flash.message="User ${person.userName} was successfully registered. Please Login."
+			redirect(controller:"login", action:"auth")
 			return
 		}
 		else {

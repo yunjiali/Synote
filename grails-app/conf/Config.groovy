@@ -113,8 +113,8 @@ log4j = {
 				//,'org.codehaus.groovy.grails.web.servlet',  //  controllers
 		warn   'org.mortbay.log' 
 		//info 	'org.synote.integration.ibmhts'
-		debug   'grails.app.service.org.synote.user.SecurityService',
-				'grails.app.service.org.synote.linkeddata.LinkedDataService',
+		debug   'grails.app.services.org.synote.user.SecurityService',
+				'grails.app.services.org.synote.linkeddata.LinkedDataService',
 				//'org.synote.user.SynoteLdapAuthenticator',
 			   //'groovy.grails.plugins.springsecurity.GrailsDaoImpl',
 		       //'org.synote.user.SynoteLdapAuthenticationProcessingFilter',
@@ -123,16 +123,16 @@ log4j = {
 			   'org.synote.user.SynoteAPITokenFilter',
 			   'org.synote.user.SynoteAPILoginFilter',
 			   'org.synote.search.GoogleCrawlFilter',
-		       'grails.app.service.org.synote.player.server.PlayerService',
-			   'grails.app.service.org.synote.resource.ResourceService',
-		       'grails.app.service.org.synote.search.resource.ResourceSearchService',
-		       'grails.app.service.org.synote.integration.ibmhts.IBMTransJobService',
-			   'grails.app.service.org.synote.search.sitemap.SitemapService',
-			   'grails.app.service.org.synote.linkeddata.DataDumpService',
-			   'grails.app.controller.org.synote.resource.compound.MultimediaController',
-			   'grails.app.controller.org.synote.linkeddata.LinkedDataController',
-			   'grails.app.controller.org.synote.user.admin.AdminController',
-			   'grails.app.controller.org.synote.api.ApiController',
+		       'grails.app.services.org.synote.player.server.PlayerService',
+			   'grails.app.services.org.synote.resource.ResourceService',
+		       'grails.app.services.org.synote.search.resource.ResourceSearchService',
+		       'grails.app.services.org.synote.integration.ibmhts.IBMTransJobService',
+			   'grails.app.services.org.synote.search.sitemap.SitemapService',
+			   'grails.app.services.org.synote.linkeddata.DataDumpService',
+			   'grails.app.controllers.org.synote.resource.compound.MultimediaController',
+			   'grails.app.controllers.org.synote.linkeddata.LinkedDataController',
+			   'grails.app.controllers.org.synote.user.admin.AdminController',
+			   'grails.app.controllers.org.synote.api.ApiController',
 		       'grails.app.task'
 	}
 	
@@ -187,7 +187,37 @@ log4j = {
 	}
 }
 
+//log4j.logger.org.springframework.security='off,stdout'
+
+//spring security configuration
+grails.plugins.springsecurity.securityConfigType = "Annotation"
+grails.plugins.springsecurity.userLookup.userDomainClassName = "org.synote.user.User"
+grails.plugins.springsecurity.userLookup.usernamePropertyName='userName'
+grails.plugins.springsecurity.userLookup.passwordPropertyName = 'password'
+grails.plugins.springsecurity.authority.className = "org.synote.user.UserRole"
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.synote.user.UserRolePeople'
+grails.plugins.springsecurity.ui.register.defaultRoleNames=['ROLE_NORMAL']
+grails.plugins.springsecurity.useSecurityEventListener = true
+grails.plugins.springsecurity.password.algorithm='SHA-1'
+
+//TODO: securityService passwordEncoder
+//@Secure annotation
+
+//useLdap = true
+//ldapRetrieveDatabaseRoles = true
+//ldapRetrieveGroupRoles = false
+//ldapServer = 'ldaps://nlbldap.soton.ac.uk:636/'
+//ldapSearchBase='ou=user,dc=soton,dc=ac,dc=uk'
+//ldapSearchFilter='(sAMAccountName={0})'
+//ldapUsePassword=false
+
+grails.plugins.springsecurity.providerNames=['synoteAuthenticationProvider',
+			   'anonymousAuthenticationProvider',
+			   'rememberMeAuthenticationProvider']
+
+grails.plugins.springsecurity.successHandler.defaultTargetUrl='/login/authSuccess'
+grails.plugins.springsecurity.successHandler.alwaysUseDefaultTargetUrl=true
+grails.plugins.springsecurity.logout.afterLogoutUrl='/login/index'
 
      
 
-//log4j.logger.org.springframework.security='off,stdout'

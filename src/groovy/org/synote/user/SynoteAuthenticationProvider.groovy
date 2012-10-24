@@ -1,10 +1,10 @@
 package org.synote.user;
 
-import org.springframework.security.*
-import org.springframework.security.providers.*
-import org.springframework.security.userdetails.*
-import org.springframework.security.context.*
-import org.codehaus.groovy.grails.plugins.springsecurity.GrailsUserImpl
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.core.Authentication
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.BadCredentialsException
+
 import org.synote.user.User
 import org.synote.user.SecurityService
 import org.apache.log4j.Logger;
@@ -17,9 +17,11 @@ import org.apache.log4j.Logger;
  */
 class SynoteAuthenticationProvider implements AuthenticationProvider{
 	
-	def authenticateService
+	def springSecurityService
+	def userDetailsService
 	private Logger log = Logger.getLogger(getClass());
 	
+	@Override
 	Authentication authenticate(Authentication synoteAuth) {
 		
 		User.withTransaction { status ->
@@ -28,16 +30,11 @@ class SynoteAuthenticationProvider implements AuthenticationProvider{
 			if(user) {
 				//if(synoteAuth instanceof SynoteAPIAuthentication)
 				// then do some that for api authentication if necessary
-				if (user?.password == authenticateService.encodePassword(synoteAuth.getPrincipal().toLowerCase()+synoteAuth.getCredentials())) 
+				if (user?.password == springSecurityService.encodePassword(synoteAuth.getPrincipal().toLowerCase()+synoteAuth.getCredentials())) 
 				{
-					GrantedAuthorityImpl[] authorities = 
-						user.authorities.collect 
-						{
-							new GrantedAuthorityImpl(it.authority)
-						}
-					def userDetails = new GrailsUserImpl(user.userName, user.password, true, true, true, true, authorities, user)
-					def token = new UsernamePasswordAuthenticationToken(userDetails, user.password, userDetails.authorities)
-					token.details = synoteAuth.details
+					def userDetails = userDetailsService.loadUserByUsername(user.userName)
+					def token = new UsernamePasswordAuthenticationToken(userDetails, user.password, userDetails.getAuthorities())
+					//token.details = synoteAuth.details
 					
 					return token
 				}else 
@@ -49,7 +46,9 @@ class SynoteAuthenticationProvider implements AuthenticationProvider{
 		}
 	}
 	
-	boolean supports(Class authentication) {
-		return true
-	}
+	@Override
+	public boolean supports(Class<? extends Object> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class)
+    }
+
 }

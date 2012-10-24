@@ -44,7 +44,7 @@ import org.synote.player.client.UserData
 import org.synote.player.client.WebVTTCueData
 import org.synote.player.client.WebVTTData
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 class RecordingController {
 

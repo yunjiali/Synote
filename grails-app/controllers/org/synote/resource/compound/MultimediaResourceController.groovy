@@ -29,7 +29,6 @@ import org.synote.integration.ibmhts.exception.IBMTransJobException
 import org.synote.resource.exception.ResourceException
 import org.synote.annotation.exception.AnnotationException
 import org.synote.exception.SynoteException
-import org.synote.integration.entermedia.EnterMediaService
 import org.synote.api.APIStatusCode
 import org.synote.config.ConfigurationService
 
@@ -48,7 +47,6 @@ class MultimediaResourceController {
 	def regExService
 	def databaseService
 	def messageService
-	def enterMediaService
 	def resourceService
 	def configurationService
 	def webVTTService

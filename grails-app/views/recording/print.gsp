@@ -112,11 +112,11 @@
 	</script>
 </head>
 <body>
-<g:isLoggedIn>
+<syn:isLoggedIn>
 <div class="span-24" id="user_nav">
 	<g:render template="/common/userNav"/>
 </div>
-</g:isLoggedIn>
+</syn:isLoggedIn>
 <div class="span-22 prepend-1 append-1" itemscope="itemscope" itemtype="http://schema.org/Table">
 	<h1><g:message code="org.synote.player.server.recording.print.title" /></h1>
 	<g:render template="/common/message" /> 
@@ -155,7 +155,7 @@
 							<g:each var="owner" in="${owners}">
 								<g:if test="${index % 5 == 0}">
 									<tr></g:if>
-									<td class="label"><label for="synmarked-user-${owner.id}"><g:formatOwner owner="${owner}"/></label></td>
+									<td class="label"><label for="synmarked-user-${owner.id}"><syn:formatOwner owner="${owner}"/></label></td>
 									<td><g:checkBox name="synmarked-user-${owner.id}" value="${false}"/></td>
 									<g:set var="index" value="${index + 1}"/>
 							</g:each>

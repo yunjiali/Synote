@@ -1,8 +1,8 @@
 package org.synote.api
 
 import grails.converters.*
-import org.springframework.security.context.SecurityContextHolder as SCH
-import org.springframework.security.BadCredentialsException
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.security.authentication.BadCredentialsException
 import org.synote.user.SecurityService
 import org.synote.user.UserAPIKey
 import org.synote.user.User
@@ -45,7 +45,7 @@ class ApiController {
 	def beforeInterceptor = [action:this.&auth, except:['error']]
 	//def afterInterceptor = [action:this.&signout, except:['listAllTags']]
 	def securityService
-	def authenticationService
+	def springSecurityService
 	def playerService
 	def permService
 	def databaseService

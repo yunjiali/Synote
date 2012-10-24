@@ -29,7 +29,7 @@ import org.synote.player.client.TranscriptDataSimple
 import org.synote.player.client.TranscriptItemData
 import org.synote.player.client.TranscriptSynpoint
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_ADMIN'])
 class AdminController {

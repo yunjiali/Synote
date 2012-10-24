@@ -1,12 +1,13 @@
 package org.synote.user;
 
-import org.springframework.context.*
-import org.springframework.security.event.authentication.*
-import org.springframework.security.event.authorization.AbstractAuthorizationEvent
+import org.springframework.context.ApplicationListener
+import org.springframework.security.authentication.event.*
+import org.springframework.security.core.Authentication
+
 import org.synote.user.User
 import org.synote.user.SecurityService
 
-class SynoteSecurityEventListener implements ApplicationListener{
+class SynoteSecurityEventListener implements ApplicationListener<AbstractAuthenticationEvent>{
 	
 	def securityService
 	/**
@@ -14,32 +15,18 @@ class SynoteSecurityEventListener implements ApplicationListener{
 	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(
 	 *     org.springframework.context.ApplicationEvent)
 	 */
-	void onApplicationEvent(final ApplicationEvent e) 
+	void onApplicationEvent(AbstractAuthenticationEvent event) 
 	{
-		if (e instanceof AbstractAuthenticationEvent) 
-		{
-			if (e instanceof InteractiveAuthenticationSuccessEvent) {
-				// handle InteractiveAuthenticationSuccessEvent
-			}
-			else if (e instanceof AbstractAuthenticationFailureEvent) {
-				// handle AbstractAuthenticationFailureEvent
-			}
-			else if (e instanceof AuthenticationSuccessEvent) {
-				def user = User.findByUserName(e.authentication.principal.username)
-				if(user)
-				{
-					securityService.saveLoginDate(user)
+		User.withTransaction { status ->
+			event.authentication.with {
+				if (event instanceof AuthenticationSuccessEvent) {
+					def user = User.findByUserName(event.authentication.principal.username)
+					if(user)
+					{
+						securityService.saveLoginDate(user)
+					}
 				}
 			}
-			else if (e instanceof AuthenticationSwitchUserEvent) {
-				// handle AuthenticationSwitchUserEvent
-			}
-			else {
-				// handle other authentication event
-			}
-		}
-		else if (e instanceof AbstractAuthorizationEvent) {
-			// handle authorization event
-		}
+		 }
 	}
 }

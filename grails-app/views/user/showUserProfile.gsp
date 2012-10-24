@@ -10,9 +10,9 @@
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:isLoggedIn>
+			<syn:isLoggedIn>
 				<g:render template="/common/userNav" model="['active':'user_profile']"/>
-			</g:isLoggedIn>
+			</syn:isLoggedIn>
 		</div>
 		<div class="span10" itemscope="itemscope" itemtype="http://schema.org/Table">
 			<h1>${userInstance.userName}'s Profile</h1>
@@ -56,10 +56,10 @@
 				<div class="span6 offset1">
 					<g:link class="btn" controller='user' action='editUserProfile' elementId="user_profile_edit">
 					Edit your profile</g:link>
-					<g:allowRegistering>
+					<syn:allowRegistering>
 						<g:link class="btn btn-warning" controller='user' action='changePassword' elementId="user_profile_change_password">
 						Change password</g:link>
-					</g:allowRegistering>
+					</syn:allowRegistering>
 				</div>
 			</div>
 		</div>

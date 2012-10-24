@@ -10,9 +10,9 @@
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:isLoggedIn>
+			<syn:isLoggedIn>
 				<g:render template="/common/userNav" model="['active':'user_profile']"/>
-			</g:isLoggedIn>
+			</syn:isLoggedIn>
 		</div>
 		<div class="span10" itemscope="itemscope" itemtype="http://schema.org/Table">
 			<h1><g:message code="org.synote.user.showUserProfile.title" /></h1>

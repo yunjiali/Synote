@@ -263,7 +263,7 @@ obligations under this Agreement may be assigned to a subsequent owner
 or operator of the Service in a merger, acquisition or sale of all or
 substantially all of the University of Southampton's assets.</p>
 -->
-<g:getContentFromConfig name="org.synote.metadata.legal.termsAndConditions"/>
+<syn:getContentFromConfig name="org.synote.metadata.legal.termsAndConditions"/>
 </div>
 </body>
 </html>

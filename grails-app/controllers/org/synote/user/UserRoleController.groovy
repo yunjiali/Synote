@@ -2,7 +2,7 @@ package org.synote.user
 
 import org.synote.user.UserRole
 //import org.synote.user.admin.Requestmap
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 /**
  * UserRole Controller.
@@ -54,7 +54,7 @@ class UserRoleController {
 			return
 		}
 
-		authenticateService.deleteRole(authority)
+		springSecurityService.deleteRole(authority)
 
 		flash.message = "UserRole $params.id deleted."
 		redirect action: list
@@ -94,8 +94,8 @@ class UserRoleController {
 			return
 		}
 
-		if (authenticateService.updateRole(authority, params)) {
-			authenticateService.clearCachedRequestmaps()
+		if (springSecurityService.updateRole(authority, params)) {
+			springSecurityService.clearCachedRequestmaps()
 			redirect action: show, id: authority.id
 		}
 		else {

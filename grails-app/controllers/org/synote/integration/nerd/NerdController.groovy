@@ -1,6 +1,6 @@
 package org.synote.integration.nerd
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 import org.synote.resource.compound.*
 import org.synote.resource.Resource
 import org.synote.resource.single.text.TagResource

@@ -149,11 +149,11 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#">Named Entities Preview</a>
-				<g:isLoggedIn>
+				<syn:isLoggedIn>
 				<div class="btn-group pull-right">
 					<g:link class="btn btn-success" controller="user" action="showUserProfile" title="Show user profile">
 						<i class="icon-user icon-white"></i>
-						<g:loggedInUsername />
+						<syn:loggedInUsername />
 					</g:link>
 					<a href="#" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
 						<span class="caret"></span>
@@ -161,9 +161,9 @@
 					<ul class="dropdown-menu">
 				    	<li><g:link controller="user" action="showUserProfile" title="Show user profile">My Profile</g:link></li>
 				    	<li><g:link controller="user" action="index" title="Edit my profile">My Synote</g:link></li>
-				    	<g:isAdminLoggedIn>
+				    	<syn:isAdminLoggedIn>
 						<li><g:link controller="admin" action="index" title="Administration">Administration</g:link></li>
-						</g:isAdminLoggedIn>
+						</syn:isAdminLoggedIn>
 				    	<li class="divider"></li>
 				    	<li>
 		    				<g:link controller="multimediaResource" action="create" title="create a recording">
@@ -177,17 +177,17 @@
 				        <li><g:link controller="logout" action="index" title="Log out">Log out</g:link></li>
            			</ul>
 				</div>
-				</g:isLoggedIn>
-				<g:isNotLoggedIn>
+				</syn:isLoggedIn>
+				<syn:isNotLoggedIn>
 				<div class="btn-group pull-right">
 					<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" title="Login to make annotations" class="btn btn-primary">
 							Login</g:link>
-					<g:allowRegistering>
+					<syn:allowRegistering>
 						<g:link controller="register" action="index" title="Register" class="btn btn-success hidden-phone">
 							 Register</g:link>
-					</g:allowRegistering>
+					</syn:allowRegistering>
 				</div>
-				</g:isNotLoggedIn>
+				</syn:isNotLoggedIn>
 				<div class="btn-group nav pull-right">
 					<button id="nav_play_btn" class="btn" title="play"><i class="icon-play"></i></button>
 					<button id="nav_pause_btn" class="btn" title="pause"><i class="icon-pause"></i></button>
@@ -230,7 +230,7 @@
 					<meta itemprop="email" content="${recording.owner?.email}"/>
 					<span class="owner-info">by <g:link controller="user" action="show" id="${recording.owner?.id}" elementId="recording_owner_a" itemprop="name">
 						${recording.owner?.userName}</g:link> |</span>
-	  				<span class="datetime-info" itemprop="dateCreated">Created at <g:printSQLTime datetime="${recording.dateCreated}"/> |</span>
+	  				<span class="datetime-info" itemprop="dateCreated">Created at <syn:printSQLTime datetime="${recording.dateCreated}"/> |</span>
 	  				<span class="datetime-info">${views} Views</span>
 				</div>
 			</div>
@@ -420,7 +420,7 @@
 			</div>
 		</div>
 	</div>
-	</div><!-- container for content-->
+	<!-- container for content-->
 	<g:render template="/common/footer"/>
 </body>
 </html>

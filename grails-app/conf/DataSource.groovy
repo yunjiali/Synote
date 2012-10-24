@@ -23,7 +23,7 @@ environments {
 	test {
 		dataSource {
 //			dbCreate = "create-drop"
-			url = "jdbc:mysql://localhost/synote_aluiar"
+			url = "jdbc:mysql://localhost/synote"
 		}
 	}
 	production {

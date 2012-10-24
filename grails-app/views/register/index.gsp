@@ -71,7 +71,7 @@
 					    	</div>
 					    </div>
 					</div>
-					<g:captchaEnabled>
+					<syn:captchaEnabled>
 					<div class="control-group">
 					    <label for="captcha" class="control-label"><b><em>*</em>Enter Code:</b></label>
 					    <div class="controls">
@@ -79,7 +79,7 @@
 							<p class="help-block"><img src="${createLink(controller:'captcha', action:'index')}" align="absmiddle" /></p>
 					    </div>
 					</div>
-					</g:captchaEnabled>
+					</syn:captchaEnabled>
 					<div class="control-group">
 			    		<label class="checkbox" for="termsAndConditions">
 			    			<input type="checkbox" name="termsAndConditions" id="termsAndConditions" class="required"/>

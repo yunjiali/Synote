@@ -16,6 +16,8 @@ import java.util.GregorianCalendar
 import org.synote.analysis.Views
 
 class SynoteTagLib {
+	static namespace = "syn"
+	
 	def securityService
 	def permService
 	def configurationService
@@ -31,6 +33,12 @@ class SynoteTagLib {
 		if(securityService.isLoggedIn())
 			out << body()
 	}
+	
+	def isNotLoggedIn = {attrs,body->
+		if(securityService.isNotLoggedIn())	
+			out << body()
+	}
+	
 	def isNormalLoggedIn = {attrs, body ->
 		if (securityService.isNormalLoggedIn())
 		out << body()
@@ -68,6 +76,10 @@ class SynoteTagLib {
 		out << securityService.getLoggedUser()?.id
 	}
 	
+	def loggedInUsername = {
+		out << securityService.getLoggedUser()?.userName	
+	}
+	
 	def formatOwner = {attrs ->
 		def owner = attrs.owner
 		
@@ -88,14 +100,14 @@ class SynoteTagLib {
 	}
 	
 	def formatTime = {attrs ->
-		out << formatTime(attrs.startTime, attrs.endTime)
+		out << formatTimePrivate(attrs.startTime, attrs.endTime)
 	}
 	
 	def printTime = { attrs ->
 		try
 		{
 			int time = Integer.parseInt(attrs.time.toString())
-			out << formatTime(time)
+			out << formatTimePrivate(time)
 		}
 		catch(NumberFormatException nex)
 		{
@@ -110,7 +122,7 @@ class SynoteTagLib {
 		
 		attrs.ends.each {time ->
 			if (synpoint.targetStart < time && (index + 1 == synpoints.size() || synpoints[index + 1].targetStart >= time))
-			out << formatTime(time, null)
+			out << formatTimePrivate(time, null)
 		}
 	}
 	
@@ -278,19 +290,19 @@ class SynoteTagLib {
 		}
 	}
 	
-	private String formatTime(Integer start, Integer end)
+	private String formatTimePrivate(Integer start, Integer end)
 	{
 		def result = '['
 		
 		if (start)
-		result += formatTime(start)
+		result += formatTimePrivate(start)
 		else
-		result += formatTime(0)
+		result += formatTimePrivate(0)
 		
 		if (end)
 		{
 			result += ' - '
-			result += formatTime(end)
+			result += formatTimePrivate(end)
 		}
 		
 		result += ']'
@@ -298,7 +310,7 @@ class SynoteTagLib {
 		return result
 	}
 	
-	private String formatTime(int time)
+	private String formatTimePrivate(int time)
 	{
 		int seconds = time / 1000;
 		

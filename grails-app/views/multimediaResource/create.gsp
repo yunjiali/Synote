@@ -22,15 +22,15 @@
 			
 			<g:link class="user" action="createyt" title="Youtube">
 				<img src="${resource(dir: 'images/skin', file: 'youtube_64.png')}" alt="youtube"/><br />YouTube</g:link>
-			<g:fileUploadEnabled>
+			<syn:fileUploadEnabled>
 			<g:link class="user" action="createlocal" title="Upload from local disk">
 				<img src="${resource(dir: 'images/skin', file: 'harddisk_64.png')}" alt="upload"/><br />Local Disk</g:link>
-			</g:fileUploadEnabled>
-			<g:viascribeXmlUploadEnabled>
+			</syn:fileUploadEnabled>
+			<syn:viascribeXmlUploadEnabled>
 			<g:link class="user" action="createxml" title="Synchronised XML">
 				<img src="${resource(dir: 'images/skin', file: 'xml_64.png')}" alt="synchronised xml"/><br />Synchronised XML</g:link>
+			</syn:viascribeXmlUploadEnabled>
 			</div>
-			</g:viascribeXmlUploadEnabled>
 		</div>
 	</div>
 </div>

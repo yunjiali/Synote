@@ -83,7 +83,7 @@
 		<g:if test="${perm?.val >= PermissionValue.findByName('WRITE').val && iBMTransJob.status == IBMTransJobStatus.DONE.value()}">
 			<span class="link"><a target="_blank" href="${editUrl}" class="edit" title="Edit Transcript">Edit Transcript</a></span>
 		</g:if> 
-		<g:isOwnerOrAdmin owner="${iBMTransJob.owner.id}">
+		<syn:isOwnerOrAdmin owner="${iBMTransJob.owner.id}">
 			<g:if test="${iBMTransJob.status == IBMTransJobStatus.DONE.value()}">
 				<span class="link">
 					<g:if test="${iBMTransJob.saved}">
@@ -100,7 +100,7 @@
 				<g:link action="delete" onclick="return confirm('Are you sure?');" class="delete"
 				title="Delete Job" id="${iBMTransJob?.id}">Delete Job</g:link>
 			</span>
-		</g:isOwnerOrAdmin>
+		</syn:isOwnerOrAdmin>
 	</g:if>
 	<g:else>
 		<span style="color:red"><g:message code="org.synote.integration.ibmhts.show.downtime" /></span>

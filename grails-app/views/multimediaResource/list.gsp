@@ -30,20 +30,20 @@
 									<option value="title">Title</option>
 								</g:else>
 								<g:if test="${params.sidx =='perm'}">
-									<g:isLoggedIn>
+									<syn:isLoggedIn>
 										<option value="user_perm_val" selected="selected">Permission</option>
-									</g:isLoggedIn>
-									<g:isNotLoggedIn>
+									</syn:isLoggedIn>
+									<syn:isNotLoggedIn>
 										<option value="public_perm_val" selected="selected">Permission</option>
-									</g:isNotLoggedIn>
+									</syn:isNotLoggedIn>
 								</g:if>
 								<g:else>
-									<g:isLoggedIn>
+									<syn:isLoggedIn>
 										<option value="user_perm_val">Permission</option>
-									</g:isLoggedIn>
-									<g:isNotLoggedIn>
+									</syn:isLoggedIn>
+									<syn:isNotLoggedIn>
 										<option value="public_perm_val">Permission</option>
-									</g:isNotLoggedIn>
+									</syn:isNotLoggedIn>
 								</g:else>
 							</select>
 							<input type="submit" class="btn" value="Submit" />

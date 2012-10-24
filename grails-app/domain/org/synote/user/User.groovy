@@ -10,7 +10,8 @@ import org.synote.annotation.Annotation
  */
 class User {
 	
-	static transients = ['confirmedPassword']
+	static transients = ['confirmedPassword','accountExpired','accountLocked','passwordExpired','springSecurityService']
+	def springSecurityService
 	                     
 	static hasMany = [authorities: UserRole,memberOf: UserGroupMember, groups: UserGroup, resources: Resource, annotations: Annotation]
 	static belongsTo = UserRole
@@ -26,6 +27,10 @@ class User {
 	String password
 	/** enabled*/
 	boolean enabled //DB
+	
+	boolean accountExpired =false
+	boolean accountLocked =false
+	boolean passwordExpired=false
 
 	/** email address*/
 	String email
@@ -68,6 +73,21 @@ class User {
 
 	String toString()
 	{
-		return "$userName"
+		return "${userName}"
 	}
+	
+	//Sometimes throw: Cannot invoke method encodePassword() on null object.
+	//def beforeInsert() {
+	//	encodePassword()
+	//}
+
+	//def beforeUpdate() {
+	//	if (isDirty('password')) {
+	//		encodePassword()
+	//	}
+	//}
+
+	//protected void encodePassword() {
+	//	password = springSecurityService.encodePassword(userName.toLowerCase()+password)
+	//}
 }

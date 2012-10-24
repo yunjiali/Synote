@@ -2,7 +2,7 @@ package org.synote.api.exception
 
 
 
-import org.springframework.security.BadCredentialsException
+import org.springframework.security.authentication.BadCredentialsException
 
 class SynoteAPIException extends BadCredentialsException 
 {

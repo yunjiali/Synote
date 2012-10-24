@@ -1,6 +1,6 @@
 package org.synote.user.group
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_ADMIN'])
 class UserGroupMemberController {

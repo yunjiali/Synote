@@ -198,7 +198,7 @@
 								<label for="duration" class="control-label"><b>Duration</b></label>
 						      	<div class="controls">
 						      		<div class="input-append">
-						      			<span class="span2 uneditable-input" id="duration_span"><g:printTime time="${duration}"/></span>
+						      			<span class="span2 uneditable-input" id="duration_span"><syn:printTime time="${duration}"/></span>
 						      			<button class="btn btn-info" type="button" id="duration_button" data-loading-text="Loading...">Get duration</button>
 						      		</div>
 						      		<input type='hidden' class="required" name='duration' id='duration' value="${multimedia.duration}" />

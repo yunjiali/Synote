@@ -34,20 +34,20 @@
 			<div class="container" style="width:940px;">
 				<!-- top menu -->
 				<div class="nav-collapse">
-					<g:isLoggedIn>
+					<syn:isLoggedIn>
 					<div class="btn-group pull-right">
 						<g:link class="btn btn-success" controller="user" action="showUserProfile" title="Show user profile">
 							<i class="icon-user icon-white"></i>
-							<g:loggedInUsername />
+							<syn:loggedInUsername />
 						</g:link>
 						<a href="#" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
 					    	<li><g:link controller="user" action="showUserProfile" title="Show user profile">My Profile</g:link></li>
-					    	<g:isAdminLoggedIn>
+					    	<syn:isAdminLoggedIn>
 							<li><g:link controller="admin" action="index" title="Administration">Administration</g:link></li>
-							</g:isAdminLoggedIn>
+							</syn:isAdminLoggedIn>
 					        <li class="divider"></li>
 					        <li><g:link controller="logout" action="index" title="Log out">Log out</g:link></li>
             			</ul>
@@ -76,17 +76,17 @@
 						<i class="icon-briefcase"></i>
 						My Synote</g:link>
 					</div>
-					</g:isLoggedIn>
-					<g:isNotLoggedIn>
+					</syn:isLoggedIn>
+					<syn:isNotLoggedIn>
 					<div class="btn-group pull-right">
 						<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" class="btn btn-primary">
 								Login</g:link>
-						<g:allowRegistering>
+						<syn:allowRegistering>
 							<g:link controller="register" action="index" title="Register" class="btn btn-success">
 								 Register</g:link>
-						</g:allowRegistering>
+						</syn:allowRegistering>
 					</div>
-					</g:isNotLoggedIn>
+					</syn:isNotLoggedIn>
 					<ul class="nav">   
 					    <li>
 					    	<a href="${resource(dir: '/')}" title="home">

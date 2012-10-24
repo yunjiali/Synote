@@ -18,7 +18,7 @@ import org.synote.resource.compound.MultimediaResource
 import org.synote.permission.PermissionValue
 import org.synote.utils.FileService
 
-import org.codehaus.groovy.grails.plugins.springsecurity.Secured
+import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 class IBMTransJobController {

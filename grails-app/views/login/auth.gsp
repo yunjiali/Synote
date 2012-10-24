@@ -62,11 +62,11 @@
 			    		<input type="checkbox" name="_acegi_security_remember_me" id="_acegi_security_remember_me" />Keep me signed in
 			    	</label>
 			    </div>
-			    <g:forgetPasswordEnabled>
+			    <syn:forgetPasswordEnabled>
 				<div id="forget_password_div">
 					<a href="#">Forgotten Password?</a> (not implemented yet)
 				</div>
-				</g:forgetPasswordEnabled>
+				</syn:forgetPasswordEnabled>
 				
 			    <div class="form-actions">
 		            <input class="btn-large btn-primary" id="loginForm_submit" type="submit" value="Login" />
