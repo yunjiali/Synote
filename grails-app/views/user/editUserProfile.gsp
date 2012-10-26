@@ -2,53 +2,67 @@
 <head>
 <title><g:message code="org.synote.user.editUserProfile.title" /></title>
 <meta name="layout" content="main" />
-<link rel="stylesheet" href="${resource(dir: 'css/jquery/aristo/uniform', file: 'uni-form.css')}" media="screen" charset="utf-8"/>
-<link rel="stylesheet" href="${resource(dir: 'css/jquery/aristo/uniform', file: 'default.uni-form.css')}" media="screen" charset="utf-8"/>
-<script type="text/javascript" src="${resource(dir:'js/jquery/uniform',file:'uni-form.jquery.min.js')}"></script>
-<script type="text/javascript" src="${resource(dir:'js/jquery/uniform',file:'uni-form-validation.jquery.min.js')}"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
+<script type="text/javascript" src="${resource(dir:'js',file:'synote-multimedia-service-client.js')}"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
-		$(".uniForm").uniform();
-		$("input[type=text], input[type=password]").wijtextbox();
-		$("#userProfileEditForm_submit").button();
-		$("#userProfileEditForm_cancel").button();
-	});
+	
 </script>
 </head>
 <body>
-<div class="span-24" id="user_nav">
-	<g:render template="/common/userNav"/>
-</div>
-<div class="span-22 prepend-1 append-1" id="user_content">
-	<h1><g:message code="org.synote.user.editUserProfile.title" /></h1>
-	<g:render template="/common/message" model="[bean: user]" />
-	<g:form method="post" class="uniForm" action="handleEditUserProfile">
-		<input type="hidden" name="id" value="${user?.id}" />
-		<div class="ctrlHolder inlineLabels">
-			<label for="id">Id:</label>
-			<span>${fieldValue(bean: user, field: 'id')}</span>
+<div class="container">
+	<div class="row">
+		<div class="span2" id="user_nav_div">
+			<g:render template="/common/userNav" model="['active':'user_profile']"/>
 		</div>
-		<div class="ctrlHolder inlineLabels">
-			<label for="userName">User Name:</label>
-			<span>${fieldValue(bean: user, field: 'userName')}</span>
+		<div class="span10" id="user_content_div">
+			<h2 class="heading-inline"><g:message code="org.synote.user.editUserProfile.title" /></h2>
+			<hr/>
+			<g:render template="/common/message" model="[bean: user]" />
+			<div id="error_msg_div"></div>
+			<div class="well">
+				<g:form method="post" class="form-horizontal" action="handleEditUserProfile">
+					<input type="hidden" name="id" value="${user?.id}" />
+			      	<div class="control-group">
+			      		<label class="control-label" for="id">Id:</label>
+				      	<div class="controls">
+							${fieldValue(bean: user, field: 'id')}
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="userName">User Name:</label>
+						<div class="controls">
+							${fieldValue(bean: user, field: 'userName')}
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="firstName"><em>*</em>First Name:</label>
+						<div class="controls">
+							<input type="text" id="firstName" class="required" name="firstName" value="${fieldValue(bean: user, field: 'firstName')}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="lastName"><em>*</em>Last Name:</label>
+						<div class="controls">
+							<input type="text" class="required" id="lastName" name="lastName" value="${fieldValue(bean: user, field: 'lastName')}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="email"><em>*</em>Email:</label>
+						<div class="controls">
+							<input type="text" class="required" id="email" name="email" value="${fieldValue(bean: user, field: 'email')}" />
+						</div>
+					</div>
+					<div class="form-actions">
+						<div class="pull-left">
+							<input class="btn btn-primary" id="userProfileEditForm_submit" type="submit" value="Save" />
+							<g:link class="btn" controller='user' action='showUserProfile' elementId="userProfileEditForm_cancel">Cancel</g:link>
+						</div>
+					</div>
+				</g:form>
+			</div>
 		</div>
-		<div class="ctrlHolder inlineLabels">
-			<label for="firstName"><em>*</em>First Name:</label>
-			<input type="text" id="firstName" class="textInput medium required" name="firstName" value="${fieldValue(bean: user, field: 'firstName')}" />
-		</div>
-		<div class="ctrlHolder inlineLabels">
-			<label for="lastName"><em>*</em>Last Name:</label>
-			<input type="text" class="textInput medium required" id="lastName" name="lastName" value="${fieldValue(bean: user, field: 'lastName')}" />
-		</div>
-		<div class="ctrlHolder inlineLabels">
-			<label for="email"><em>*</em>Email:</label>
-			<input type="text" class="textInput medium required" id="email" name="email" value="${fieldValue(bean: user, field: 'email')}" />
-		</div>
-		<div class="prepend-top append-bottom">
-			<input id="userProfileEditForm_submit" type="submit" value="Save" />
-			<g:link controller='user' action='showUserProfile' elementId="userProfileEditForm_cancel">Cancel</g:link>
-		</div>
-	</g:form>
+	</div>
 </div>
 </body>
 </html>
