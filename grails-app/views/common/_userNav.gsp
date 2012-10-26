@@ -57,7 +57,7 @@
     </g:if>
     <g:else>
     	<li>
-    </g:else><g:link controller="iBMTransJob" action=index"><i class="icon-document-small"></i>
+    </g:else><g:link controller="iBMTransJob" action="index"><i class="icon-document-small"></i>
     	Transcript Jobs</g:link></li>
     </syn:ibmhtsEnabled>
 </ul>

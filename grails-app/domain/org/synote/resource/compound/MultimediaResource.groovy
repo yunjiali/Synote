@@ -5,10 +5,17 @@ import org.synote.resource.single.text.MultimediaTextNote
 import org.synote.resource.single.binary.MultimediaUrl
 import java.util.UUID
 
+import org.synote.search.resource.converter.MultimediaConverter
+
 class MultimediaResource extends CompoundResource {
 
-	//TODO: Add tags and note later
-	static searchable = { only:['title'] }
+	String indexString = ""
+	
+	static transients = ['indexString']
+	
+	static searchable = { 
+		  indexString converter:'multimediaConverter',boost:2.0 //the description on the whole multimedia level is more important
+	}
 	
 	static hasMany = [tags:MultimediaTag]
 	
@@ -63,15 +70,6 @@ class MultimediaResource extends CompoundResource {
 	{
 		
 	}
-	
-	def propertiesToString ={
-
-		def propMap = [:]
-		if(title)
-			propMap.put("title", title)
-
-		return propMap
-	}
 
 	public String toNIFString()
 	{
@@ -96,13 +94,24 @@ class MultimediaResource extends CompoundResource {
 		return str.toString()
 	}
 	
-	public static ArrayList getSearchableFields()
+	public String toString()
 	{
-		def fields = ['title']
-	}
-
-	public static String getResourceAlias() {
-		return "MultimediaResource"
+		String mmStr = ''
+		if(title)
+		{
+			mmStr += title+"\r\n"
+		}
+		if(tags)
+		{
+			tags.each {tag ->
+				mmStr += tag.content+" "
+			}
+		}
+		if(note)
+		{
+			mmStr += "\r\n"+note.content
+		}
+		return mmStr
 	}
 	
 	def afterInsert()

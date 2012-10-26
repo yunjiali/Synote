@@ -9,7 +9,7 @@
 <div class="container">
 	<div class="row">
 		<div class="span2" id="user_nav_div">
-			<g:render template="/common/userNav" model="['active':null]"/>
+			<g:render template="/common/userNav" model='["active":null]'/>
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2><g:message code="org.synote.user.index.title" /></h2>

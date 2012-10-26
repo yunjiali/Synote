@@ -975,13 +975,13 @@ class RecordingController {
 		if(transList?.size() == 1)
 		{
 			def cuesList = transList[0].getCues()
-			render cuesList.encodeAsJSON()
+			render cuesList as JSON
 			return
 		}
 		else //Multi language is possible, but I won't consider now
 		{
 			def cuesList = transList[0].getCues()
-			render cuesList.encodeAsJSON()
+			render cuesList as JSON
 			return
 		}
 		 

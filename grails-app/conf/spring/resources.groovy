@@ -3,11 +3,8 @@
 import org.synote.user.SynoteSecurityEventListener
 import org.synote.search.GoogleCrawlFilter
 import org.synote.user.SecurityService
-//import org.springframework.ldap.core.support.BaseLdapPathContextSource
-//import org.springframework.ldap.core.ContextSource
-//import org.springframework.security.ldap.SpringSecurityContextSource;
-//import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
-//import org.synote.user.SynoteLdapAuthenticator
+
+import org.synote.search.resource.converter.*
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils as SSU
  
@@ -39,4 +36,9 @@ beans = {
 	{
 		securityService = ref("securityService")
 	}
+	
+	
+	multimediaConverter(MultimediaConverter)
+	synmarkConverter(SynmarkConverter)
+	webVTTCueConverter(WebVTTCueConverter)
 }

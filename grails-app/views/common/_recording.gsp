@@ -93,15 +93,18 @@
 	  				<li><g:link controller="multimediaResource" action="edit" id="${row.id}">Edit</g:link></li>
 	  				<li class="divider"></li>
 	  				</g:if>
+	  				<g:if test="${viewSynmarksEnabled}">
 	  				<li><g:link controller="transcriptResource" action="list" id="${row.id}">Show Transcript</g:link></li>
+	  				</g:if>
 	  				<g:if test="${editable}">
 	  				<li><g:link controller="transcriptResource" action="upload" id="${row.id}">Upload Transcript</g:link></li>
 	  				</g:if>
+	  				<g:if test="${viewTranscriptsEnabled}">
 	  				<li><g:link controller="synmarkResource" action="list" id="${row.id}">Show Synmarks</g:link></li>
-	  				<!-- 
-	  				<li><g:link controller="nerd" action="listne" id="${row.id}">Review Named Entities</g:link></li>
-	  				-->
+	  				</g:if>
+	  				<g:if test="${viewTranscriptsEnabled || viewSynmarksEnabled}">
 	  				<li class="divider"></li>
+	  				</g:if>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>

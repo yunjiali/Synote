@@ -40,6 +40,7 @@
 		  		<i>Title not available</i>
 	  		</g:else>
 	  	</h3>
+	  	<div style="display:inline"><img src="${resource(dir: 'images/skin', file: 'synmark_16.png')}" alt="This is a synmark" title="This is a synmark"/></div>
 	  	<br/>
 	  	<span class="datetime-info">${row.date_created}</span><br/>
 	  	<div style="padding: 5px 0px;">
@@ -54,14 +55,18 @@
 	 		<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
 	  			Actions<span class="caret"></span></a>
 	  		<ul class="dropdown-menu">
+	  				<g:if test="${nerditEnabled}">
 	  				<li><g:link controller="nerd" action="listne" id="${row.id}">Review Named Entities</g:link></li>
 	  				<li class="divider"></li>
+	  				</g:if>
 	  				<li><g:link controller="recording" action="replay" id="${row.rid}" fragment="${row.mf}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.rid}" fragment="${row.mf}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>
+	 	<g:if test="${nerditEnabled}">
 	 	<div class="pull-right" style="margin-right:10px;">
 	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdsmk" id="${row.id}">NERD it</g:link>
 	 	</div>
+	 	</g:if>
 	</div>
 </div>

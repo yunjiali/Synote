@@ -46,7 +46,7 @@ class BootStrap {
 				linkedDataService.initPrefixMapping(store)
 			}
 		}
-		//Change Datasoruce settings to avoid Broken pipeline prblem
+		//Change Datasoruce settings to avoid Broken pipeline problem
 		DataSourceUtils.tune(servletContext)
 		
 		//Disable IBM HTS service

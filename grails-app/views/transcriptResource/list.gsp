@@ -30,7 +30,7 @@
 						<div class="nodata">There is no transcript for this recording</div>
 					</g:if>
 					<g:each in="${cueList.rows}" var="row">
-						<g:render template="/common/subtitle_nerd_all" model="['row':row,'multimedia':multimedia]"/>
+						<g:render template="/common/subtitle_block" model="['row':row]"/>
 					</g:each>
 				</div>
 			</div>

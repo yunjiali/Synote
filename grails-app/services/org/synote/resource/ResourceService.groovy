@@ -4,6 +4,7 @@ import org.synote.utils.DatabaseService
 import org.synote.user.SecurityService
 import org.synote.utils.UtilsService
 import org.synote.config.ConfigurationService
+import org.synote.resource.compound.WebVTTService
 import org.synote.player.client.TimeFormat
 import org.synote.resource.compound.*
 import org.synote.resource.single.text.TagResource
@@ -20,6 +21,8 @@ import org.synote.analysis.Views
 import grails.converters.*
 import groovy.json.*
 
+import org.hibernate.criterion.Order //a bug in grails 2.x, ignoreCase() doesn't work anymore
+
 import groovyx.net.http.HTTPBuilder
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
@@ -31,6 +34,7 @@ class ResourceService {
 	def utilsService
 	def linkedDataService
 	def configurationService
+	def webVTTService
 	
     static transactional = true
 
@@ -75,38 +79,59 @@ class ResourceService {
 		
 		multimediaResourceList?.collect{ r->
 			def multimedia = MultimediaResource.findById(r.id)
-			def tags = []
-			multimedia.tags.each{
-				tags<<it.content
+			def public_perm = PermissionValue.findByVal(r.public_perm_val)
+			def user_perm
+			if(isLoggedIn)
+			{
+				user_perm = PermissionValue.findByVal(r.user_perm_val)
 			}
-			def views = Views.countByResource(multimedia)
-			def metrics = getMultimediaResourceMetrics(multimedia)
-			
-			def item = [
-				id:r.id, 
-				title:r.title,
-				url:MultimediaResource.findById(r.id).url?.url,
-				owner_name:r.owner_name,
-				perm_name:isLoggedIn?PermissionValue.findByVal(r.user_perm_val).name:r.public_perm_name,
-				perm_val:isLoggedIn?r.user_perm_val:r.public_perm_val,
-				date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.date_created,"dd.MM.yyyy HH:mm"),
-				last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.last_updated,"dd.MM.yyyy HH:mm"),
-				thumbnail:r.thumbnail,
-				duration:r.duration,
-				isVideo:r.is_video,
-				note:multimedia.note?.content,
-				tags:tags,
-				cc:metrics.cc,
-				slides_count:metrics.slides_count,
-				synmarks_count: metrics.synmarks_count,
-				views:views
-			]
-			
-			results << item
+			else
+			{
+				user_perm = public_perm	
+			}
+			results << buildMultimediaJSON(multimedia,isLoggedIn,user_perm, public_perm)
 		}
 		def jqGridData = [rows:results, page:currentPage, records:count, total:numberOfPages]
 		return jqGridData
     }
+	
+	/*
+	 * Build the json for a single multimedia resource
+	 * IMPORTANT: r is fetched from a special query!
+	 */
+	def buildMultimediaJSON(multimedia,isLoggedIn, user_perm, public_perm)
+	{
+		
+		def tags = []
+		multimedia.tags.each{
+			tags<<it.content
+		}
+		def views = Views.countByResource(multimedia)
+		def metrics = getMultimediaResourceMetrics(multimedia)
+		
+		def item = [
+			id:multimedia.id,
+			clazz:"multimedia",
+			title:multimedia.title,
+			url:multimedia.url?.url,
+			owner_name:multimedia.owner?.userName,
+			perm_name:isLoggedIn?user_perm.name:public_perm.name,
+			perm_val:isLoggedIn?user_perm.val:public_perm.val,
+			date_created:utilsService.convertSQLTimeStampToFormattedTimeString(multimedia.dateCreated,"dd.MM.yyyy HH:mm"),
+			last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(multimedia.lastUpdated,"dd.MM.yyyy HH:mm"),
+			thumbnail:multimedia.thumbnail,
+			duration:multimedia.duration,
+			isVideo:multimedia.isVideo,
+			note:multimedia.note?.content,
+			tags:tags,
+			cc:metrics.cc,
+			slides_count:metrics.slides_count,
+			synmarks_count: metrics.synmarks_count,
+			views:views
+		]
+		
+		return item
+	}
 	
 	/*
 	 * Only list my multimedia resources
@@ -132,41 +157,51 @@ class ResourceService {
 			{
 				ilike("title","%${params.text}%")
 			}
-			order(sortIndex,sortOrder).ignoreCase()
+			order(new Order(sortIndex,sortOrder=='asc').ignoreCase())
 		}
 		def totalRows = multimediaList.totalCount
 		def numberOfPages = Math.ceil(totalRows/maxRows)
 		def results = []
 		
 		multimediaList?.collect{ r->
-			def views = Views.countByResource(r)
-			def metrics = getMultimediaResourceMetrics(r)
-			def tags = []
-			r.tags.each{
-				tags<<it.content	
-			}
-			results << [
-				id:r.id, 
-				//owner_name:r.owner.userName, Don't need owner_name, it's you!
-				title:r.title,
-				url:r.url?.url,
-				perm_name:r.perm?.name,
-				perm_val:r.perm?.val,
-				date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.dateCreated,"dd.MM.yyyy HH:mm"),
-				last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.lastUpdated,"dd.MM.yyyy HH:mm"),
-				thumbnail:r.thumbnail,
-				duration:r.duration,
-				isVideo:r.isVideo,
-				note:r.note?.content,
-				tags:tags,
-				cc:metrics.cc,
-				slides_count:metrics.slides_count,
-				synmarks_count: metrics.synmarks_count,
-				views:views
-			]
+			results<< buildMyMultimediaJSON(r)
 		}
 		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 		return jqGridData
+	}
+	
+	/*
+	 * Build a single multimedia of mine as JSON
+	 */
+	def buildMyMultimediaJSON(r)
+	{
+		def views = Views.countByResource(r)
+		def metrics = getMultimediaResourceMetrics(r)
+		def tags = []
+		r.tags.each{
+			tags<<it.content
+		}
+		def item =  [
+			id:r.id,
+			clazz: "multimedia",
+			//owner_name:r.owner.userName, Don't need owner_name, it's you!
+			title:r.title,
+			url:r.url?.url,
+			perm_name:r.perm?.name,
+			perm_val:r.perm?.val,
+			date_created:utilsService.convertSQLTimeStampToFormattedTimeString(r.dateCreated,"dd.MM.yyyy HH:mm"),
+			last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(r.lastUpdated,"dd.MM.yyyy HH:mm"),
+			thumbnail:r.thumbnail,
+			duration:r.duration,
+			isVideo:r.isVideo,
+			note:r.note?.content,
+			tags:tags,
+			cc:metrics.cc,
+			slides_count:metrics.slides_count,
+			synmarks_count: metrics.synmarks_count,
+			views:views
+		]
+		return item
 	}
 	
 	/*
@@ -209,38 +244,8 @@ class ResourceService {
 			def mr = annotation?.target
 			//println "mr:"+mr?.id
 			if(annotation && mr && sr)
-			{
-				def start = synpoint.targetStart
-				def end = synpoint.targetEnd
-				def tags = null
-				if(sr.tags?.size() > 0)
-				{
-					tags = []
-					sr.tags.each{t -> 
-						tags << t.content
-					}
-				}
-				else
-					tags = null
-				
-				def item = [
-					id:sr.id,
-					//owner_name:r.owner.userName, Don't need owner_name, it's you!
-					title:sr.title,
-					tags:tags,
-					note:sr.note?.content?.trim()?.size()>256?sr.note?.content?.substring(0,256)+"...":sr.note?.content,
-					rtitle:mr.title,
-					rid:mr.id,
-					risVideo:mr.isVideo,
-					mf: synpoint?linkedDataService.getFragmentStringFromSynpoint(synpoint):null,//get media fragment
-					start: start !=null?TimeFormat.getInstance().toString(start):"unknown",
-					end:end !=null?TimeFormat.getInstance().toString(end):"unknown",
-					thumbnail:sr.thumbnail,
-					date_created:utilsService.convertSQLTimeStampToFormattedTimeString(sr.dateCreated,"dd.MM.yyyy HH:mm"),
-					last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(sr.lastUpdated,"dd.MM.yyyy HH:mm")
-				]
-				
-				results << item
+			{	
+				results << buildSynmarkJSON(sr,mr,synpoint)
 			}
 			else //The synmark doesn't annotate any multimedia resource, so we need to delete it
 			{
@@ -250,6 +255,45 @@ class ResourceService {
 		//println "size:"+synmarkList.size()
 		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 		return jqGridData
+	}
+	
+	/*
+	 * Build a single synmark json
+	 */
+	def buildSynmarkJSON(sr,mr,synpoint)
+	{
+		def start = synpoint.targetStart
+		def end = synpoint.targetEnd
+		def tags = null
+		if(sr.tags?.size() > 0)
+		{
+			tags = []
+			sr.tags.each{t ->
+				tags << t.content
+			}
+		}
+		else
+			tags = null
+		
+		def item = [
+			id:sr.id,
+			clazz:"synmark",
+			//owner_name:r.owner.userName, Don't need owner_name, it's you!
+			title:sr.title,
+			tags:tags,
+			note:sr.note?.content?.trim()?.size()>256?sr.note?.content?.substring(0,256)+"...":sr.note?.content,
+			rtitle:mr.title,
+			rid:mr.id,
+			risVideo:mr.isVideo,
+			mf: synpoint?linkedDataService.getFragmentStringFromSynpoint(synpoint):null,//get media fragment
+			start: start !=null?TimeFormat.getInstance().toString(start):"unknown",
+			end:end !=null?TimeFormat.getInstance().toString(end):"unknown",
+			thumbnail:sr.thumbnail,
+			date_created:utilsService.convertSQLTimeStampToFormattedTimeString(sr.dateCreated,"dd.MM.yyyy HH:mm"),
+			last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(sr.lastUpdated,"dd.MM.yyyy HH:mm")
+		]
+		
+		return item
 	}
 	
 	def getMySynmarksAsJSON(params)
@@ -303,26 +347,15 @@ class ResourceService {
 					synpoint = annotation.synpoints.toArray()[0]
 					start = annotation.synpoints.toArray()[0].targetStart
 					end = annotation.synpoints.toArray()[0].targetEnd
-				} 
 				
-				def item = [
-					id:s.id,
-					//owner_name:r.owner.userName, Don't need owner_name, it's you!
-					title:s.title,
-					tags:s.tags?.size() > 0?s.tags.split(","):null,
-					note:sr.note?.content?.trim()?.size()>256?sr.note?.content?.substring(0,256)+"...":sr.note?.content,
-					rtitle:mr.title,
-					rid:mr.id,
-					risVideo:mr.isVideo,
-					mf: synpoint?linkedDataService.getFragmentStringFromSynpoint(synpoint):null,//get media fragment
-					start: start !=null?TimeFormat.getInstance().toString(start):"unknown",
-					end:end !=null?TimeFormat.getInstance().toString(end):"unknown",
-					thumbnail:s.thumbnail,
-					date_created:utilsService.convertSQLTimeStampToFormattedTimeString(s.date_created,"dd.MM.yyyy HH:mm"),
-					last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(s.last_updated,"dd.MM.yyyy HH:mm")
-				]
-				
-				results << item
+					def item = buildSynmarkJSON(sr,mr,synpoint)
+					
+					results << item
+				}
+				else
+				{
+					sr.delete() // a broken synmark	
+				}
 			}
 			else //The synmark doesn't annotate any multimedia resource, so we need to delete it
 			{
@@ -392,7 +425,7 @@ class ResourceService {
 	
 		def transcriptList = WebVTTResource.createCriteria().list(max:maxRows, offset:rowOffset){
 			eq('owner',user)
-			order(sortIndex,sortOrder).ignoreCase()
+			order(new Order(sortIndex,sortOrder=='asc').ignoreCase())
 		}
 		def totalRows = transcriptList.totalCount
 		def numberOfPages = Math.ceil(totalRows/maxRows)
@@ -443,6 +476,30 @@ class ResourceService {
 		//println "size:"+synmarkList.size()
 		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 		return jqGridData
+	}
+	
+	/*
+	 * Build a single Cue json 
+	 * IMPORTANT!The input cue is WebVTTCueData instead of WebVTTCue
+	 */
+	def buildCueJSON(cue, multimedia)
+	{
+		def item = [
+			id:cue.id,
+			clazz:"webvttcue",
+			//owner_name:r.owner.userName, Don't need owner_name, it's you!
+			text:webVTTService.getCueText(cue.getCueText()),
+			speaker: webVTTService.getSpeaker(cue.getCueText()),
+			settings: cue.getCueSettings(),
+			rid:multimedia.id,
+			risVideo:multimedia.isVideo,
+			mf: linkedDataService.getFragmentString(cue.getStart(), cue.getEnd()),//get media fragment
+			start: cue.getStart() !=null?TimeFormat.getInstance().toString(cue.getStart()):"unknown",
+			end:cue.getEnd() !=null?TimeFormat.getInstance().toString(cue.getEnd()):"unknown",
+			thumbnail:cue.getThumbnail()
+		]
+		
+		return item
 	}
 	
 	def getTagsAsArray(user)

@@ -123,8 +123,12 @@ class PermService {
 				.setLong('resource_id', resource.id)
 				.setLong('user_id', user.id)
 				.list()
-		
-		def perm = PermissionValue.findByVal((Integer) result[0])
+				
+		def perm = null
+		if(result?.size() > 0)
+		{
+			perm = PermissionValue.findByVal((Integer) result[0])
+		}
 		
 		return (perm?.val >= publicPerm?.val) ? perm : publicPerm
 	}

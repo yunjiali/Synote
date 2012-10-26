@@ -4,9 +4,9 @@ import org.synote.resource.compound.SynmarkResource
 
 class SynmarkTag extends TagResource{
 
-	static searchable={
-		only:['content']
-	}
+	//static searchable={
+	//	only:['content']
+	//}
 	
 	static belongsTo = [synmark: SynmarkResource]
 	

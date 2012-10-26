@@ -74,23 +74,11 @@ class TranscriptResourceController {
 	   
 	   def results = []
 	   
-	   cueList.each{cue ->
-		   def item = [
-			   id:cue.id,
-			   //owner_name:r.owner.userName, Don't need owner_name, it's you!
-			   text:webVTTService.getCueText(cue.getCueText()),
-			   speaker: webVTTService.getSpeaker(cue.getCueText()),
-			   settings: cue.getCueSettings(),
-			   mf: linkedDataService.getFragmentString(cue.getStart(), cue.getEnd()),//get media fragment
-			   start: cue.getStart() !=null?TimeFormat.getInstance().toString(cue.getStart()):"unknown",
-			   end:cue.getEnd() !=null?TimeFormat.getInstance().toString(cue.getEnd()):"unknown",
-			   thumbnail:cue.getThumbnail()
-		   ]
-		   
-		   results << item
+	   cueList.each{cue -> 
+		   results << resourceService.buildCueJSON(cue,multimedia)
 	   }
 	   def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
-	   return [cueList:jqGridData, params:params, multimedia:multimedia,transcript:transcript]
+	   return [cueList:jqGridData, params:params,multimedia:multimedia,transcript:transcript]
    }
    
    @Secured(['ROLE_ADMIN','ROLE_NORMAL'])

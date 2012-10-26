@@ -24,12 +24,12 @@
 				</div>
 			</div>
 			<div>
-				<div id="recording_list_div">
+				<div id="synmark_list_div">
 					<g:if test="${synmarksList.rows?.size() == 0}">
 						<div class="nodata">You have no recordings</div>
 					</g:if>
 					<g:each in="${synmarksList.rows}" var="row">
-						<g:render template="/common/synmark" model="['row':row]"/>
+						<g:render template="/common/synmark" model="['row':row,'nerditEnabled':false]"/>
 					</g:each>
 				</div>
 			</div>

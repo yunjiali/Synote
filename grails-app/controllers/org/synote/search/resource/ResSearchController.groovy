@@ -2,16 +2,22 @@ package org.synote.search.resource
 
 import org.apache.lucene.search.BooleanQuery
 import org.compass.core.engine.SearchEngineQueryParseException
-import org.synote.search.resource.*
 import org.synote.search.resource.exception.ResourceSearchException
 import org.codehaus.groovy.grails.web.errors.GrailsWrappedRuntimeException
+
+import org.synote.resource.compound.MultimediaResource
+import org.synote.resource.compound.SynmarkResource
+import org.synote.resource.single.text.WebVTTCue
 
 import org.synote.user.SecurityService
 import org.synote.user.User
 import org.synote.search.resource.ResourceSearchService
+import org.synote.resource.ResourceService
 import org.synote.resource.compound.*
 import org.synote.annotation.ResourceAnnotation
 import org.synote.annotation.synpoint.Synpoint
+import org.synote.player.client.WebVTTCueData
+import org.synote.analysis.Views
 
 import org.synote.search.resource.analysis.QueryRecord
 import org.synote.search.resource.analysis.ResultRecord
@@ -21,7 +27,10 @@ class ResSearchController {
 
 	def securityService
 	def resourceSearchService
-//	def emailService
+	def searchableService
+	def resourceService
+	
+	private static String MAX_RESULTS = "20"
 	
 	def index = {
 		if (!params.query?.trim()) {
@@ -31,284 +40,134 @@ class ResSearchController {
 		}
 		//println "max:"+params.max
 		//println "offset:"+params.offset
+		if(!params.type)
+			params.type = "all"
+		if(!params.rows)
+			params.rows = MAX_RESULTS
+			
+		def maxRows = Integer.valueOf(params.rows)
+		if(!params.page)
+			params.page ="1"
+			
+		def currentPage = Integer.valueOf(params.page) ?: 1
+		def rowOffset = currentPage == 1 ? 0 : (currentPage - 1) * maxRows
 		
-		if(!params.max)
-			params.max = ResourceSearchResult.MAX_RESULTS
-		else
-			params.max = Integer.parseInt(params.max)
-		
-		if(!params.offset)
-			params.offset = 0
-		else
-			params.offset = Integer.parseInt(params.offset)
-		
-		
+		def user=securityService.getLoggedUser()
+
 		try
 		{
+			def searchResult
+			if(params.type == 'all')
+			{
+				searchResult = searchableService.search(params.query,params)
+			}
+			else if(params.type == 'multimedia')
+			{
+				searchResult = MultimediaResource.search(params.query,params)
+			}
+			else if(params.type == 'synmark')
+			{
+				searchResult = SynmarkResource.search(params.query,params)
+			}
+			else if(params.type == 'transcript')
+			{
+				searchResult = WebVTTCue.search(params.query,params)
+			}
+			else
+			{
+				searchResult = searchableService.search(params.query,params)
+			}
+			
+			//for(int i=0;i<searchResult.results.size();i++)
+			//{
+			//	println "class:"+searchResult.results[i].class
+			//	println "score:"+searchResult.scores[i]	
+			//}
+			def totalRows = searchResult.results?.size()
+			def numberOfPages = Math.ceil(totalRows/maxRows)
 			def results = []
-			def resourceSearchResult = new ResourceSearchResult(results:results, offset:params.offset, max:params.max)
 			
-			User user = securityService.getLoggedUser()
+			//TODO: ADD search log to database
+			searchResult.results.each{result->
+				if(result.instanceOf(MultimediaResource))
+				{
+					def multimedia = MultimediaResource.get(result.id)
+					results << resourceService.buildMultimediaJSON(multimedia, securityService.isLoggedIn(), multimedia.perm, multimedia.perm)
+				}
+				else if(result.instanceOf(SynmarkResource))
+				{
+					def sr = SynmarkResource.get(result.id)
+					def annotation = ResourceAnnotation.findBySource(sr)
+					def mr = annotation?.target
+					if(mr && annotation)
+					{
+						if(annotation.synpoints?.size()>0)
+						{
+							def synpoint = annotation.synpoints.toArray()[0]
+							
+							results << resourceService.buildSynmarkJSON(sr,mr,synpoint)
+						}
+						else
+						{
+							result.delete()	
+						}
+					}
+					else
+					{
+						result.delete()	
+					}
+				}
+				else if(result.instanceOf(WebVTTCue))
+				{
+					def cue = WebVTTCue.get(result.id)
+					def vtt = cue.webVTTFile
+					def annotation = ResourceAnnotation.findBySource(vtt)
+					def mr = annotation?.target
+					if(mr && annotation)
+					{
+						def synpoint = annotation.synpoints.find{cue.cueIndex==it.sourceStart}
+						if(synpoint)
+						{
+							def cueData = new WebVTTCueData
+								(cue.id.toString(), cue.cueIndex, synpoint.targetStart, synpoint.targetEnd, cue.content,cue.cueSettings,cue.thumbnail)
+							results << resourceService.buildCueJSON(cueData, mr)
+							
+						}
+						else
+						{
+							vtt.delete()
+							throw new ResourceSearchException("Error occurs during the search. Please try it again.")	
+						}
+					}
+					else
+					{
+						vtt.delete()
+						throw new ResourceSearchException("Error occurs during the search. Please try it again.")	
+					}
+				}
+				else //there shouldn't be any else I think
+				{
+					//Do nothing
+				}	
+			}
 			
-			if(!params.advanced)
-				params.advanced = "false"
-			
-			//def search = resourceSearchService.buildQuery((Boolean.valueOf(params.advanced)).booleanValue(),params)
-			
-			resourceSearchService.searchResource(params,user,resourceSearchResult)
-			
-			resourceSearchResult.results = resourceSearchResult.results.sort{-it.score}
-			
-			return [resourceSearchResult:resourceSearchResult, params:params, parseException:null]
+			def searchResultList = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
+			return [searchResultList:searchResultList, params:params]
 		}
 		catch (SearchEngineQueryParseException seqpex) {
-			flash.message = "Query syntax error!"
-			redirect (action:"help")
+			flash.error = "Query syntax error!"
+			render (view:"index")
 			return
 		}
 		catch (ResourceSearchException rsex)
 		{
-			flash.message = rsex.message
-			redirect (action:"help")
+			flash.error = rsex.message
+			render (view:"index")
 			return
 		}
 		catch (BooleanQuery.TooManyClauses bqex) {
-			flash.message = "Too many results matched your query!"
-			redirect (action:"help")
-			return
-		}
-	}
-	
-	def locateMultimedia = {
-		if(!params.id)
-		{
-			flash.error ="Resource id is missing!"
-			log.error "Resource id is missing!"
-			redirect (action:"help")
-			return
-		}
-		MultimediaResource multimediaResource = MultimediaResource.get(params.id)
-		
-		redirect(controller:"recording",action:"replay_old", id:params.id)
-	}
-	
-	//used to locate the position where to start playing the recording for synmark
-	def locateSynmark = {
-		
-		if(!params.id)
-		{
-			flash.error ="Resource id is missing!"
-			log.error "Resource id is missing!"
-			redirect (action:"help")
-			return
-		}
-		
-		def synmarkResource = SynmarkResource.get(params.id)
-		if(!synmarkResource)
-		{
-			flash.error = "Cannot find resource with id ${params.id}"
-			log.error "Cannot find resource with id ${params.id}"
-			redirect (action:"help")
-			return
-		}
-		
-		//if(synmarkResource instanceof SynmarkResource)
-		//{
-			def ra = ResourceAnnotation.findBySource(synmarkResource)
-			if(!ra)
-			{
-				flash.error = "The annotation for synmark with id ${params.id} has broken!"
-				log.error = "The annotation for synmark with id ${params.id} has broken!"
-				redirect (action:"help")
-				return
-			}
-			saveSelectedRecord(params,synmarkResource)
-			
-			def multimediaResource = ra.target
-			def synpoints = ra.synpoints.toArray()
-			if(!synpoints || synpoints.size() ==0)
-			{
-				flash.error = "The annotation for synmark with id ${params.id} has broken!"
-				log.error = "The annotation for synmark with id ${params.id} has broken!"
-				redirect (action:"help")
-				return
-			}
-			if(synpoints.size() == 1)
-			{
-				def synpoint = synpoints[0]
-				redirect(controller:"recording", action:"replay_old", params:[id:multimediaResource.id, position:synpoint.targetStart])
-				return
-			}
-			else //I don't think it's possible but...
-			{
-				flash.error = "It's insane! More than one synmark"
-				log.error = "It's insane! More than one synmark"
-				redirect (action:"help")
-				return
-			}
-		//}
-		//else
-		//{
-		//	flash.error = "Resource with id ${params.id} is not a synmark resource."
-		//	log.error "Resource with id ${params.id} is not a synmark resource."
-		//	redirect (action:"help")
-		//	return
-		//}
-	}
-	
-	def locateTranscript = {
-		
-		if(!params.id)
-		{
-			flash.error = "Transcript id is missing"
-			log.error "Resource id is missing!"
-			redirect(action:"help")
-			return
-		}
-		
-		if(!params.content)
-		{
-			flash.error = "Cannot find the content in transcript."
-			log.error "Cannot find the content in transcript."
-			redirect(action:"help")
-			return
-		}
-		
-		def transcriptResource = TranscriptResource.get(params.id)
-		if(!transcriptResource)
-		{
-			flash.error = "No Transcript Resource with id ${params.id} is found!"
-			log.error "No Transcript Resource with id ${params.id} is found!"
-			redirect(action:"help")
-			return
-		}
-		def ra = ResourceAnnotation.findBySource(transcriptResource)
-		if(!ra)
-		{
-			flash.error = "The annotation for transcript with id ${params.id} has broken!"
-			log.error "The annotation for transcript with id ${params.id} has broken!"
-			redirect (action:"help")
-			return
-		}
-		
-		saveSelectedRecord(params,transcriptResource)
-		
-		def multimediaResource = ra.target
-		//remove the <b></b>tag in content
-		String text = resourceSearchService.removeHighlight(params.content)
-		def index = transcriptResource.transcript.content.indexOf(text)
-		
-		//firstly find if there is any SourceStart is exactly index
-		def sq = Synpoint.createCriteria()
-		def synpoints = sq.list {
-			eq("annotation.id", ra.id)
-			ge("sourceStart",index)
-			maxResults(1)
-			order("sourceStart","asc")
-		}
-		
-		if(synpoints.size()==0)
-		{
-			flash.error = "Cannot find the transcript clip!"
-			log.error "Cannot find the transcript clip!"
-			redirect(action:"help")
-			return
-		}
-		def synpoint = synpoints[0]
-		redirect(controller:"recording", action:"replay_old", params:[id:multimediaResource.id, position:synpoint.targetStart])
-		
-	}
-	
-	def advancedSearch = {
-		//Currently, I think wildcard search is problematic. When you try INFO*, there will be
-		//many empty transcript and synmark results. I am working on it.
-		
-		//iBMTransJobService.testVar()
-		//Do nothing
-	}
-	
-	def handleAdvancedSearch = {
-		if( !params.all&&
-		!params.exact&&
-		!params.oneormore1&&
-		!params.oneormore2&&
-		!params.oneormore3)
-		{
-			flash.error ="You must at least input one word or phrase to search."
-			render(view:'advancedSearch')
-			return
-		}
-		
-		if(!params.multimedia &&
-		!params.synmark &&
-		!params.transcript)
-		{
-			flash.error = "You must at least specify a resource"
-			render(view:'advancedSearch')
-			return
-		}
-		
-		
-		params.advanced = "true"
-		params.query = resourceSearchService.queryStringBuilder(params)
-		//println "query:"+params.query
-		chain(action:"index", params:params)
-		return
-	}
-	
-	/*
-	 * Currently, we can only search the title of multimedia. There's no other field
-	 * to search in multimedia
-	 */
-	def selectMultimediaFields = {
-		//Do nothing
-	}
-	
-	/*
-	 * Searchable fields are tags, note, title
-	 */
-	def selectSynmarkFields = {
-		//println "checked:"+params.checked
-		def synmarkSearchFields = SynmarkResource.getSearchableFields()
-		render synmarkSearchFields
-		return
-	}
-	
-	/*
-	 * Only the content of the transcript is searchable
-	 */
-	def selectTranscriptFields = {
-		
-	}
-	
-	def help = {
-		// Do nothing.
-	}
-	
-	private saveSelectedRecord(params,resource)
-	{
-		if(params.qr)
-		{
-			QueryRecord qr = QueryRecord.get(params.qr)
-			ResultRecord rr = ResultRecord.findByResourceAndQuery(resource,qr)
-			if(rr)
-			{
-				rr.selected = true
-				if(!rr.save())
-				{
-					log.error("Cannot save result record ${rr.id}")
-					return
-				}
-			}
-			else
-			{
-				log.error("Cannot find result recrod for resource ${multimediaResource.id} and query ${qr.id}")
-				return
-			}
-		}
-		else
-		{
-			log.error "Cannot fine query record while locate multimedia ${params.id}"
+			flash.error = "Too many results matched your query!"
+			render(view:"help")
 			return
 		}
 	}
