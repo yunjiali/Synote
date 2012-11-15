@@ -21,4 +21,5 @@
     sdb:driver        "com.mysql.jdbc.Driver" ;
     sdb:sdbUser		  "synote";
     sdb:sdbPassword	  "synote";
+
     .

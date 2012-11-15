@@ -34,6 +34,7 @@ environments {
 			//url="jdbc:mysql://localhost/synote?user=synote&password=synote"
 			//url="jdbc:mysql://localhost/synote_r0649_aluiar"
 			url="jdbc:mysql://localhost/synote_linkeddata"
+			//url = "jdbc:mysql://localhost/synote"
 		}
 	}
 	databasetest {
