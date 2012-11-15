@@ -241,10 +241,10 @@ class NerdController {
 			//save json to triple store
 			//println "before"
 			def extractions = nerdService.getExtractionFromJSON(result)
-			extractions.each{ex->
-				println "startNPT:"+ex.getStartNPT()
-				println "endNPT:"+ex.getEndNPT()	
-			}
+			//extractions.each{ex->
+			//	println "startNPT:"+ex.getStartNPT()
+			//	println "endNPT:"+ex.getEndNPT()	
+			//}
 			//def synpoint = resourceService.getSynpointByResource(resource)
 			//def multimedia = resourceService.getMultimediaByResource(resource)
 			
