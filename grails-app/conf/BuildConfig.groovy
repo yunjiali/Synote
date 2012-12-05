@@ -60,5 +60,9 @@ grails.project.dependency.resolution = {
 			excludes "commons-logging", "xml-apis", "groovy"
 		}
     }
+	
+	plugins {
+		build ":tomcat:$grailsVersion"	
+	}
 
 }

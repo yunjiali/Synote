@@ -53,16 +53,6 @@ class NerdService {
 		}
     }
 	
-	def getLanguageType(String lang)
-	{
-		switch(lang?.toLowerCase()){
-			case "en":
-				return LanguageType.ENGLISH
-			default:
-				return null
-		}
-	}
-	
 	def getNerdExtractorName(ExtractorType extr)
 	{
 		switch(extr){
@@ -172,15 +162,15 @@ class NerdService {
 	def getExtractionFromJSON(String jsonExtraction)
 	{
 		Gson gson = new Gson()
-		Type listType = new TypeToken<List<Extraction>>(){}.getType()
-		List<Extraction> extractions = gson.fromJson(jsonExtraction, listType)
+		Type listType = new TypeToken<List<Entity>>(){}.getType()
+		List<Entity> extractions = gson.fromJson(jsonExtraction, listType)
 		return extractions
 	}
 	
 	/*
 	 * Get the OffsetString defined in NIF
 	 */
-	def getNIFOffsetString(Extraction e)
+	def getNIFOffsetString(Entity e)
 	{
 		String strOffset = "offset_"+e.getStartChar()+"_"+e.getEndChar()+"_"+e.getEntity()
 		return URLEncoder.encode(strOffset , "UTF-8").replaceAll("\\+","%20")

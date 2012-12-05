@@ -128,6 +128,7 @@ h2 {
 	<li>Change the linkeddata baseURI and servercontext in configuration</li>
 	<li>Change the synote-multimedia-service url in configuration</li>
 	<li>Enable NERD, set the NERD key if necessary</li>
+	<li>Check if the NERD base URI is correct, default is http://nerd.eurecom.fr/entity/ since nerd client 0.5v </li>
 </ol>
 <h2>When the system restarts, you need to:</h2>
 <ol>

@@ -11,6 +11,7 @@ import java.util.UUID
 
 import org.synote.resource.compound.*
 import org.synote.player.server.PlayerService
+import org.synote.resource.ResourceService
 import org.synote.permission.PermService
 import org.synote.utils.DatabaseService
 import org.synote.permission.PermissionValue
@@ -42,14 +43,18 @@ class ApiController {
 	static allowedMethods = [login:'GET',getRecording:'GET',getSynmarkList:'GET',getMultimedia:'GET',getPresentatinList:'GET',
 		getTranscriptList:'GET', getMultimediaList:'GET', signout:'GET']
 	
-	def beforeInterceptor = [action:this.&auth, except:['error']]
+	//def beforeInterceptor = [action:this.&auth, except:['error']]
 	//def afterInterceptor = [action:this.&signout, except:['listAllTags']]
 	def securityService
 	def springSecurityService
 	def playerService
 	def permService
 	def databaseService
+	def resourceService
 	
+	/*
+	 * Deprecated
+	 */
 	def auth(){
 		def exception = session[APIStatusCode.API_AUTH_EXCEPTION]
 		String format = request.getParameter("format")
@@ -77,6 +82,9 @@ class ApiController {
 			
 	}
 	
+	/*
+	 * Deprecated
+	 */
 	/**
 	 * sign out the user and clear the session
 	 * 
@@ -139,6 +147,9 @@ class ApiController {
 		return
 		
 	}
+	/*
+	 * Deprecated
+	 */
     /**
      * PARAMS:
      * userName:the login name
@@ -192,6 +203,7 @@ class ApiController {
 	}
 	
 	/**
+	 * Not implemented yet
 	 * Get all the resources, including multimedia, transcript, synmarks and presentations related to a recording. The parameter mmid
 	 * must be provided to find the multimedia resource. NOT IMPLEMENTED YET.
 	 * 
@@ -227,66 +239,31 @@ class ApiController {
 	* WRITE: 300
 	*/
 	def getMultimediaList = {
-		
-		//The the number of record returned is not specified, we return all the records
-		if(!params.max)
-			params.max=Integer.MAX_VALUE
-			
-		String format = request.getParameter("format")
-			
-		def multimediaResourceList = databaseService.listMultimedia(params)
-		int cnt = databaseService.countMultimediaList(params)
-		
-		int stat = APIStatusCode.SUCCESS
-		String desc = "Successfully get multimedia list."
-		if(format && format.toLowerCase() == "json")
+		try
 		{
-			//We don't support json yet
+			def multimediaList = resourceService.getMultimediaAsJSON(params) as Map
+			def viewList = resourceService.getMostViewedMultimedia(5) as Map
+			//println multimediaList.total
+			render resourceService.getMultimediaAsJSON(params) as JSON
+			return
 		}
-		else if(format && format.toLowerCase() == "rdf")
+		catch(org.hibernate.QueryException qex) //In case the query params not found
 		{
-			//We don't support RDF yet
+			def desc = qex.getMessage()
+			redirect(action:'error',params:[stat:APIStatusCode.INTERNAL_ERROR,desc:desc])
 		}
-		else
-		{
-			render (contentType:"text/xml", encoding:"UTF-8")
-			{
-				synote(action:"getMultimediaList")
-				{
-					status(stat)
-					description(desc)
-					multimediaList(total:cnt)
-					{
-						multimediaResourceList.each{mr->
-							multimedia(id:mr.id)
-							{
-								owner(id:mr.owner_id, mr.owner_name)
-								title(mr.title)
-								public_perm_val(mr.public_perm_val)
-								if(securityService.isLoggedIn())
-								{
-									user_perm_val(mr.user_perm_val)
-								}
-							}	
-						}	
-					}
-				}
-			}
-		}
-		return
 	}
 	
 	/**
 	* Get the multimedia resource and related attributes. The parameter mmid must be provided to find the multimedia resource.
 	*
 	* PARAMS:
-	* apiKey (optional): the user api key, if not provided, the request will be treated as anonymous user
-	* mmid: multimedia resource id
+	* multimediaId: multimedia resource id
 	*/
 	def getMultimedia = 
 	{
 		String format = request.getParameter("format")
-		def mmid = request.getParameter("mmid")
+		def mmid = request.getParameter("multimediaId")
 		def mmr = checkMultimediaResource(mmid, format)
 		if(!mmr)
 			return
@@ -294,17 +271,18 @@ class ApiController {
 		def perm = permService.getPerm(mmr)
 		if(perm.val >= PermissionValue.findByName("READ")?.val)
 		{
+			String tagsStr = ""
+			if(mmr.tags != null && mmr.tags?.size() >0)
+			{
+				mmr.tags.each{tag->
+					tagsStr+=tag?.content+","	
+				}
+				tagsStr = tagsStr.substring(0,tagsStr.size()-1)
+			}
+			
 			int stat = APIStatusCode.SUCCESS
 			String desc = "Successfully get multimedia resource."
-			if(format && format.toLowerCase() == "json")
-			{
-				//We don't support json yet
-			}
-			else if(format && format.toLowerCase() == "rdf")
-			{
-				//We don't support RDF yet
-			}
-			else
+			if(format && format.toLowerCase() == "xml")
 			{
 				render (contentType:"text/xml", encoding:"UTF-8")
 				{
@@ -328,6 +306,30 @@ class ApiController {
 				}
 				return
 			}
+			else if(format && format.toLowerCase() == "rdf")
+			{
+				//We don't support RDF yet
+			}
+			else
+			{
+				render (contentType:"text/json", encoding:"UTF-8")
+				{
+					'synote'(
+						'action':'getMultimedia',
+						'status':stat,
+						'description':desc,
+						'multimedia':[
+							'id':mmr.id,
+							'ownerid':mmr.owner?.id,
+							'ownername':mmr.owner?.userName,
+							'title':mmr.title,
+							'url':mmr.url?.url,
+							'tags':tagsStr,
+							'note':mmr.note?.content
+						]
+					)
+				}
+			}
 		}
 		else
 		{
@@ -339,67 +341,54 @@ class ApiController {
 	* Get all the synmarks related to a multimedia resource
 	*
 	* PARAMS:
-	* apiKey (optional): the user api key, if not provided, the request will be treated as anonymous user
-	* mmid: multimedia resource id
+	* multimediaId: multimedia resource id
 	* 
 	* Comments:
 	* The start and end time for synmark is in 1/1000 second
 	*/
 	def getSynmarkList = {
 		
-		String format = request.getParameter("format")
-		def mmid = request.getParameter("mmid")
-		def mmr = checkMultimediaResource(mmid, format)
-		if(!mmr)
-			return
-			
-		def annotations = ResourceAnnotation.findAllByTarget(mmr)
-		
-		def synmarks = playerService.getSynmarks(mmr.id.toString())
-
-		int stat = APIStatusCode.SUCCESS
-		String desc = "Successfully get synmark list."
-		if(format && format.toLowerCase() == "json")
+		chain(controller:'recording',action:'getSynmarksAjax',params:params)	
+	}
+	
+	/**
+	 * Get a single synmark as json
+	 * 
+	 * PARAMS:
+	 * synmarkId: synmark resource id
+	 */
+	def getSynmark = {
+		def synmarkId = params.synmarkId
+		if(!synmarkId)
 		{
-			//We don't support json yet
-		}
-		else if(format && format.toLowerCase() == "rdf")
-		{
-			//We don't support RDF yet
-		}
-		else
-		{
-			render (contentType:"text/xml", encoding:"UTF-8")
-			{
-				synote(action:"getSynmarkList")
-				{
-					status(stat)
-					description(desc)
-					synmarkList()
-					{
-						synmarks.sort {it.getStart()}.each {smk ->
-							synmark(id:smk.id)
-							{
-								owner(id:smk.owner?.getId(), smk.owner?.getFirstName() + " "+smk.owner?.getLastName())
-								title(smk.getTitle())
-								note(smk.getNote())
-								tags()
-								{
-									smk.getTags().each{t->
-										tag(t)
-									}
-								}
-								nextSynmark(smk.getNext())
-								start(smk.getStart())
-								end(smk.getEnd())
-								canEdit(smk.canEdit())
-								canDelete(smk.canDelete())	
-							}
-						}
-					}
-				}
+			render(contentType:"text/json"){
+				error(stat:APIStatusCode.SYNMARK_ID_MISSING, description:"Cannot find synmark id!")
 			}
+			return
 		}
+		def synmark = SynmarkResource.get(synmarkId.toLong())
+		if(!synmark)
+		{
+			redirect(action:'error', params:[stat:APIStatusCode.SYNMARK_NOT_FOUND,desc:"Cannot find the synmark resource with id=${synmarkId}!"])
+			return
+		}
+		
+		def annotation = ResourceAnnotation.findBySource(synmark)
+		def multimedia = annotation?.target
+		if(!multimedia)
+		{
+			redirect(action:'error', params:[stat:APIStatusCode.MM_NOT_FOUND,desc:"Cannot find the multimedia resource!"])
+			return
+		}
+		def perm = permService.getPerm(multimedia)
+		if(perm?.val <=0)
+		{
+			redirect(action:'error', params:[stat:APIStatusCode.MM_PERMISSION_DENIED,desc:"Permission Denied!"])
+			return
+		}
+		
+		SynmarkData synmarkData = playerService.createSynmarkData(annotation)
+		render synmark as JSON//encodeAsJSON()
 		return
 	}
 	/**
@@ -407,65 +396,13 @@ class ApiController {
 	*
 	* PARAMS:
 	* apiKey (optional): the user api key, if not provided, the request will be treated as anonymous user
-	* mmid: multimedia resource id
+	* multimediaId: multimedia resource id
 	* 
 	* Comments:
 	* The start and end time for synpoints is in 1/1000 second
 	*/
 	def getPresentationList = {
-		String format = request.getParameter("format")
-		def mmid = request.getParameter("mmid")
-		def mmr = checkMultimediaResource(mmid, format)
-		if(!mmr)
-			return
-		
-		def annotations = ResourceAnnotation.findAllByTarget(mmr)
-		
-		def presentations = playerService.getPresentations(mmr.id.toString())
-		int stat = APIStatusCode.SUCCESS
-		String desc = "Successfully get presentations."
-		
-		if(format && format.toLowerCase() == "json")
-		{
-			//We don't support json yet
-		}
-		else if(format && format.toLowerCase() == "rdf")
-		{
-			//We don't support RDF yet
-		}
-		else
-		{
-			render (contentType:"text/xml", encoding:"UTF-8")
-			{
-				synote(action:"getPresentations")
-				{
-					status(stat)
-					description(desc)
-					presentationList()
-					{
-						presentations.each{p->
-							presentation(id:p.getId())
-							{
-								owner(id:p.owner?.getId(), p.owner?.getFirstName() + " "+p.owner?.getLastName())
-								slides()
-								{
-									p.slides.each{s->
-										slide(id:s.getId())
-										{
-											start(s.getStart())
-											url(s.getUrl())
-										}
-									}
-								}
-								canEdit(p.canEdit())
-								canDelete(p.canDelete())
-							}
-						}
-					}
-				}
-			}
-		}
-		return
+		chain(controller:'recording',action:'getPresentationsAjax',params:params)
 	}
 	
 	/**
@@ -479,86 +416,27 @@ class ApiController {
 	* The start and end time for synpoints is in 1/1000 second
 	*/
 	def getTranscriptList = {
-		String format = request.getParameter("format")
-		def mmid = request.getParameter("mmid")
-		def mmr = checkMultimediaResource(mmid, format)
-		if(!mmr)
-			return
-			
-		def annotations = ResourceAnnotation.findAllByTarget(mmr)
-		
-		def transcripts = playerService.getTranscripts(mmr.id.toString())
-		int stat = APIStatusCode.SUCCESS
-		String desc = "Successfully get presentations."
-		
-		if(format && format.toLowerCase() == "json")
-		{
-			//We don't support json yet
-		}
-		else if(format && format.toLowerCase() == "rdf")
-		{
-			//We don't support RDF yet
-		}
-		else
-		{
-			render (contentType:"text/xml", encoding:"UTF-8")
-			{
-				synote(action:"getTranscripts")
-				{
-					status(stat)
-					description(desc)
-					transcriptList()
-					{
-						transcripts.each{t->
-							transcript(id:t.getId()
-								)
-							{
-								owner(id:t.owner?.getId(), t.owner?.getFirstName() + " "+t.owner?.getLastName())
-								content(t.getText())
-								canEdit(t.canEdit())
-								canDelete(t.canDelete())
-								synpoints()
-								{
-									t.getSynpoints().each{s->
-										synpoint(startIndex:s.getStartIndex(), endIndex:s.getEndIndex(), startTime:s.getStartTime(), endTime:s.getEndTime())	
-									}
-								}
-							}	
-						}
-					}
-				}
-			}
-		}
-		return
+		chain(controller:'recording',action:'getTranscriptsAjax',params:params)
 	}
 	
 	/**
-	 * Return error xml or json
+	 * Return error json
 	 */
 	def error = {
 		int stat = Integer.parseInt(params['stat'])
-		println "stat:"+stat
+		//println "stat:"+stat
 		String desc = params['desc']
-		String format = params['format']
+		//String format = params['format']
 		
-		if(format && format.toLowerCase() == "json")
+		render (contentType:"text/json", encoding:"UTF-8")
 		{
-			//We don't support json yet
-			return
+			'synote'(
+					'status':stat,
+					'description':desc
+			)
+			
 		}
-		else
-		{
-			render (contentType:"text/xml", encoding:"UTF-8")
-			{
-				synote()
-				{
-					status(stat)
-					description(desc)
-				}
-				
-			}
-			return
-		}
+		return
 	}
 	
 	private MultimediaResource checkMultimediaResource(String mmid,String format)

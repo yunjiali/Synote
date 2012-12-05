@@ -62,7 +62,7 @@ import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
 
 //For nerd
-import fr.eurecom.nerd.client.schema.Extraction
+import fr.eurecom.nerd.client.schema.Entity
 
 class LinkedDataService {
 
@@ -848,7 +848,7 @@ class LinkedDataService {
 	   * TODO: Need to be changed
 	   * Check if the named entity has already been extracted using the same extractor for the same media resource or fragment
 	   * params:
-	   * extraction: the NERD definition of Extraction result
+	   * extraction: from NERD client 0.5v, extraction is the entity, the NERD definition of Extraction result
 	   * extractor: the name of the extractor
 	   * mediaUri: the multimedia URI or media fragment URI
 	   * 
@@ -1054,7 +1054,7 @@ class LinkedDataService {
 					
 				log.debug("extractions size:"+extractions?.size());
 				
-				for(Extraction e : extractions )
+				for(Entity e : extractions )
 			    {
 				   
 				   if(checkDuplicateNE(e, extractor,resource))

@@ -340,7 +340,7 @@ class RecordingController {
 			render ""
 			return
 		}
-		render synmarkList.encodeAsJSON()
+		render synmarkList as JSON//encodeAsJSON()
 		return
 	}
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])

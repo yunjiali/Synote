@@ -127,13 +127,15 @@ class NerdController {
 		try
 		{
 			
-			NERD nerd = new NERD("http://semantics.eurecom.fr/nerdtest/api/",NERD_KEY)
-			def result= nerd.extractionJSON(nerdExtractor,
+			//old uri:
+			//NERD nerd = new NERD("http://semantics.eurecom.fr/nerdtest/api/",NERD_KEY)
+
+			NERD nerd = new NERD(NERD_KEY)
+			def result= nerd.annotateJSON(nerdExtractor,
                                    DocumentType.PLAINTEXT,
-                                   LanguageType.ENGLISH,
                                    text,
-								   20L,
-                                   false); 
+								   GranularityType.OEN,
+								   10L); 	
 			
 			def jsObj = JSON.parse(result)
 			
@@ -224,17 +226,22 @@ class NerdController {
 		if(!params.lang)
 			params.lang = "en"
 		
-		def languageType = nerdService.getLanguageType(params.lang)
 		try
 		{
-			
-			NERD nerd = new NERD("http://semantics.eurecom.fr/nerdtest/api/",NERD_KEY)
-			def result= nerd.extractionJSON(nerdExtractor,
+			try
+			{
+			NERD nerd = new NERD(NERD_KEY)
+			def result= nerd.annotateJSON(nerdExtractor,
 								   DocumentType.TIMEDTEXT,
-								   languageType,
 								   text,
-								   20L,
-								   false);
+								   GranularityType.OEN,
+								   10L);
+			}
+			catch(Exception expp)
+			{
+				println expp.class
+				println expp.getMessage()
+			}
 			
 			def jsObj = JSON.parse(result)
 			
