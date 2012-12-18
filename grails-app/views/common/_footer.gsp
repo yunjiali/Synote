@@ -28,6 +28,10 @@
 			</span>|
 			<span>
 				<img src="${resource(dir: 'images', file: 'licenses-bsd-88x31.png')}" alt="BSD license"/>
+			</span>|
+			<span>
+				Funded by: <a href="http://www.jisc.ac.uk" target="_blank"><img src="${resource(dir: 'images', file: 'jisc-small.jpg')}" alt="JISC"/></a>
 			</span>
+			
 	</div>
 </footer>

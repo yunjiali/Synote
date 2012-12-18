@@ -3,56 +3,6 @@
 <title><g:message code="org.synote.home.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css/jquery',file:"jquery.slides.css")}" media="screen, projection" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:"calendar.css")}" media="screen, projection" />
-<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.zrssfeed.min.js")}"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-	//Get the RSS feed from Synote blog
-	$("#blog_feed_div").rssfeed("http://blog.lsl.ecs.soton.ac.uk/synote/feed/",{
-		limit:6,
-		content:false,
-		titletag:"h4"
-	})
-});
-</script>
-<style type="text/css" media="screen">
-   /*I didn't use the original zrssfeed css file*/
-   .rssFeed {
-		font-family: Arial, Helvetica, sans-serif;
-		font-size:90%;
-	}
-	.rssFeed a {
-		color: #444;
-		text-decoration: none;
-	}
-	.rssFeed a:hover {
-		color: #000;
-		text-decoration: underline;
-	}
-	
-	.rssHeader { padding: 0.2em 0; }
-	
-	.rssBody { border: 0; }
-	.rssBody ul { list-style: none; }
-	.rssBody ul, .rssRow, .rssRow h4, .rssRow p {
-		margin: 0;
-		padding: 0;
-	}
-	
-	.rssRow h4 { font-size: 1.1em; }
-	.rssRow div {
-		font-size: 90%;
-		color: #666;
-		margin: 0.2em 0 0.4em 0;
-	}
-	
-	.rssRow .rssMedia {
-		padding: 0.5em;
-		font-size: 1em;
-	}
-   
-</style>
 </head>
 <body>
 	<h1 class="hiding"><g:message code="org.synote.home.title" /></h1>
