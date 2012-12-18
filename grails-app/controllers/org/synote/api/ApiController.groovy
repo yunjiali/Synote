@@ -1,6 +1,7 @@
 package org.synote.api
 
 import grails.converters.*
+import grails.web.JSONBuilder
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.authentication.BadCredentialsException
 import org.synote.user.SecurityService
@@ -388,7 +389,13 @@ class ApiController {
 		}
 		
 		SynmarkData synmarkData = playerService.createSynmarkData(annotation)
-		render synmark as JSON//encodeAsJSON()
+		JSONBuilder b=new JSONBuilder()
+		render b.build{
+			synmarkData.properties.each{propName, propValue->
+				setProperty(propName,propValue)	
+			}
+			setProperty("multimediaId",multimedia.id)	
+		}
 		return
 	}
 	/**
