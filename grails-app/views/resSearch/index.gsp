@@ -93,9 +93,9 @@
 					</g:each>
 				</div>
 			</div>
-			<div class="row" id="recording_pagination">
+			<div class="row" id="search_pagination">
 				<g:render template="/common/pagination" 
-					model="['currentPage':searchResultList?.page,'rows':params.rows,'ctrl':'resSearch', 'act':'index', 'total':searchResultList?.total]"/>
+					model="['query': params.query, 'currentPage':searchResultList?.page,'rows':params.rows,'ctrl':'resSearch', 'act':'index', 'total':searchResultList?.total]"/>
 			</div>
 		</div>
 	</div>

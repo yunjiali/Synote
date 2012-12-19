@@ -26,7 +26,7 @@
 			<div>
 				<div id="synmark_list_div">
 					<g:if test="${synmarksList.rows?.size() == 0}">
-						<div class="nodata">You have no recordings</div>
+						<div class="nodata">You don't have any Synmark</div>
 					</g:if>
 					<g:each in="${synmarksList.rows}" var="row">
 						<g:render template="/common/synmark" model="['row':row,'nerditEnabled':false]"/>
@@ -35,7 +35,7 @@
 			</div>
 			<div class="row" id="recording_pagination">
 				<g:render template="/common/pagination" 
-					model="['currentPage':synmarksList.page,'rows':params.rows, 'sidx':params.sidx, 'text':params.text,
+					model="['currentPage':synmarksList.page,'rows':params.rows, 'sidx':params.sidx, 'query':params.text,
 						'sord':params.sord,'ctrl':'user', 'act':'listSynmarks', 'total':synmarksList.total]"/>
 			</div>
 		</div>

@@ -10,7 +10,7 @@
 			</g:if>
 			<g:else>
 				<li><g:link controller="${ctrl}" action="${act}" id="${id}"
-					params="[page:page_prev,text:text,rows:rows,sidx:sidx,sord:sord]" title="previous page">Prev</g:link>
+					params="[page:page_prev,query:query,rows:rows,sidx:sidx,sord:sord]" title="previous page">Prev</g:link>
 			</li>
 			</g:else>
 			<g:if test="${total<=7}">
@@ -31,7 +31,7 @@
 			</g:else>
 			<g:each var="i" in="${pages}">
 				<li class="${cPage==i?'active':''}"><g:link controller="${ctrl}" action="${act}" id="${id}" 
-					params="[page:i,text:text,rows:rows,sidx:sidx,sord:sord]" title="page ${i}">${i}</g:link>
+					params="[page:i,query:query,rows:rows,sidx:sidx,sord:sord]" title="page ${i}">${i}</g:link>
 				</li>
 			</g:each>
 			<g:if test="${cPage==total}">
@@ -40,7 +40,7 @@
 			</g:if>
 			<g:else>
 				<li><g:link controller="${ctrl}" action="${act}" id="${id}" 
-					params="[page:page_next,text:text,rows:rows,sidx:sidx,sord:sord]" title="next page">Next</g:link>
+					params="[page:page_next,query:query,rows:rows,sidx:sidx,sord:sord]" title="next page">Next</g:link>
 				</li>
 			</g:else>
 		</ul>

@@ -52,7 +52,7 @@
 			</div>
 			<div class="row" id="recording_pagination">
 				<g:render template="/common/pagination" 
-					model="['currentPage':multimediaList.page,'rows':params.rows, 'sidx':params.sidx, 'text':params.text,
+					model="['currentPage':multimediaList.page,'rows':params.rows, 'sidx':params.sidx, 'query':params.text,
 						'sord':params.sord,'ctrl':'user', 'act':'listRecordings', 'total':multimediaList.total]"/>
 			</div>
 		</div>

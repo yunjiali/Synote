@@ -1,3 +1,5 @@
+package org.synote.user
+
 import grails.converters.JSON
 
 import javax.servlet.http.HttpServletResponse

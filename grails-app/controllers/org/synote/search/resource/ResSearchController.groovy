@@ -30,7 +30,7 @@ class ResSearchController {
 	def searchableService
 	def resourceService
 	
-	private static String MAX_RESULTS = "20"
+	private static String MAX_RESULTS = 10
 	
 	def index = {
 		if (!params.query?.trim()) {
@@ -38,6 +38,8 @@ class ResSearchController {
 			redirect (action:"help")
 			return
 		}
+		
+		def searchParams = [:]
 		//println "max:"+params.max
 		//println "offset:"+params.offset
 		if(!params.type)
@@ -52,6 +54,9 @@ class ResSearchController {
 		def currentPage = Integer.valueOf(params.page) ?: 1
 		def rowOffset = currentPage == 1 ? 0 : (currentPage - 1) * maxRows
 		
+		searchParams.offset = rowOffset
+		searchParams.max = maxRows
+		
 		def user=securityService.getLoggedUser()
 
 		try
@@ -59,23 +64,23 @@ class ResSearchController {
 			def searchResult
 			if(params.type == 'all')
 			{
-				searchResult = searchableService.search(params.query,params)
+				searchResult = searchableService.search(params.query,searchParams)
 			}
 			else if(params.type == 'multimedia')
 			{
-				searchResult = MultimediaResource.search(params.query,params)
+				searchResult = MultimediaResource.search(params.query,searchParams)
 			}
 			else if(params.type == 'synmark')
 			{
-				searchResult = SynmarkResource.search(params.query,params)
+				searchResult = SynmarkResource.search(params.query,searchParams)
 			}
 			else if(params.type == 'transcript')
 			{
-				searchResult = WebVTTCue.search(params.query,params)
+				searchResult = WebVTTCue.search(params.query,searchParams)
 			}
 			else
 			{
-				searchResult = searchableService.search(params.query,params)
+				searchResult = searchableService.search(params.query,searchParams)
 			}
 			
 			//for(int i=0;i<searchResult.results.size();i++)
@@ -83,7 +88,7 @@ class ResSearchController {
 			//	println "class:"+searchResult.results[i].class
 			//	println "score:"+searchResult.scores[i]	
 			//}
-			def totalRows = searchResult.results?.size()
+			def totalRows = searchResult.total
 			def numberOfPages = Math.ceil(totalRows/maxRows)
 			def results = []
 			
@@ -109,12 +114,16 @@ class ResSearchController {
 						}
 						else
 						{
-							result.delete()	
+							def syn = SynmarkResource.get(result.id)
+							if(syn != null)
+								syn.delete()	
 						}
 					}
 					else
 					{
-						result.delete()	
+						def syn = SynmarkResource.get(result.id)
+						if(syn != null)
+							syn.delete()	
 					}
 				}
 				else if(result.instanceOf(WebVTTCue))
