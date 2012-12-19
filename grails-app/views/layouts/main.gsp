@@ -29,7 +29,7 @@
 <body itemscope="itemscope" itemtype="http://schema.org/WebPage" itemref="bottomMainFooter">
 <meta itemprop="author" content="Yunjia Li"/>
 	<!-- Top Navigation bar -->
-	<div id="navbar_div" class="navbar navbar-inverse" style="margin-bottom:0px !important;min-width:940px;" itemscope="itemscope" itemtype="WPHeader">
+	<div id="navbar_div" class="navbar" style="margin-bottom:0px !important;" itemscope="itemscope" itemtype="WPHeader">
 		<div class="navbar-inner">
 			<div class="container">
 				<!-- top menu -->
