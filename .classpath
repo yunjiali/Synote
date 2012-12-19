@@ -27,6 +27,6 @@
 	<classpathentry kind="lib" path="lib/gson-1.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/jersey-client-1.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/jersey-core-1.8.jar"/>
-	<classpathentry kind="lib" path="lib/nerd-client-0.2.jar"/>
+	<classpathentry kind="lib" path="lib/nerd4java-v0.5.jar"/>
 	<classpathentry kind="output" path="target-eclipse/classes"/>
 </classpath>
