@@ -169,6 +169,13 @@ class MultimediaResourceController {
 				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
 	}
 	
+	def createdm = {
+		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
+		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		return [isAllowedIPAddress:isAllowedIPAddress,
+				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
+	}
+	
 	def createinet = {
 		//def multimediaResource = new MultimediaResource(params)
 		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
@@ -368,6 +375,23 @@ class MultimediaResourceController {
 					else
 					{
 						msg+="No Closed Captioning could be uploaded.<br/>"	
+					}
+				}
+			}
+			else if(rlocation == "dailymotion" && params.cc == "true")
+			{
+				def videoid = regExService.getVideoIDfromDailyMotionURL(url)
+				if(videoid != null)
+				{
+					def srt = resourceService.getSRTfromDailyMotion(videoid,null)
+					if(srt!=null)
+					{
+						//Save srt as webvtt in Synote
+						webVTTService.createWebVTTResourceFromSRT(multimediaResource,srt)
+					}
+					else
+					{
+						msg+="No subtitle of the give language is found for the video.<br/>"
 					}
 				}
 			}

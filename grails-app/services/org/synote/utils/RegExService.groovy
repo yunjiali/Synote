@@ -98,4 +98,27 @@ class RegExService {
 		
 		return vid
 	}
+	
+	def getVideoIDfromDailyMotionURL(String url)
+	{
+		def vid = null
+		
+		Pattern p = Pattern.compile("^.+dailymotion.com\\/(video|hub)\\/([^_]+)[^#]*(#video=([^_&]+))?")
+			
+		Matcher m = p.matcher(url)
+		 
+		if (m.matches())
+		{
+			if(m.group(4) != null)
+			{
+				vid = m.group(4)
+			}
+			else
+			{
+				vid = m.group(2)
+			}
+		}
+		
+		return vid
+	}
 }

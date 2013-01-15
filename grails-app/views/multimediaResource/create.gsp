@@ -21,7 +21,11 @@
 			</g:link>
 			
 			<g:link class="user" action="createyt" title="Youtube">
-				<img src="${resource(dir: 'images/skin', file: 'youtube_64.png')}" alt="youtube"/><br />YouTube</g:link>
+				<img src="${resource(dir: 'images/skin', file: 'youtube_64.png')}" alt="youtube"/><br />YouTube
+			</g:link>
+			<g:link class="user" action="createdm" title="DailyMotion">
+				<img src="${resource(dir: 'images/skin', file: 'dailymotion_64.png')}" alt="dailymotion"/><br />DailyMotion
+			</g:link>
 			<syn:fileUploadEnabled>
 			<g:link class="user" action="createlocal" title="Upload from local disk">
 				<img src="${resource(dir: 'images/skin', file: 'harddisk_64.png')}" alt="upload"/><br />Local Disk</g:link>
