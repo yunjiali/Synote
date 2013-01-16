@@ -730,4 +730,61 @@ class ResourceService {
 			return srt
 		}
 	}
+	
+	/*
+	 * Get closed captioning in srt format from DailyMotion
+	 * videoid: the id of YouTube Video
+	 * lang: language code, default is en
+	 */
+	def getSRTfromDailyMotion(videoid,lang)
+	{
+		if(videoid == null)
+			return null
+			
+		String l = lang
+		if(lang == null)
+			l= "en"
+		String fmt = "srt"
+		
+		def http = new HTTPBuilder("https://api.dailymotion.com/")
+		def srt = null
+		try
+		{
+			def queryTrack = [fields:'url']
+			
+			//send the first request to get the url for the srt file
+			http.get(path:"/subtitle/"+videoid+"."+l, contentType:JSON, query:queryTrack){ resp1,reader1->
+				String s1 = reader1?.text
+				println s1
+				if(s1?.size() > 0)
+				{
+					//parse the json
+					def slurper = new JsonSlurper()
+					def result = slurper.parseText(s1)
+					if(result.error == null)
+					{
+						http.get(path:result.url, contentType:TEXT){ resp2,reader2->
+								
+							String s2 = reader2?.text
+							if(s2?.size() > 0)
+								srt = s2
+							return srt
+						}
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			//do nothing
+			println ex.getMessage()
+			ex.printStackTrace()
+			log.debug(ex.getMessage())
+		}
+		finally
+		{
+			return srt
+		}
+		//https://api.dailymotion.com/subtitle/28764736?fields=url
+	}
 }

@@ -31,7 +31,8 @@ function initSynotePlayer(recording)
 		}
 	});
 	
-    multimedia = new MediaElementJSPlayer(recording,$("#recording_content_div"),$("#multimedia_player_div"));
+	multimedia = new MediaElementJSPlayer(recording,$("#recording_content_div"),$("#multimedia_player_div"));
+    
     multimedia.initPlayer(function(msg,error){
     	if(error!=null)
     	{

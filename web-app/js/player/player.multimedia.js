@@ -48,7 +48,7 @@ var MultimediaBase = Base.extend({
 	{
 		return inner_container;
 	},
-	
+		
 	initPlayer:function(){ //startPosition is in miliseconds
 		
 		//in the base class init player's control panels
@@ -147,7 +147,7 @@ var MultimediaBase = Base.extend({
 	showMsg:function(msg,error)
 	{
 		var msg_div = $("#multimedia_player_error_div");
-		if(type == "error")
+		if(error!=null)
 		{
 			msg_div.html("<div class='alert alert-error'><button class='close' data-dismiss='alert'>x</button>"+msg+"</div>");
 		}
@@ -178,6 +178,10 @@ var MediaElementJSPlayer = MultimediaBase.extend({
 		if(isYouTubeURL(recording.url))
 		{
 			$("#multimedia_player").children("source").attr("type","video/x-youtube");
+		}
+		else if(isDailyMotionURL(recording.url))
+		{
+			$("#multimedia_player").children("source").attr("type","video/dailymotion");
 		}
 		else
 		{
@@ -358,4 +362,3 @@ var MediaElementJSPlayer = MultimediaBase.extend({
 		$("#control_forward").bind('click',{},this.forward);
 	}
 });
-
