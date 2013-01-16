@@ -44,17 +44,17 @@ var nerdsrt = function(extractor_name){
 					//This is the type from other extractors, we will us nerdType instead
 					//var entity_type = data[i].type === undefined ?"unknown type":data[i].type.toLowerCase();
 					var entity_type = data[i].nerdType ==""?"Thing":data[i].nerdType.split("#")[data[i].nerdType.split("#").length-1]
-					if(data[i].type != null)
-						entity_type+=" ("+data[i].type+")";
+					if(data[i].extractorType != null)
+						entity_type+=" ("+data[i].extractorType+")";
 					var html='';
 					if(data[i].uri == null || data[i].uri == "null"  || data[i].uri =="NORDF")
 					{
-						html += data[i].entity + " is a(n) "+entity_type
+						html += data[i].label + " is a(n) "+entity_type
 					}
 					else
 					{
-						html+="<a target='_blank' href='"+data[i].uri+"' title='"+data[i].entity+
-								"'>"+data[i].entity+"<i class='icon-link-small'></i></a> is a(n) "+entity_type;
+						html+="<a target='_blank' href='"+data[i].uri+"' title='"+data[i].label+
+								"'>"+data[i].label+"<i class='icon-link-small'></i></a> is a(n) "+entity_type;
 					}
 						
 					var entity_div = $("<div/>");

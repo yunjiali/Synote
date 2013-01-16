@@ -979,7 +979,7 @@ class LinkedDataService {
 	   * synpoint: providing the start and end time that the named entity annotates
 	   * extractor: a String, the extractor's name
 	   */
-	  def synchronized saveNERDToTripleStroe(extractions,multimedia,resource,synpoint,extractor)
+	  def synchronized saveNERDToTripleStroe(entities,multimedia,resource,synpoint,extractor)
 	  {
 		  	if(grailsApplication.config.jena.enabled != true)
 			{
@@ -990,7 +990,7 @@ class LinkedDataService {
 				return false	
 			}
 			//No extractions
-			if(extractions?.size() <=0)
+			if(entities?.size() <=0)
 			{
 				return false
 			}
@@ -1052,22 +1052,22 @@ class LinkedDataService {
 					}
 				}
 					
-				log.debug("extractions size:"+extractions?.size());
+				log.debug("extractions size:"+entities?.size());
 				
-				for(Entity e : extractions )
+				for(Entity e : entities )
 			    {
 				   
 				   if(checkDuplicateNE(e, extractor,resource))
 				   {
-					   log.debug("#######duplicated:###########"+e.getEntity())
+					   log.debug("#######duplicated:###########"+e.getLabel())
 					   continue
 				   }
 				   
 				   JenaResource ne = null
 				   if(e.getUri() == null || e.getUri().equals("null") || e.getUri().equals("NORDF"))
 				   {
-					   //println "getEntity:"+e.getEntity()
-					   ne = model.createResource(new AnonId("_b_"+e.getIdExtraction()))
+					   //println "getEntity:"+e.getLabel()
+					   ne = model.createResource(new AnonId("_b_"+e.getIdEntity()))
 				   }
 				   else
 				   {
@@ -1087,9 +1087,9 @@ class LinkedDataService {
 				   
 				   //The type extracted from the original extractor
 				  
-				   String str_ext_type = e.getType()
+				   String str_ext_type = e.getExtractorType()
 				   JenaResource ext_type
-				   if(!e.getType())
+				   if(!e.getExtractorType())
 				   {
 					   //If the type is empty, use default type Nerd:Thing
 					   str_ext_type = "Thing" 
@@ -1097,7 +1097,7 @@ class LinkedDataService {
 				   }
 				   else
 				   {
-					   ext_type = model.createResource(e.getType())
+					   ext_type = model.createResource(e.getExtractorType())
 				   }
 				   model.add(ne,p_rdf_type,ext_type)
 				   log.debug("extractor uri")
@@ -1107,12 +1107,12 @@ class LinkedDataService {
 				   log.debug("extractor type")
 				   
 				   //?ne rdfs:label entity_string
-				   Literal o_entityName = model.createLiteral(e.getEntity())
+				   Literal o_entityName = model.createLiteral(e.getLabel())
 				   model.add(ne,p_rdfs_label,o_entityName)
 				   log.debug("label");
 				   
 				   //The extraction is an OAC annotations and opmv:Artifact
-				   JenaResource s_annotation = model.createResource(getNERDExtractionBaseURI()+e.getIdExtraction())
+				   JenaResource s_annotation = model.createResource(getNERDExtractionBaseURI()+e.getIdEntity())
 				   JenaResource o_annotationType = model.createResource(V.OAC_NS[1]+"Annotation")
 				   model.add(s_annotation,p_rdf_type,o_annotationType)
 				   JenaResource o_opmv_artifact = model.createResource(V.OPMV_NS[1]+"Artifact")
@@ -1120,7 +1120,7 @@ class LinkedDataService {
 				   
 				   //the identifier is the extraction id
 				   JenaProperty p_dc_identifier = model.createProperty(V.DC_NS[1]+"identifier")
-				   Literal o_idExtraction = model.createLiteral(String.valueOf(e.getIdExtraction()))
+				   Literal o_idExtraction = model.createLiteral(String.valueOf(e.getIdEntity()))
 				   model.add(s_annotation,p_dc_identifier,o_idExtraction)
 				   
 				   JenaProperty p_oac_hasBody = model.createProperty(V.OAC_NS[1]+"hasBody")
