@@ -135,14 +135,14 @@ class NerdController {
                                    DocumentType.PLAINTEXT,
                                    text,
 								   GranularityType.OEN,
-								   10L); 	
+								   30L); 	
 			
 			def jsObj = JSON.parse(result)
 			
 			//save json to triple store
 			//println "before"
-			def extractions = nerdService.getExtractionFromJSON(result)
-			linkedDataService.saveNERDToTripleStroe(extractions,multimedia,resource,synpoint,params.extractor)
+			def entities = nerdService.getEntityFromJSON(result)
+			linkedDataService.saveNERDToTripleStroe(entities,multimedia,resource,synpoint,params.extractor)
 			//println "afters"
 			render JSON.parse(result) as JSON
 			return
@@ -228,57 +228,52 @@ class NerdController {
 		
 		try
 		{
-			try
-			{
+			
 			NERD nerd = new NERD(NERD_KEY)
 			def result= nerd.annotateJSON(nerdExtractor,
 								   DocumentType.TIMEDTEXT,
 								   text,
 								   GranularityType.OEN,
-								   10L);
-			}
-			catch(Exception expp)
-			{
-				println expp.class
-				println expp.getMessage()
-			}
-			
+								   30L);
 			def jsObj = JSON.parse(result)
-			
+		   
 			//save json to triple store
 			//println "before"
-			def extractions = nerdService.getExtractionFromJSON(result)
+			def entities = nerdService.getEntityFromJSON(result)
 			//extractions.each{ex->
 			//	println "startNPT:"+ex.getStartNPT()
-			//	println "endNPT:"+ex.getEndNPT()	
+			//	println "endNPT:"+ex.getEndNPT()
 			//}
 			//def synpoint = resourceService.getSynpointByResource(resource)
 			//def multimedia = resourceService.getMultimediaByResource(resource)
-			
+		   
 			def synpoints = Synpoint.findAllByAnnotation(anno)
 			
 			int countintriple = 0
 			synpoints.each{syn->
 				//TODO: if two synpoints have exactly the same start and end time
-				def exts = extractions.findAll{ ext->
-					(((int)(ext.getStartNPT()*1000)) -syn.targetStart).abs() <=100 && 
-					(((int)(ext.getEndNPT()*1000)) - syn.targetEnd).abs() <=100
+				def ents = entities.findAll{ ent->
+					(((int)(ent.getStartNPT()*1000)) -syn.targetStart).abs() <=100 &&
+					(((int)(ent.getEndNPT()*1000)) - syn.targetEnd).abs() <=100
 				}
 				//println "exts size:"+exts?.size()
-				if(exts?.size() >0)
+				if(ents?.size() >0)
 				{
-					countintriple+=exts.size()
+					countintriple+=ents.size()
 					def cue = WebVTTCue.findByCueIndexAndWebVTTFile(syn.sourceStart,vtt)
-					linkedDataService.saveNERDToTripleStroe(exts,multimedia,cue,syn,params.extractor)
+					linkedDataService.saveNERDToTripleStroe(ents,multimedia,cue,syn,params.extractor)
 				}
 			}
-			
+			   
 			//println "££££££££££finalcounts:${countintriple}££££££££££"
 			render JSON.parse(result) as JSON
 			return
 		}
 		catch(Exception ex)
 		{
+			println ex.class
+			println ex.getMessage()
+			ex.printStackTrace()
 			throw ex
 			render(contentType:"text/json"){
 				error(stat:APIStatusCode.NERD_EXTRACTOR_INTERAL_ERROR, description:"Connection failure to the extractor.")

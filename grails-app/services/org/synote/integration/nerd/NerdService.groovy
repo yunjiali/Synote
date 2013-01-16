@@ -39,7 +39,7 @@ class NerdService {
 			case "saplo":
 				return ExtractorType.SAPLO
 			case "uep":
-				return ExtractorType.UEP
+				return ExtractorType.SEMITAGS
 			case "wikimeta":
 				return ExtractorType.WIKIMETA
 			case "yahoo":
@@ -70,7 +70,7 @@ class NerdService {
 				return "opencalais"
 			case ExtractorType.SAPLO:
 				return "saplo"
-			case ExtractorType.UEP:
+			case ExtractorType.SEMITAGS:
 				return "uep"
 			case ExtractorType.WIKIMETA:
 				return "wikimeta"
@@ -133,14 +133,12 @@ class NerdService {
 				return "http://extractiv.com/"
 			case "lupedia":
 				return "http://lupedia.ontotext.com/"
-			case "ontotext":
-				return "http://lupedia.ontotext.com/"
 			case "opencalais":
 				return "http://www.opencalais.com/"
 			case "saplo":
 				return "http://saplo.com/"
-			case "uep": //Can't find it
-				return "http://nerd.eurecom.fr/"
+			case "semitags": 
+				return "http://www.tag.fr/"
 			case "wikimeta":
 				return "http://www.wikimeta.com/"
 			case "yahoo":
@@ -155,16 +153,16 @@ class NerdService {
 	}
 	
 	/*
-	 * return the Extraction object defined in fr.eurecom.nerd.client.schema.Extraction from json response
+	 * return the Entity object defined in fr.eurecom.nerd.client.schema.Entity from json response
 	 * return:
-	 * List<Extraction>
+	 * List<Entity>
 	 */
-	def getExtractionFromJSON(String jsonExtraction)
+	def getEntityFromJSON(String jsonEntity)
 	{
 		Gson gson = new Gson()
 		Type listType = new TypeToken<List<Entity>>(){}.getType()
-		List<Entity> extractions = gson.fromJson(jsonExtraction, listType)
-		return extractions
+		List<Entity> entities = gson.fromJson(jsonEntity, listType)
+		return entities
 	}
 	
 	/*
@@ -172,7 +170,7 @@ class NerdService {
 	 */
 	def getNIFOffsetString(Entity e)
 	{
-		String strOffset = "offset_"+e.getStartChar()+"_"+e.getEndChar()+"_"+e.getEntity()
+		String strOffset = "offset_"+e.getStartChar()+"_"+e.getEndChar()+"_"+e.getLabel()
 		return URLEncoder.encode(strOffset , "UTF-8").replaceAll("\\+","%20")
 	}
 }
