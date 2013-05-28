@@ -67,7 +67,7 @@
 				</div>
 				<div class="span3">
 					<h3>Multimedia Online</h3>
-					<p>Annotate most auido and video resources online as long as they are accessible through URLs, including YouTube video.</p>
+					<p>Annotate most audio and video resources online as long as they are accessible through URLs, including YouTube video.</p>
 				</div>
 				<div class="span1">
 					<img src="${resource(dir:'images',file:"sync_48.png")}" title="synchronised"/>

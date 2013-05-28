@@ -21,7 +21,6 @@ For more information on SemVer, please visit http://semver.org/.
 
 Roadmap
 ---------------------
-* Linking user generated annotations, including comments and transcripts into the linked data cloud using Named Entity Recognition and Disambiguation ([NERD](http://nerd.eurecom.fr))
 * Add support for mobile and tablet devices, especially audio and video replay
 * Use Twitter Bootstrap to optimise user interface for mobile and tablet 
 
@@ -43,9 +42,9 @@ Synote Members
 
 Contributors
 ---------------------
-*[Raphael Troncy](http://www.eurecom.fr/~troncy/) (EURECOM, Sophia-Antipolis, France)
+*[Raphael Troncy](http://www.eurecom.fr/~troncy/) (EURECOM, Biot, France)
 
-*[Giuseppe Rizzo](http://www.eurecom.fr/~rizzo/) (EURECOM, Sophia-Antipolis, France)
+*[Giuseppe Rizzo](http://www.eurecom.fr/~rizzo/) (EURECOM, Biot, France)
 
 
 Copyright

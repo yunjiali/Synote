@@ -1,5 +1,5 @@
 <!-- set thumbnail url -->
-<!-- Deprecated, see  _subtitle_nerd_all.gsp-->
+<!-- Deprecated, see  _subtitle_nerd_all.gsp???-->
 <g:if test="${row.thumbnail?.size() >0 && multimedia.isVideo==true}">
 	<g:set var="thumbnail_src" value="${row.thumbnail}"/>
 </g:if>
@@ -33,14 +33,10 @@
 	 		<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
 	  			Actions<span class="caret"></span></a>
 	  		<ul class="dropdown-menu">
-	  				<li><g:link controller="nerd" action="listne" id="${row.id}">Review Named Entities</g:link></li>
 	  				<li class="divider"></li>
 	  				<li><g:link controller="recording" action="replay" id="${multimedia.id}" fragment="${row.mf}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${multimedia.id}" fragment="${row.mf}">Print Friendly Version</g:link></li>
 	 		</ul>
-	 	</div>
-	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdcue" id="${row.id}">NERD It</g:link>
 	 	</div>
 	</div>
 </div>

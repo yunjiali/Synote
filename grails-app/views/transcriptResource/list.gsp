@@ -17,13 +17,6 @@
 			<div class="row">
 				<span id="recording_count_span" style="padding:5px" class="pull-right label label-info">${cueList.records} Transcript Blocks</span>
 			</div>
-			<div class="row" style="margin-top:10px;">
-				<g:link class="btn btn-warning pull-right" controller="nerd" action="nerditsub" id="${multimedia.id}">
-					NERD It</g:link>
-				<g:link controller="recording" action="subpreview" id="${multimedia.id}" class="btn btn-info pull-right" style="margin-right:10px;">
-						Preview Named Entities
-				</g:link>
-			</div>
 			<div>
 				<div id="recording_list_div">
 					<g:if test="${cueList.rows?.size() == 0}">

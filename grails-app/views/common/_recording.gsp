@@ -110,22 +110,6 @@
 	 		</ul>
 	 	</div>
 	 	</g:if>
-	 	<g:if test="${nerditEnabled}">
-	 	<g:if test="${row.cc == true}">
-	  	<div class="pull-right" style="margin-right:10px">
-	  		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerditsub" id="${row.id}">NERD Subtitle</g:link>
-	  	</div>
-	  	<div class="pull-right" style="margin-right:10px">
-	  	<g:link controller="recording" action="subpreview" id="${row.id}" class="btn btn-info">
-			Preview Named Entities
-		</g:link>
-		</div>
-	 	</g:if>
-	 	<!-- 
-	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdmm" id="${row.id}">NERD It</g:link>
-	 	</div>-->
-	 	</g:if>
 	 	<g:if test="${viewSynmarksEnabled}">
 	 	<div class="pull-right" style="margin-right:10px;">
 	 		<g:link class="btn pull-right" controller="synmarkResource" action="list" id="${row.id}">View Synmarks</g:link>

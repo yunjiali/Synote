@@ -133,7 +133,6 @@
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline"><g:message code="org.synote.resource.compound.multimediaResource.edit.title" /></h2>
-			<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdmm" id="${multimedia.id}">Nerd this recording&gt;&gt;</g:link>
 			<hr/>
 			<g:render template="/common/message" model="[bean: multimediaResource]" />
 			<div id="error_msg_div"></div>

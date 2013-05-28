@@ -141,16 +141,9 @@ footer
     word-wrap: normal;
 }
 
-.recording-description, .nerd-entity-count
+.recording-description
 {
 	color: #666666;
-}
-
-.btn-group-nerd
-{
-	display:inline;
-	margin-right:10px;
-	margin-bottom:10px;
 }
 
 .permission-info
@@ -178,12 +171,6 @@ footer
 	height:90px;
 }
 
-.nerd-extractor-li
-{
-	display:inline-block;
-	padding-left:10px;
-	padding-bottom:10px;
-}
 /* My Synote */
 
 #my_synote_content a {
