@@ -6,7 +6,7 @@
 <g:urlMappings/>
 <script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.maskedinput-1.3.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.form.js')}"></script>
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:"synote-multimedia-service-client.js")}"></script>
 <script type="text/javascript">
@@ -115,6 +115,7 @@ $(document).ready(function(){
 			complete:function(jqXHR,textStatus)
 			{
 				$("#form_loading_div").hide();
+				$("#create_warning_div").hide();
 				$("#multimediaCreateForm_submit").button("reset");
 			}
 		});
@@ -125,7 +126,7 @@ $(document).ready(function(){
 	
 	$("#url_submit_btn").click(function(){
 		
-		var url = $("#url").val();
+		var url = $.trim($("#url").val());
 		if(!isValidURL(url))
 		{
 			showMsg("The recording URL is not valid","error");
@@ -160,9 +161,9 @@ $(document).ready(function(){
 				});*/
 
 				//Get duration
-				if(data.durationsec !== undefined && data.durationsec != null)
+				if(data.metadata.duration != 0)
 				{
-					var duration = parseInt(data.durationsec)*1000;
+					var duration = parseInt(data.metadata.duration)*1000;
 					$("#duration_span").val(milisecToString(duration));
 					$("#duration_span").attr("disabled","disabled").addClass("disabled");
 					$("#duration").val(duration);
@@ -171,26 +172,23 @@ $(document).ready(function(){
 				{
 					$("#duration_span").closest(".control-group").addClass("warning");
 					var oldHtml = $("#duration_span").closest(".controls").html();
-					$("#duration_span").closest(".controls").html(oldHtml+"<p class='help-block'>Please manually enter the duration of the recording.</p>");
+					if(oldHtml.indexOf("Please manually") == -1)
+						$("#duration_span").closest(".controls").html(oldHtml+"<p class='help-block'>Please manually enter the duration of the recording.</p>");
 				}
 
 				//Get isVideo
 				//We are sure it is a video if the isVideo is true, but we cannot be certain if the isVideo field is false
-				if(data.isVideo !== undefined && data.isVideo != null)
+				if(data.metadata.isVideo === true)
 				{
-					if(data.isVideo === true)
-					{
-						$("#isVideo_true").attr("checked","checked");//.attr("disabled","disabled");
-						//$("#isVideo_false").attr("disabled","disabled");
-					}
-					else
-					{
-						//$("#isVideo_true").attr("disabled","disabled");
-						$("#isVideo_false").attr("checked","checked");//.attr("disabled","disabled");
-					}
-					
+					$("#isVideo_true").attr("checked","checked");//.attr("disabled","disabled");
+					//$("#isVideo_false").attr("disabled","disabled");
 				}
-
+				else
+				{
+					//$("#isVideo_true").attr("disabled","disabled");
+					$("#isVideo_false").attr("checked","checked");//.attr("disabled","disabled");
+				}
+					
 				//Add title if exists
 				if(data.title !== undefined && data.title != null)
 				{
@@ -221,6 +219,10 @@ $(document).ready(function(){
 		<div class="span10" id="user_content_div">
 			<h2 class="heading-inline"><g:message code="org.synote.resource.compound.multimediaResource.createinet.title" /></h2>
 			<hr/>
+			<div id="create_warning_div" class="alert">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+  				<strong>Warning!</strong>  URL using HTTPs protocol is not supported!
+			</div>
 			<g:render template="/common/message" model="[bean: multimediaResource]" />
 			<div id="error_msg_div"></div>
 			<div id="after_save_div" style="display:none;">
@@ -324,6 +326,7 @@ $(document).ready(function(){
 			        </div>
 				</g:form>
 			</div>
+
 		</div>
 	</div>
 </div>

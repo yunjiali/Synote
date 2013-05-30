@@ -91,7 +91,15 @@ class RecordingController {
 	//the media fragment must already be given in the url
 	def replay = {
 		def recording = null
-		def resource = Resource.findById(params.id?.toString())
+		if(!params.id?.isLong())
+		{
+			flash.error = "Cannot find resource with ID ${params.id}"
+			redirect(controller:'multimediaResource',action: 'list')
+			return
+		}
+		
+		def resource = Resource.findById(params.id)
+		
 		if(!resource || !resource.instanceOf(MultimediaResource))
 		{
 			flash.error = "Cannot find resource with ID ${params.id}"
@@ -135,8 +143,20 @@ class RecordingController {
 			
 			def metrics = resourceService.getMultimediaResourceMetrics(recording)
 			
+			def typeaheadStr = new StringBuilder();
+			typeaheadStr.append("[")
+			int i=0;
+			recording.tags.each{tag->
+				typeaheadStr.append("&quot;"+tag?.content.replace("\"","").replace("'","")+"&quot;");
+				if(i<recording.tags.size()-1)
+					typeaheadStr.append(",")
+				i++
+			}
+			typeaheadStr.append("]")
+			
+			
 			return [recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
-				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc]
+				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc, typeaheadStr:typeaheadStr.toString()]
 		}
 		else
 		{
@@ -343,6 +363,7 @@ class RecordingController {
 		render synmarkList as JSON//encodeAsJSON()
 		return
 	}
+	
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def saveSynmarkAjax = {
 		def multimediaId = params.multimedia_id
@@ -393,6 +414,8 @@ class RecordingController {
 		String note = params.synmark_note.trim()
 		String[] tags = params.synmark_tags.split(",")
 		String nextSynmark = (params.synmark_next?.trim()?.size() > 0) ? params.synmark_next?.trim() : null
+		
+		//Async call get thumbnail picture
 		String thumbnail = params.synmark_thumbnail?.size()>0? params.synmark_thumbnail:null
 		//println "thumbnail:"+thumbnail
 		

@@ -2,9 +2,8 @@
 <head>
 <title><g:message code="org.synote.user.editUserProfile.title" /></title>
 <meta name="layout" content="main" />
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
-<script type="text/javascript" src="${resource(dir:'js',file:'synote-multimedia-service-client.js')}"></script>
+<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 <script type="text/javascript">
 	
 </script>

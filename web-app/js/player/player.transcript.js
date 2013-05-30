@@ -59,7 +59,11 @@ var Transcript = Base.extend({
 		{
 			var currentTranscript = this.getTranscript(currentPosition)
 			//console.log("selectedTranscript:"+this.selectedTranscript);
-			if(currentTranscript != this.selectedTranscript)
+			
+			if(currentTranscript == null)
+				return;
+			
+			else if(this.selectedTranscript == null || currentTranscript.attr('id') != this.selectedTranscript.attr('id'))
 			{
 				this.setTranscriptSelected(currentTranscript);
 			}
@@ -127,10 +131,16 @@ var Transcript = Base.extend({
 		{
 			if(this.selectedTranscript != null)
 				this.selectedTranscript.removeClass("transcript-selected");
-			this.selectedTranscript = currentTranscript;
-			currentTranscript.addClass("transcript-selected");
-			if(this.autoScroll)
-				this.inner_container.scrollTo(currentTranscript,400, {offset:this.scrollOffset});
+				
+			if(this.selectedTranscript == null || this.selectedTranscript.attr('id') != currentTranscript.attr('id'))
+			{
+				this.selectedTranscript = currentTranscript;
+				currentTranscript.addClass("transcript-selected");
+				if(this.autoScroll)
+				{
+					this.inner_container.scrollTo(currentTranscript, 100, {offset:this.scrollOffset});
+				}
+			}
 		}
 	},
 	//set the currentTranscript_div as edited transcript
@@ -141,7 +151,7 @@ var Transcript = Base.extend({
 	clickTranscript:function(currentTranscript) //Define what things should happen after clicking on a transcript line
 	{
 		this.setTranscriptSelected(currentTranscript);
-		multimedia.setPosition(parseInt(currentTranscript.attr("date-time-st")));
+		player.setPosition(parseInt(currentTranscript.attr("date-time-st")));
 	},
 	createTranscriptLine:function(cue) //create the li line for a transcript block
 	{
@@ -262,7 +272,7 @@ var Transcript = Base.extend({
 		
 		$("#edit_transcript_add_btn").click(function(){
 			
-			var newTime = multimedia.getPosition();
+			var newTime = player.getPosition();
 			$("#transcript_st").val(milisecToString(newTime));
 			$("#transcript_edit_div").show(400);
 			$("#transcript_id").val("");
@@ -303,7 +313,7 @@ var Transcript = Base.extend({
 		$("#transcript_et").mask("?99:99:99");
 		
 		$("#transcript_st_time").click(function(){
-			var currentPosition = multimedia.getPosition();
+			var currentPosition = player.getPosition();
 			//console.log("curpo:"+currentPosition);
 			$("#transcript_st").val(milisecToString(currentPosition));
 		});
@@ -319,7 +329,7 @@ var Transcript = Base.extend({
 			$("#transcript_st").val(milisecToString(newTime));
 		});
 		$("#transcript_et_time").click(function(){
-			var currentPosition = multimedia.getPosition();
+			var currentPosition = player.getPosition();
 			$("#transcript_et").val(milisecToString(currentPosition));
 		});
 		$("#transcript_et_add").click(function(){
@@ -381,7 +391,7 @@ var Transcript = Base.extend({
 						transcript.showMsg(msg);
 						//Do not hide the form, as users may want to add transcript again
 						//Reset the start time to the current time
-						var newTime = multimedia.getPosition();
+						var newTime = player.getPosition();
 						$("#transcript_st").val(milisecToString(newTime));
 					}
 				});
@@ -457,23 +467,7 @@ var Transcript = Base.extend({
 		cue.cueText += $("#transcript_content").val();
 		cue.cueText += "</v>";
 		cue.index = transcript.newId++;
-		
-		//Generate thumbnail picture
-		if(recording.isVideo == 'true' && recording.thumbnail != 'null')
-		{
-			mmServiceClient.generateThumbnail(recording.url,recording.uuid, cue.start, cue.end, function(thumbnail_url, error){
-				//We are not going to print out any error message here
-				if(error == null)
-				{
-					cue.thumbnail = thumbnail_url;
-					transcript.createTranscriptAjax(cue, callback)
-				}
-			});
-		}
-		else
-		{
-			transcript.createTranscriptAjax(cue,callback)
-		}
+		transcript.createTranscriptAjax(cue,callback)
 	},
 	/*The create transcript ajax function shared by both creating thumbnail picture and not creating thumbnail picture*/
 	createTranscriptAjax:function(cue, callback)

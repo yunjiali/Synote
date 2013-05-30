@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap.min.css')}" />
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'main.css')}" />
 	<link rel="shortcut icon" href="${resource(dir: 'images', file: 'synote_icon.ico')}" type="image/x-icon" />
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery-1.7.1.min.js')}"></script>
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
 	<script id="scriptInit" type="text/javascript">
 		//In case I forget to remove console.log in IE

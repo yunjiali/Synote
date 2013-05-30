@@ -44,7 +44,7 @@ var Synmark = Base.extend({
 			$("#synmark_et").mask("?99:99:99");
 			
 			$("#synmark_st_time").click(function(){
-				var currentPosition = multimedia.getPosition();
+				var currentPosition = player.getPosition();
 				//console.log("curpo:"+currentPosition);
 				$("#synmark_st").val(milisecToString(currentPosition));
 			});
@@ -59,7 +59,7 @@ var Synmark = Base.extend({
 				$("#synmark_st").val(milisecToString(newTime));
 			});
 			$("#synmark_et_time").click(function(){
-				var currentPosition = multimedia.getPosition();
+				var currentPosition = player.getPosition();
 				$("#synmark_et").val(milisecToString(currentPosition));
 			});
 			$("#synmark_et_add").click(function(){
@@ -104,6 +104,11 @@ var Synmark = Base.extend({
 				}
 			});*/
 			
+			$(".tm-input").tagsManager({
+				hiddenTagListName:'synmark_tags'
+				//hiddenTagListId:'synmark_tags'
+			});
+			
 			//Init tinyMCE
 			$('#synmark_note').tinymce({
 				script_url:g.resource({dir:'js/tiny_mce',file:'tiny_mce.js'}),
@@ -135,43 +140,18 @@ var Synmark = Base.extend({
 					var url = g.createLink({controller:"recording",action:"updateSynmarkAjax"});//, params:{synmark_id:$.trim($("#synmark_id").val())}});
 					var synmarkData = synmark.getSynmarkData($("#synmark_id").val());
 					var oldMiddle = (synmarkData.start + synmarkData.end)/2;
-					if(recording.thumbnail != 'null' && recording.isVideo == 'true' && (cue.thumbnail == null || (oldMiddle<newCue.start || oldMiddle > newCue.end))) //need to regenerate the thumbnail
-					{
-						mmServiceClient.generateThumbnail(recording.url,recording.uuid, synmark_st, synmark_et, function(thumbnail_url, error){
-							//We are not going to print out any error message here
-							if(error == null)
-							{
-								$("#synmark_thumbnail").val(thumbnail_url);
-							}
-							synmark.updateSynmarkAjax(url, function(msg,error){
-								if(error == null)
-								{
-									synmark.showMsg(msg,null);
-									$("#synmark_create_div").hide(400);
-									synmark.refresh();
-								}
-								else
-								{
-									synmark.showMsg(msg,"error");
-								}
-							});
-						});
-					}
-					else
-					{
-						synmark.updateSynmarkAjax(url, function(msg,error){
-							if(error == null)
-							{
-								synmark.showMsg(msg,null);
-								$("#synmark_create_div").hide(400);
-								synmark.refresh();
-							}
-							else
-							{
-								synmark.showMsg(msg,"error");
-							}
-						});
-					}
+					synmark.updateSynmarkAjax(url, function(msg,error){
+						if(error == null)
+						{
+							synmark.showMsg(msg,null);
+							$("#synmark_create_div").hide(400);
+							synmark.refresh();
+						}
+						else
+						{
+							synmark.showMsg(msg,"error");
+						}
+					});
 				}
 				else
 				{
@@ -222,7 +202,7 @@ var Synmark = Base.extend({
 			});
 			
 			$("#add_synmark_btn").click(function(){
-				var newTime = multimedia.getPosition();
+				var newTime = player.getPosition();
 				synmark.fillSynmarkForm(milisecToString(newTime),"","","","","","");
 				$("#synmark_create_div").show(400);
 			});
@@ -291,10 +271,16 @@ var Synmark = Base.extend({
 		$("#synmark_st").val(synmark_st);
 		$("#synmark_et").val(synmark_et);
 		$("#synmark_title").val(synmark_title);
-		$("#synmark_tags").val(synmark_tags);
-		//$("#synmark_note").val(synmark_note);
-		//CKEDITOR.instances.synmark_note.setData(synmark_note);
-		$("#synmark_note").val(synmark_note);
+		//$("input[name='synmark_tags']").val(synmark_tags);
+		console.log(synmark_tags);
+		var tags = synmark_tags.split(',');
+		$(".tm-input").tagsManager('empty');
+		for(var i=0;i<tags.length;i++)
+		{
+			$(".tm-input").tagsManager('pushTag',tags[i]);
+		}
+		if(synmark_note != null)
+			$("#synmark_note").val(synmark_note);
 		$("#synmark_thumbnail").val(synmark_thumbnail);
 		$("#synmark_id").val(synmark_id);
 	},
@@ -309,7 +295,11 @@ var Synmark = Base.extend({
 		{
 			var currentSynmark = this.getSynmark(currentPosition)
 			//console.log("selectedSynmark:"+this.selectedSynmark);
-			if(currentSynmark != this.selectedSynmark)
+			
+			if(currentSynmark == null)
+				return;
+				
+			if(this.selectedSynmark == null || currentSynmark.attr('id') != this.selectedSynmark.attr('id'))
 			{
 				this.setSynmarkSelected(currentSynmark);
 			}
@@ -352,17 +342,20 @@ var Synmark = Base.extend({
 		{
 			if(this.selectedSynmark != null)
 				this.selectedSynmark.removeClass("synmark_selected");
-			this.selectedSynmark = currentSynmark;
-			currentSynmark.addClass("synmark_selected");
-			if(this.autoScroll == true)
-				this.inner_container.scrollTo(currentSynmark, 400, {offset:this.scrollOffset});
+			if(this.selectedSynmark == null || this.selectedSynmark.attr('id') != currentSynmark.attr('id'))
+			{
+				this.selectedSynmark = currentSynmark;
+				currentSynmark.addClass("synmark_selected");
+				if(this.autoScroll == true)
+					this.inner_container.scrollTo(currentSynmark, 100, {offset:this.scrollOffset});
+			}
 		}
 	},
 	clickSynmark:function(currentSynmark)
 	{
 		this.setSynmarkSelected(currentSynmark);
 		//console.log("cur sy id:"+currentSynmark.attr("id"));
-		multimedia.setPosition(parseInt(currentSynmark.attr("date-time-st")));
+		player.setPosition(parseInt(currentSynmark.attr("date-time-st")));
 	},
 	deleteSynmark:function(synmark_id)
 	{
