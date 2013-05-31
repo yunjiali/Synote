@@ -138,6 +138,10 @@ $(document).ready(function(){
 									<input type="radio" value="webvtt" name="format" />
 											WebVTT
 								</label>
+								<label class="radio">
+									<input type="radio" value="dragonidx" name="format" />
+											Dragon Index File
+								</label>
 					      	</div>
 					      	<label for="file" class="control-label"><b><em>*</em>File:</b></label>
 					      	<div class="control-group">
