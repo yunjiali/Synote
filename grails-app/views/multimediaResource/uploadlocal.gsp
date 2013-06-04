@@ -14,7 +14,7 @@
 			<h2><g:message code="org.synote.resource.compound.multimediaResource.createlocal.title" /></h2>
 			<hr/>
 			<div >
-				<iframe style="border:0; min-height:300px;width:100%" src="${uploadMultimediaURL}"></iframe>
+				<iframe style="border:0; min-height:300px;width:100%" src="http://localhost:8888/api/multimediaUpload?nexturl=http%3A%2F%2Flocalhost%3A8888"></iframe>
 			</div>
 		</div>
 	</div>

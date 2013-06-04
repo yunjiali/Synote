@@ -5,6 +5,7 @@
 <meta name="layout" content="main" />
 <g:urlMappings/>
 <script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.maskedinput-1.3.min.js")}"></script>
+<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.url.js")}"></script>
 <script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.form.js')}"></script>
 <script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
@@ -126,7 +127,7 @@ $(document).ready(function(){
 	
 	$("#url_submit_btn").click(function(){
 		
-		var url = $.trim($("#url").val());
+		var url = $.trim($("#url").val()).replace("/\s/g","%20");
 		if(!isValidURL(url))
 		{
 			showMsg("The recording URL is not valid","error");
@@ -206,7 +207,18 @@ $(document).ready(function(){
 
 	$("#multimediaCreateForm_reset").click(function(){
 		resetForm();
-	})
+	});
+
+	//check if url query param is available
+	var currentURL = $.url(true);
+	if(currentURL.param('url') !== undefined)
+	{
+		var videourl = decodeURIComponent(currentURL.param('url'));
+		$("#url").val(videourl);
+		//trigger click
+		$("#url_submit_btn").trigger('click');
+	}
+	
 });
 </script>
 </head>
