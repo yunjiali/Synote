@@ -175,11 +175,9 @@ class UserGroupController {
 			return
 		}
 		
-		def canJoinGroup = false //As a normal use, you can join the group
 		def isMember = false // As a normal user, you are a member of the group and you can remove yourself from the group
 		def isOwnerOrAdmin = false //As the owner or admin, you can edit the group information
-		//As the owner or admin, you can add a new member to the group
-		//As the owner or admin, you can add a new recording with the permission different from public to this group
+		def canShowFigures = false
 		
 		def user = securityService.getLoggedUser()
 		if(user)
@@ -187,34 +185,40 @@ class UserGroupController {
 			if(securityService.isOwnerOrAdmin(userGroup.owner.id))
 			{
 				isOwnerOrAdmin = true	//We can only add group owner's recordings
+				isMember = true
+				canShowFigures = true
 			}
 			else if(UserGroupMember.findByGroupAndUser(userGroup,user) != null)//the logged in user is a member of the group
 			{
 				isMember = true
+				canShowFigures = true
 			}
-			else //the logged in user is not the owner and is not a member of the group yet
+			else if(userGroup.shared == true)//the logged in user is not the owner and is not a member of the group yet
 			{
-				canJoinGroup = true
+				canShowFigures = true
 			}
 		}
 		else
 		{
 			//Not logged in and the group is not shared
-			if(!userGroup.shared)
+			if(userGroup.shared == true)
 			{
-				flash.error = "Permission denied - cannot show group with id ${params.id}."
-				redirect(action: list)
-				return
+				canShowFigures = true
 			}
 		}
 		
-		def memberCount = UserGroupMember.countByGroup(userGroup)+1
-		def recordingCount = ResourcePermission.countByGroup(userGroup)
-		return [userGroup: userGroup, canJoinGroup:canJoinGroup, isMember:isMember, isOwnerOrAdmin:isOwnerOrAdmin, 
-			memberCount:memberCount,recordingCount:recordingCount]
+		def members = null
+		def recordings = null
+		if(canShowFigures == true)
+		{
+			members = UserGroupMember.findAllByGroup(userGroup)
+			recordings = ResourcePermission.findAllByGroup(userGroup)
+		}
+		return [userGroup: userGroup, canShowFigures:canShowFigures, isMember:isMember, isOwnerOrAdmin:isOwnerOrAdmin, 
+			members: members,recordings: recordings]
 	}
 	
-	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+	@Secured(['ROLE_NORMAL'])
 	def joinGroup = {
 		//return to show page
 		def user=securityService.getLoggedUser()
