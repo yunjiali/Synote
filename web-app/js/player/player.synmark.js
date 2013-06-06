@@ -310,7 +310,7 @@ var Synmark = Base.extend({
 		var cs = null;
 		for(var i=0;i<this.synmarks.length;i++)
 		{
-			var st = parseInt($(this.synmarks[i]).attr("date-time-st"));
+			var st = parseInt($(this.synmarks[i]).attr("data-time-st"));
 			if(st>=currentPosition)
 			{
 				//if(cs==null)
@@ -355,7 +355,9 @@ var Synmark = Base.extend({
 	{
 		this.setSynmarkSelected(currentSynmark);
 		//console.log("cur sy id:"+currentSynmark.attr("id"));
-		player.setPosition(parseInt(currentSynmark.attr("date-time-st")));
+		player.setPosition(parseInt(currentSynmark.attr("data-time-st")));
+		if(player.getMeplayer().domNode.paused === true)
+			player.play();
 	},
 	deleteSynmark:function(synmark_id)
 	{
@@ -441,7 +443,7 @@ var Synmark = Base.extend({
 							   synmark.clickSynmark($(this));
 						   },
 						   id:"synmark_"+s.id
-					   }).attr("date-time-st",s.start).attr("date-time-et",s.end?s.end:"").attr("synmark_id",s.id)
+					   }).attr("data-time-st",s.start).attr("data-time-et",s.end?s.end:"").attr("synmark_id",s.id)
 					   .addClass("single_synmark_div").appendTo(synmark_list_div);
 					   //MicroData: add microdata related to synmark
 					   mdHelper.setMediaObject(single_synmark_div, recording.isVideo == 'true'?true:false);
@@ -454,7 +456,7 @@ var Synmark = Base.extend({
 					   else
 						   single_synmark_div.addClass("synmark_other");
 					   
-					   var synmark_title_span = $("<span/>",{
+					   var synmark_title_span = $("<div/>",{
 						   text:s.title?s.title:"No title"
 					   }).addClass("synmark_title").appendTo(single_synmark_div);
 					   
@@ -485,8 +487,9 @@ var Synmark = Base.extend({
 							  html: "<i class='icon-share'></i>"
 						   }).attr("title","Share the URL of this synmark").attr("type","button").addClass("btn btn-mini");
 					   link_synmark_btn.bind("click",{synmark_id:s.id},function(event){
-						   $("#synmark_url_dialog .modal-body").html("<p>"+synmark.getURI(event.data.synmark_id)+"</p>");
-						   $("#synmark_url_dialog").modal('show');
+					   	   $("#share_url_title_h4").text("Share Synmark");
+						   $("#share_url_dialog .modal-body").html("<p>"+synmark.getURI(event.data.synmark_id)+"</p>");
+						   $("#share_url_dialog").modal('show');
 					   });
 					   link_synmark_btn.appendTo(synmark_btn_span);
 					   

@@ -316,5 +316,6 @@
 			Values(0,"org.synote.resource.service.multimediaUpload.path","api/multimediaUpload", "The absolute path for getting isVideo information",now(),now());
 		</sql>
 	</changeSet>
+	<!-- v0.1.6 from now -->
 </databaseChangeLog>
 

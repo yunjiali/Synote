@@ -1,3 +1,8 @@
+/* override bootstrap */
+.modal, .modal.fade.in {
+    top: 50; /* was 10% */
+}
+
 /* New Player */
 #col_left_div .span-left
 {
@@ -63,6 +68,11 @@
 {
 	margin:0px;
 	list-style:none;
+}
+
+.transcript-line
+{
+	margin-top: 10px;	
 }
 
 .transcript-line-time {

@@ -27,17 +27,10 @@ class UserGroupController {
 	 * Open list.gsp page for usergroup
 	 */
 	def list = {
-		//Do nothing
+		def groupList = userGroupService.getGroupsAsJSON(params)
+		return [groupList:groupList, params:params]
 	}
 	
-	/*
-	 * List all the groups
-	 */
-	def listGroupsAjax = {
-		def groupList = userGroupService.getGroupsAsJSON(params)
-		render groupList as JSON
-		return
-	}
 	/*
 	 * List all the current group memebers
 	 */

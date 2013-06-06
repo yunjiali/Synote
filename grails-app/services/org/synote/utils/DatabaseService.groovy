@@ -246,7 +246,7 @@ class DatabaseService {
 	 */
 	def listGroup(params)
 	{
-		if(securityService.isLoggedIn())
+		/*if(securityService.isLoggedIn())
 		{
 			def user = securityService.getLoggedUser()
 			
@@ -257,13 +257,13 @@ class DatabaseService {
 			else
 				return listGroupAdminLoggedIn(params,user)
 		}
-		else
-			return listGroupNotLoggedIn(params)
+		else*/
+		return listGroupNotLoggedIn(params)
 	}
 	
 	def countGroupList(params)
 	{
-		if(securityService.isLoggedIn())
+		/*if(securityService.isLoggedIn())
 		{
 			def user = securityService.getLoggedUser()
 			
@@ -274,18 +274,18 @@ class DatabaseService {
 			else
 				return countGroupListAdminLoggedIn(params,user)
 		}
-		else
-			return countGroupListNotLoggedIn(params)
+		else*/
+		return countGroupListNotLoggedIn(params)
 	}
 	
 	def listGroupNotLoggedIn(params)
 	{
-		return UserGroup.findAllByShared(true, params)
+		return UserGroup.findAll(params)
 	}
 	
 	def countGroupListNotLoggedIn(params)
 	{
-		UserGroup.countByShared(true)
+		UserGroup.count()
 	}
 	
 	def listGroupNormalLoggedIn(params,user)

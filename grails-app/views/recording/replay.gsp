@@ -121,6 +121,9 @@
 			autoStart:true, 
 			height: 320, 
 			width:480,
+			audioWidth:480,
+			audioHeight:320,
+			isVideo: recording.isVideo === "true"?true:false,
 			success:function(mediaElement,domObject,p){
 				mediaElement.addEventListener('timeupdate', function(e){
 		            var currentPosition = mediaElement.currentTime*1000;
@@ -213,9 +216,6 @@
 			});
 			$("#control_pause,#nav_pause_btn").bind('click',{},function(){
 				player.pause();
-			});
-			$("#control_stop,#nav_stop_btn").bind('click',{},function(){
-				player.stop();
 			});
 			$("#control_rewind,#nav_rewind_btn").bind('click',{},function(){
 				var currentPos = player.getPosition();
@@ -334,7 +334,6 @@
 				<div class="btn-group nav pull-right">
 					<button id="nav_play_btn" class="btn" title="play"><i class="icon-play"></i></button>
 					<button id="nav_pause_btn" class="btn" title="pause"><i class="icon-pause"></i></button>
-					<button id="nav_stop_btn" class="btn visible-desktop" title="stop"><i class="icon-stop"></i></button>
 					<button id="nav_rewind_btn" class="btn" title="rewind"><i class="icon-backward"></i></button>
 					<button id="nav_forward_btn" class="btn" title="rewind"><i class="icon-forward"></i></button>
 				</div>
@@ -379,7 +378,9 @@
 			</div>
 		</div>
 		<!-- Player and Description-->
+		
 		<div class="container">
+		
 		<div class="row">
 			<div id="col_left_div" class="player-fixed-width">
 				<div id="mf_info_div" class="mf-info-video">
@@ -407,7 +408,6 @@
 					<div style="display:inline;">
 						<button id="control_play" title="Play" class="btn"><i class="icon-play"></i></button>
 						<button id="control_pause" title="Pause" class="btn"><i class="icon-pause"></i></button>
-						<button id="control_stop" title="Stop" class="btn"><i class="icon-stop"></i></button>
 						<button id="control_rewind" title="Rewind" class="btn"><i class="icon-backward"></i></button>
 						<button id="control_forward" title="Forward" class="btn"><i class="icon-forward"></i></button>
 					</div>	
@@ -434,15 +434,6 @@
 							<div class="btn-group" id="transcript_edit_enter_div">
 								<button class="btn" title="Add a new transcript block" id="edit_transcript_add_btn">
 									<img src="${resource(dir:'images/player',file:"edit_transcript_add_22.png")}"  id="edit_transcript_add_img" alt="Add new transcript block"/>
-								</button>
-								<button class="btn" title="Edit the selected transcript block" id="edit_transcript_edit_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_22.png")}"  id="edit_transcript_enter_img" alt="Edit Transcript"/>
-								</button>
-								<button class="btn" title="Delete the selected transcript block" id="edit_transcript_delete_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_delete_img" alt="Remove all the transcripts"/>
-								</button>
-								<button class="btn" title="Transcript editing help" id="edit_transcript_help_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_help_22.png")}"  id="edit_transcript_help_img" alt="Transcript editing help"/>
 								</button>
 							</div>
 							</g:if>
@@ -584,20 +575,6 @@
 									</div>
 								</div>
 								<div id="synmark_msg_div"></div><!-- displaying info, error messages -->
-								<div id="synmark_url_dialog" class="modal hide fade">
-									<div class='modal-header'>
-									    <button type='button' class='close' data-dismiss='modal'>×</button>
-									    <h4>Synmark URL</h4>
-									</div>
-									<div class='modal-body'>
-									    
-									</div>
-									<div class='modal-footer'>
-									    <a href='#' class='btn' data-dismiss='modal'>Close</a>
-									    <!--  
-									    <a href='#' class='btn btn-primary'>Copy to Clipboard</a>-->
-									</div>
-								</div>
 								<!-- synmark editing form -->
 								<g:if test="${canCreateSynmark}">
 								<div id="synmark_create_div" class="well" style="display:none;">
@@ -724,6 +701,20 @@
 		</div>
 	</div>
 	<!-- container for content-->
+	<div id="share_url_dialog" class="modal hide fade">
+		<div class='modal-header'>
+		    <button type='button' class='close' data-dismiss='modal'>×</button>
+		    <h4 id="share_url_title_h4"></h4>
+		</div>
+		<div class='modal-body'>
+		    
+		</div>
+		<div class='modal-footer'>
+		    <a href='#' class='btn' data-dismiss='modal'>Close</a>
+		    <!--  
+		    <a href='#' class='btn btn-primary'>Copy to Clipboard</a>-->
+		</div>
+	</div>
 	<g:render template="/common/footer"/>
 </body>
 </html>

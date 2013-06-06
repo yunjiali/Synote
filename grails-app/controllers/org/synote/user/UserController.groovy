@@ -241,17 +241,36 @@ class UserController {
 	}
 
 	//Open list my group page
-	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
+	@Secured(['ROLE_NORMAL'])
 	def listGroups = {
+		def groupList = userGroupService.getMyGroupsAsJSON(params) 
+		return [groupList: groupList, params:params]
+	}
+	
+	@Secured(['ROLE_NORMAL'])
+	def createGroup = {
 		return [params:params]
 	}
-	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
-	def listGroupsAjax =
-	{
-		def groupList = userGroupService.getMyGroupsAsJSON(params)
-		render groupList as JSON
+	
+	@Secured(['ROLE_NORMAL'])
+	def saveGroup = {
+		println "save group"
+		def userGroup = new UserGroup(params)
+		
+		userGroup.owner = securityService.getLoggedUser()
+		
+		
+		if(userGroup.hasErrors() || !userGroup.save(flush:true))
+		{
+			render(view: 'createGroup', params:params)
+			return
+		}
+		
+		flash.message = "Group ${userGroup.name} was successfully created"
+		redirect(action: 'listGroups')
 		return
 	}
+	
 	//List my tags
 	@Secured(['ROLE_ADMIN','ROLE_NORMAL'])
 	def listTags = {

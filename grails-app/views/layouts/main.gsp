@@ -66,7 +66,7 @@
 			    				Create a recording </g:link>
 				    		</li>
 				    		<li>
-				    			<g:link controller="userGroup" action="create" title="create a group">
+				    			<g:link controller="user" action="createGroup" title="create a group">
 				    			 Create a group </g:link>
 				    		</li>
             			</ul>
