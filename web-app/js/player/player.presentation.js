@@ -29,7 +29,7 @@ var Presentation = Base.extend({
 			$("#slide_st").mask("?99:99:99");
 			$("#slide_et").mask("?99:99:99");
 			$("#slide_st_time").click(function(){
-				var currentPosition = multimedia.getPosition();
+				var currentPosition = player.getPosition();
 				//console.log("curpo:"+currentPosition);
 				$("#slide_st").val(milisecToString(currentPosition));
 			});
@@ -44,7 +44,7 @@ var Presentation = Base.extend({
 				$("#slide_st").val(milisecToString(newTime));
 			});
 			$("#slide_et_time").click(function(){
-				var currentPosition = multimedia.getPosition();
+				var currentPosition = player.getPosition();
 				$("#slide_et").val(milisecToString(currentPosition));
 			});
 			$("#slide_et_add").click(function(){
@@ -64,7 +64,7 @@ var Presentation = Base.extend({
 			//Yunjia: Can't use combobox because the dropdownlist keep on appearing behind the dialog
 			//$("#presentation_edit_dialog select").combobox();
 			$("#slides_add_btn").click(function(){
-				var newTime = multimedia.getPosition();
+				var newTime = player.getPosition();
 				presentation.fillPresentationForm(milisecToString(newTime),"","","","","");
 				$("#presentation_edit_div").show(400);
 				return;
@@ -297,7 +297,7 @@ var Presentation = Base.extend({
 	clickSlide:function(currentSlide)
 	{
 		this.setSlideSelected(currentSlide);
-		multimedia.setPosition(parseInt(currentSlide.attr("date-time-st")));
+		player.setPosition(parseInt(currentSlide.attr("date-time-st")));
 	},
 	initEditing:function()
 	{

@@ -1,5 +1,3 @@
-<!-- Designed to nerd all subtitle blocks all at once to nerd, which saves time. Nerd could find the npt start and end time corresponding
- to each media fragment -->
 <!-- set thumbnail url -->
 <g:if test="${row.thumbnail?.size() >0 && row.risVideo==true}">
 	<g:set var="thumbnail_src" value="${row.thumbnail}"/>

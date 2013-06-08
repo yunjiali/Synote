@@ -29,7 +29,7 @@
 						<div class="nodata">You don't have any Synmark</div>
 					</g:if>
 					<g:each in="${synmarksList.rows}" var="row">
-						<g:render template="/common/synmark" model="['row':row,'nerditEnabled':false]"/>
+						<g:render template="/common/synmark" model="['row':row]"/>
 					</g:each>
 				</div>
 			</div>

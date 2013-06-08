@@ -141,16 +141,9 @@ footer
     word-wrap: normal;
 }
 
-.recording-description, .nerd-entity-count
+.recording-description
 {
 	color: #666666;
-}
-
-.btn-group-nerd
-{
-	display:inline;
-	margin-right:10px;
-	margin-bottom:10px;
 }
 
 .permission-info
@@ -178,12 +171,6 @@ footer
 	height:90px;
 }
 
-.nerd-extractor-li
-{
-	display:inline-block;
-	padding-left:10px;
-	padding-bottom:10px;
-}
 /* My Synote */
 
 #my_synote_content a {
@@ -199,4 +186,25 @@ footer
 	width: 80%;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+/*dd and dt*/
+/*DL, DT, DD TAGS LIST DATA*/
+dl {
+    margin-bottom:20px;
+}
+ 
+dl dt {
+    background:#5f9be3;
+    color:#fff;
+    float:left; 
+    font-weight:bold; 
+    margin-right:10px; 
+    padding:5px;  
+    width:100px; 
+}
+ 
+dl dd {
+    margin:2px 0; 
+    padding:5px 0;
 }

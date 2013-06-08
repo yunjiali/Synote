@@ -184,11 +184,14 @@ class MultimediaResourceController {
 				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
 	}
 	
-	def createlocl = {
+	def createlocal = {
+		def nexturl = createLink(action:'createinet', absolute:true)
 		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)
 		def synoteMultimediaServiceURL = configurationService.getConfigValue("org.synote.resource.service.server.url")
+		def uploadMultimediaURL = synoteMultimediaServiceURL+configurationService.getConfigValue("org.synote.resource.service.multimediaUpload.path")+
+			"?nexturl="+URLEncoder.encode(nexturl,"utf-8")
 		return [isAllowedIPAddress:isAllowedIPAddress,
-				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), mmServiceURL:synoteMultimediaServiceURL]
+				isIBMTransJobEnabled:IBMTransJobService.getConnected() && IBMTransJobService.getAllowAddingJobs(), uploadMultimediaURL:uploadMultimediaURL]
 	}
 	/**
 	 * Ajax, add group permission

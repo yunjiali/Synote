@@ -5,7 +5,7 @@
 <meta name="layout" content="main" />
 <g:urlMappings/>
 <script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.form.js')}"></script>
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 <script type="text/javascript">
 
 function showMsg(msg,type)
@@ -137,6 +137,10 @@ $(document).ready(function(){
 								<label class="radio">
 									<input type="radio" value="webvtt" name="format" />
 											WebVTT
+								</label>
+								<label class="radio">
+									<input type="radio" value="dragonidx" name="format" />
+											Dragon Index File
 								</label>
 					      	</div>
 					      	<label for="file" class="control-label"><b><em>*</em>File:</b></label>

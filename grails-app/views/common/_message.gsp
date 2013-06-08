@@ -1,3 +1,10 @@
+<g:if test="${forceError && flash.message}">
+	<div class="alert alert-error">
+		<button class="close" data-dismiss="alert">×</button>
+		${flash.message}
+	</div>
+</g:if>
+<g:else>
 <g:if test="${flash.error}">
 	<div class="alert alert-error">
 		<button class="close" data-dismiss="alert">×</button>
@@ -19,3 +26,4 @@
 		${flash.message}
 	</div>
 </g:if>
+</g:else>

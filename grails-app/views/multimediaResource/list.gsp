@@ -57,7 +57,7 @@
 						<div class="nodata">You have no recordings</div>
 					</g:if>
 					<g:each in="${multimediaList.rows}" var="row">
-						<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'nerditEnabled':true, 'viewSynmarksEnabled':false]"/>
+						<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>
 					</g:each>
 				</div>
 			</div>

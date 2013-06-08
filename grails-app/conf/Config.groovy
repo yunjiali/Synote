@@ -50,8 +50,8 @@ grails.plugin.databasemigration.changelogFileName = "changelog.xml"
 environments {
     production {
         grails.serverURL = "http://linkeddata.synote.org"
-		jena {
-			enabled = true
+		jena { //deprecated
+			enabled = false
 			sdb{
 				assembler = "sdb-mysql-innodb-prod.ttl"
 				checkFormattedOnStartUp = true
@@ -61,8 +61,8 @@ environments {
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
-		jena {
-			enabled = true
+		jena { //deprecated
+			enabled = false
 			sdb{
 				assembler = "sdb-mysql-innodb-dev.ttl"
 				checkFormattedOnStartUp = false //Just check! Not reformat!

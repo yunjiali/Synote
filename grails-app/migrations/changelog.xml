@@ -46,53 +46,6 @@
 			</column>
 		</addColumn>
 	</changeSet>
-	<!-- DEPRECATED, WE ARE NOT USING ENTERMEDIA ANYMORE: insert configurations related to entermedia-->
-	<changeSet id="v5_configuration_insert_entermedia" author="Yunjia Li" context="v0.1">
-		<preConditions>
-			<sqlCheck expectedResult="0">
-				SELECT COUNT(0) from configuration
-				where name="org.synote.resource.fileUpload.enabled";
-			</sqlCheck>
-		</preConditions>
-		<sql>
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.resource.fileUpload.enabled","false",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.enabled","false",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.username","synote",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.password","synote",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.catelog","synote",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.host","http://localhost:8081",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.restapi","/media/services/rest/",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.catalogid","/media/catalogs/synote",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.sourcepath","users/synote/",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.uploadFile","upload.xml",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.login","login.xml",now(),now());
-			INSERT INTO configuration (version, name, val, date_created,
-			last_updated)
-			Values(0,"org.synote.integration.entermedia.fileDownload","downloads/originals",now(),now());
-		</sql>
-	</changeSet>
 	<!-- insert configurations related to capcha, admin contact, title, etc -->
 	<changeSet id="v5_configuration_insert" author="Yunjia Li" context="v0.1">
 		<preConditions>
@@ -359,24 +312,10 @@
 			Values(0,"org.synote.resource.service.getDuration.path","api/getDuration", "The absolute path for getting recording duration",now(),now());
 			INSERT INTO configuration (version, name, val, description,date_created,last_updated)
 			Values(0,"org.synote.resource.service.isVideo.path","api/isVideo", "The absolute path for getting isVideo information",now(),now());
+			INSERT INTO configuration (version, name, val, description,date_created,last_updated)
+			Values(0,"org.synote.resource.service.multimediaUpload.path","api/multimediaUpload", "The absolute path for getting isVideo information",now(),now());
 		</sql>
 	</changeSet>
-	<!-- Add nerd integration configuration -->
-	<changeSet id="v5_configuration_nerd_add" author="Yunjia Li" context="v0.1.5">
-		<preConditions>
-			<sqlCheck expectedResult="0">
-				SELECT COUNT(0) from configuration
-				where name="org.synote.integration.nerd.key";
-			</sqlCheck>
-		</preConditions>
-		<sql>
-			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
-			Values(0,"org.synote.integration.nerd.key","1234567890","The NERD key",now(),now());
-			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
-			Values(0,"org.synote.integration.nerd.enabled","false","If the nerd service is enabled",now(),now());
-			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
-			Values(0,"org.synote.integration.nerd.baseURI","http://nerd.eurecom.fr/extraction/","The base URI of nerd extractions. Used to construct the dereferencable URIs",now(),now());
-		</sql>
-	</changeSet>
+	<!-- v0.1.6 from now -->
 </databaseChangeLog>
 

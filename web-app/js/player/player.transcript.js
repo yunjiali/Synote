@@ -59,11 +59,24 @@ var Transcript = Base.extend({
 		{
 			var currentTranscript = this.getTranscript(currentPosition)
 			//console.log("selectedTranscript:"+this.selectedTranscript);
-			if(currentTranscript != this.selectedTranscript)
+			
+			if(currentTranscript == null)
+				return;
+			
+			else if(this.selectedTranscript == null || currentTranscript.attr('id') != this.selectedTranscript.attr('id'))
 			{
 				this.setTranscriptSelected(currentTranscript);
 			}
 		}
+	},
+	getURI:function(cue_id)
+	{
+		//This is the actual URI, but we need to write some code to redirect it to the player
+		//return getHostLocation()+"/"+appPath+"/resource/synmark/"+synmark_id;
+		
+		//This is the playing URI, which could be shared easily.
+		//console.log("getURI:"+resourceBaseURI+synmark_id);
+		return resourceBaseURI+cue_id;
 	},
 	//Get the transcript div from the current position
 	getTranscript:function(currentPosition)
@@ -127,10 +140,16 @@ var Transcript = Base.extend({
 		{
 			if(this.selectedTranscript != null)
 				this.selectedTranscript.removeClass("transcript-selected");
-			this.selectedTranscript = currentTranscript;
-			currentTranscript.addClass("transcript-selected");
-			if(this.autoScroll)
-				this.inner_container.scrollTo(currentTranscript,400, {offset:this.scrollOffset});
+				
+			if(this.selectedTranscript == null || this.selectedTranscript.attr('id') != currentTranscript.attr('id'))
+			{
+				this.selectedTranscript = currentTranscript;
+				currentTranscript.addClass("transcript-selected");
+				if(this.autoScroll)
+				{
+					this.inner_container.scrollTo(currentTranscript, 100, {offset:this.scrollOffset});
+				}
+			}
 		}
 	},
 	//set the currentTranscript_div as edited transcript
@@ -141,7 +160,9 @@ var Transcript = Base.extend({
 	clickTranscript:function(currentTranscript) //Define what things should happen after clicking on a transcript line
 	{
 		this.setTranscriptSelected(currentTranscript);
-		multimedia.setPosition(parseInt(currentTranscript.attr("date-time-st")));
+		player.setPosition(parseInt(currentTranscript.attr("data-time-st")));
+		if(player.getMeplayer().domNode.paused === true)
+			player.play();
 	},
 	createTranscriptLine:function(cue) //create the li line for a transcript block
 	{
@@ -156,9 +177,9 @@ var Transcript = Base.extend({
 			click:function(){
 				transcript.clickTranscript($(this));
 			}
-	   	}).attr("date-time-st", cue.start)
-	   	.attr("date-time-et",cue.end)
-	   	.attr("transcript_id", cue.index).addClass("transcript_line").appendTo(transcript_line_li);
+	   	}).attr("data-time-st", cue.start)
+	   	.attr("data-time-et",cue.end)
+	   	.attr("transcript_id", cue.index).addClass("transcript-line").appendTo(transcript_line_li);
 	   	
    		//MicroData: add Video or AudioObject to this transcript first and make the text as the http://schema.org/transcript
    		mdHelper.setMediaObject(transcript_line,recording.isVideo == 'true'?true:false);
@@ -189,6 +210,79 @@ var Transcript = Base.extend({
    		}).addClass("transcript_line_content").appendTo(transcript_line);
 	   	//MicroData: add cueText as microdata transcript
 	   	mdHelper.setItemprop(transcript_line_content,"transcript");
+	   	
+	   	//---- add action buttons
+	   	var transcript_btn_span = $("<span/>").insertAfter(transcript_line_content);
+		//Get synmark link button
+		var link_transcript_btn = $("<button/>",{
+				html: "<i class='icon-share'></i>"
+			}).attr("title","Share the URL of this transcript block").attr("type","button").addClass("btn btn-mini");
+			
+		link_transcript_btn.bind("click",{cue_id:cue.id},function(event){
+			   $("#share_url_title_h4").text("Share Transcript Block");	
+			   $("#share_url_dialog .modal-body").html("<p>"+transcript.getURI(event.data.cue_id)+"</p>");
+			   $("#share_url_dialog").modal('show');
+		});
+		link_transcript_btn.appendTo(transcript_btn_span);
+	   	//---- /add action buttons ----
+	    
+	    if(recording.canEdit === "true")
+	    {
+	    	var edit_transcript_btn = $("<button/>",{
+			  html: "<i class='icon-edit'></i>"
+		   }).attr("title","Edit this transcript").attr("type","button").addClass("btn btn-mini");
+		   edit_transcript_btn.bind("click",{cue_id:cue.id},function(event){
+			   var cue_id = event.data.cue_id;
+			   var transcriptData = null;
+			   $.each(transcript.transcriptsData,function(i,c){
+					if(c.id == cue_id)
+					{
+						transcriptData = c;
+						return;
+					}
+				})
+				
+				//Open the edit widget
+				if(transcriptData!=null)
+				{
+					$("#transcript_st").val(milisecToString(transcriptData.start));
+					$("#transcript_et").val(milisecToString(transcriptData.end));
+					
+					var speaker = transcript.getSpeakerFromCue(transcriptData);
+					if(speaker)
+						$("#transcript_speaker").val(speaker);
+					
+					$("#transcript_content").val(transcript.getAnnotatedTextFromCue(transcriptData.cueText));
+					$("#transcript_id").val(transcriptData.index); //This is the id of srt index, not the id of transcript div
+					
+					$("#transcript_edit_errorMsg").hide();
+					$("html,body").animate({scrollTop:$("#transcripts_div").offset().top},200);
+					$("#transcript_edit_div").show(200);	
+				}
+		   });
+		   edit_transcript_btn.appendTo(transcript_btn_span);
+		   
+		   var delete_transcript_btn = $("<button/>",{
+				  html: "<i class='icon-trash'></i>"
+		   }).attr("title","Delete this transcript").attr("type","button").addClass("btn btn-mini");
+		   delete_transcript_btn.bind("click",{cue_id:cue.id},function(event){
+			   var cue_id = event.data.cue_id;
+			   if(confirm("Do you want to delete this transcript block?"))
+			   {
+				   transcript.deleteTranscript(transcript.selectedTranscript.attr("transcript_id"),function(msg,error){	
+						if(error != null)
+						{
+							transcript.showMsg(msg,error);
+						}
+						else
+						{
+							transcript.showMsg(msg);
+						}
+				   });
+			   }
+		   });
+		   delete_transcript_btn.appendTo(transcript_btn_span);
+	    }
 	    
 	   	if(recording.canCreateSynmark === "true")
 	   	{
@@ -231,71 +325,14 @@ var Transcript = Base.extend({
 	},
 	//Init editing forms and buttons for transcript. The settings such as transcript.editingEnabled will be set in startEditing()
 	initEditing:function()
-	{
-		//Init img buttons
-		$("#edit_transcript_help_btn").click(function(){
-			var url = g.createLink({controller:"recording",action:"help"});
-			window.open(url+"#transcript_editing_help","synote player help");
-		});
-		
-		$("#edit_transcript_delete_btn").click(function(){
-			if(transcript.selectedTranscript == null)
-			{
-				alert('Please select a transcript block.');
-				return;
-			}
-			
-			if(confirm("Delete this transcript block?"))
-			{
-				transcript.deleteTranscript(transcript.selectedTranscript.attr("transcript_id"),function(msg,error){	
-					if(error != null)
-					{
-						transcript.showMsg(msg,error);
-					}
-					else
-					{
-						transcript.showMsg(msg);
-					}
-				});
-			}
-		});
-		
+	{	
 		$("#edit_transcript_add_btn").click(function(){
 			
-			var newTime = multimedia.getPosition();
+			var newTime = player.getPosition();
 			$("#transcript_st").val(milisecToString(newTime));
 			$("#transcript_edit_div").show(400);
 			$("#transcript_id").val("");
 		});
-		
-		$("#edit_transcript_edit_btn").click(function(){
-			
-			if(transcript.selectedTranscript == null)
-			{
-				alert('Please select a transcript block.');
-				return;
-			}
-			
-			var transcriptData = transcript.getTranscriptData(transcript.selectedTranscript.attr("transcript_id"));
-			if(transcriptData != null)
-			{
-				$("#transcript_st").val(milisecToString(transcriptData.start));
-				$("#transcript_et").val(milisecToString(transcriptData.end));
-				
-				var speaker = transcript.getSpeakerFromCue(transcriptData);
-				if(speaker)
-					$("#transcript_speaker").val(speaker);
-				
-				$("#transcript_content").val(transcript.getAnnotatedTextFromCue(transcriptData.cueText));
-				$("#transcript_id").val(transcriptData.index); //This is the id of srt index, not the id of transcript div
-				
-				$("#transcript_edit_errorMsg").hide();
-				$("html,body").animate({scrollTop:$("#transcripts_div").offset().top},200);
-				$("#transcript_edit_div").show(200);	
-
-			}
-		});
-		
 		//init transcript editing and creating form
 		
 		
@@ -303,7 +340,7 @@ var Transcript = Base.extend({
 		$("#transcript_et").mask("?99:99:99");
 		
 		$("#transcript_st_time").click(function(){
-			var currentPosition = multimedia.getPosition();
+			var currentPosition = player.getPosition();
 			//console.log("curpo:"+currentPosition);
 			$("#transcript_st").val(milisecToString(currentPosition));
 		});
@@ -319,7 +356,7 @@ var Transcript = Base.extend({
 			$("#transcript_st").val(milisecToString(newTime));
 		});
 		$("#transcript_et_time").click(function(){
-			var currentPosition = multimedia.getPosition();
+			var currentPosition = player.getPosition();
 			$("#transcript_et").val(milisecToString(currentPosition));
 		});
 		$("#transcript_et_add").click(function(){
@@ -381,7 +418,7 @@ var Transcript = Base.extend({
 						transcript.showMsg(msg);
 						//Do not hide the form, as users may want to add transcript again
 						//Reset the start time to the current time
-						var newTime = multimedia.getPosition();
+						var newTime = player.getPosition();
 						$("#transcript_st").val(milisecToString(newTime));
 					}
 				});
@@ -457,23 +494,7 @@ var Transcript = Base.extend({
 		cue.cueText += $("#transcript_content").val();
 		cue.cueText += "</v>";
 		cue.index = transcript.newId++;
-		
-		//Generate thumbnail picture
-		if(recording.isVideo == 'true' && recording.thumbnail != 'null')
-		{
-			mmServiceClient.generateThumbnail(recording.url,recording.uuid, cue.start, cue.end, function(thumbnail_url, error){
-				//We are not going to print out any error message here
-				if(error == null)
-				{
-					cue.thumbnail = thumbnail_url;
-					transcript.createTranscriptAjax(cue, callback)
-				}
-			});
-		}
-		else
-		{
-			transcript.createTranscriptAjax(cue,callback)
-		}
+		transcript.createTranscriptAjax(cue,callback)
 	},
 	/*The create transcript ajax function shared by both creating thumbnail picture and not creating thumbnail picture*/
 	createTranscriptAjax:function(cue, callback)
@@ -518,7 +539,7 @@ var Transcript = Base.extend({
 					}
 					transcript.setTranscriptEdited(transcript_line_li.children(":first"));
 					//renew the transcripts divs
-					transcript.transcripts = $(".transcript_line");
+					transcript.transcripts = $(".transcript-line");
 					callback(data.success.description,null);
 					return;
 				}
@@ -629,7 +650,7 @@ var Transcript = Base.extend({
 					
 					cue=newCue;
 					//renew the transcripts divs
-					transcript.transcripts = $(".transcript_line");
+					transcript.transcripts = $(".transcript-line");
 					callback(data.success.description,null);
 					return;
 				}
@@ -671,7 +692,7 @@ var Transcript = Base.extend({
 					var transcript_line_div = $("#transcript_"+transcript_id);
 					//remove the parent li from transcript_ol
 					transcript_line_div.parent().remove();
-					transcript.transcripts = $(".transcript_line");
+					transcript.transcripts = $(".transcript-line");
 					callback("The transcript block has been successfully deleted.");
 					return;
 				}
@@ -715,7 +736,7 @@ var Transcript = Base.extend({
 		});
 		
 		transcript.newId++;
-		transcript.transcripts = $(".transcript_line");	
+		transcript.transcripts = $(".transcript-line");	
 	},
 	refresh:function(callback) //Add a callback function
 	{

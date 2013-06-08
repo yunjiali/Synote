@@ -141,7 +141,7 @@ class TranscriptResourceController {
 			return
 	   }
 	   
-	   if(params.format != "srt" && params.format !="webvtt")
+	   if(params.format != "srt" && params.format !="webvtt" && params.format !="dragonidx")
 	   {
 		   def msg = "Format ${params.format} is invalid."
 		   render(contentType:"text/json"){
@@ -163,6 +163,12 @@ class TranscriptResourceController {
 		   {
 			   //check if webvtt file is valid
 			   webVTTService.createWebVTTResourceFromVTT(multimedia, text)
+		   }
+		   else if(params.format == "dragonidx")
+		   {
+			   //check if webvtt file is valid
+			   println "dragonidx"
+			   webVTTService.createWebVTTResourceFromDragonIdx(multimedia, text)
 		   }
 		   
 		   //delete the old transcript

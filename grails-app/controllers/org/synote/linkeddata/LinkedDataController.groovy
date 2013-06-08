@@ -364,8 +364,6 @@ class LinkedDataController {
 	/*
 	 * the sparql endpoint for Synote, implemented by Jena ARQ
 	 * 
-	 * Where we use sparql query in Synote?
-	 * player.nerd.js
 	 */
 	def sparql = {
 		

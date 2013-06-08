@@ -2,7 +2,7 @@
 	<div "itemscope="itemscope" itemtype="WPFooter">
 			<span>
 				<a href="http://www.soton.ac.uk" target="_blank"
-					title="University of Southampton">&copy; <span itemprop="copyrightYear">2012</span> <span itemprop="copyrightHolder">University of Southampton</span></a>
+					title="University of Southampton">&copy; <span itemprop="copyrightYear">2013</span> <span itemprop="copyrightHolder">University of Southampton</span></a>
 			</span>|
 			<span>
 				<g:link controller="user" action="contact"

@@ -144,13 +144,6 @@ class SynoteTagLib {
 			out << body()
 	}
 	
-	def NERDEnabled = {attrs,body ->
-		
-		def NERDEnabled = Boolean.parseBoolean(configurationService.getConfigValue("org.synote.integration.nerd.enabled"))
-		if(NERDEnabled)
-			out << body()
-	}
-	
 	def ibmhtsEnabled = {attrs,body->
 		//Check the enable field as well as the ipaddress
 		boolean isAllowedIPAddress = securityService.isAllowedIPAddress(request.remoteAddr)

@@ -125,7 +125,8 @@ class PermService {
 				.list()
 				
 		def perm = null
-		if(result?.size() > 0)
+		
+		if(result?.size() > 0 && result[0] != null)
 		{
 			perm = PermissionValue.findByVal((Integer) result[0])
 		}

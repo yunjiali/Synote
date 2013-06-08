@@ -93,50 +93,17 @@
 	  				<li><g:link controller="multimediaResource" action="edit" id="${row.id}">Edit</g:link></li>
 	  				<li class="divider"></li>
 	  				</g:if>
-	  				<g:if test="${viewSynmarksEnabled}">
-	  				<li><g:link controller="transcriptResource" action="list" id="${row.id}">Show Transcript</g:link></li>
-	  				</g:if>
 	  				<g:if test="${editable}">
 	  				<li><g:link controller="transcriptResource" action="upload" id="${row.id}">Upload Transcript</g:link></li>
-	  				</g:if>
-	  				<g:if test="${viewTranscriptsEnabled}">
-	  				<li><g:link controller="synmarkResource" action="list" id="${row.id}">Show Synmarks</g:link></li>
-	  				</g:if>
-	  				<g:if test="${viewTranscriptsEnabled || viewSynmarksEnabled}">
-	  				<li class="divider"></li>
 	  				</g:if>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
 	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>
 	 	</g:if>
-	 	<g:if test="${nerditEnabled}">
-	 	<g:if test="${row.cc == true}">
-	  	<div class="pull-right" style="margin-right:10px">
-	  		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerditsub" id="${row.id}">NERD Subtitle</g:link>
-	  	</div>
-	  	<div class="pull-right" style="margin-right:10px">
-	  	<g:link controller="recording" action="subpreview" id="${row.id}" class="btn btn-info">
-			Preview Named Entities
-		</g:link>
-		</div>
-	 	</g:if>
-	 	<!-- 
+	 	<g:if test="${isOwnerOrAdmin}">
 	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn btn-warning pull-right" controller="nerd" action="nerdmm" id="${row.id}">NERD It</g:link>
-	 	</div>-->
-	 	</g:if>
-	 	<g:if test="${viewSynmarksEnabled}">
-	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn pull-right" controller="synmarkResource" action="list" id="${row.id}">View Synmarks</g:link>
-	 	</div>
-	 	</g:if>
-	 	<g:if test="${viewTranscriptsEnabled}">
-	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn pull-right" controller="transcriptResource" action="list" id="${row.id}">View Transcripts</g:link>
-	 	</div>
-	 	<div class="pull-right" style="margin-right:10px;">
-	 		<g:link class="btn pull-right btn-primary" controller="transcriptResource" action="upload" id="${row.id}">Upload Transcript</g:link>
+	 		<g:link class="btn btn-success pull-right" controller="user" action="addRecordingPermission" id="${row.id}"><i class="icon-plus icon-white"></i>Add to Group</g:link>
 	 	</div>
 	 	</g:if>
 	</div>

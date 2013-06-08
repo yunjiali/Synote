@@ -12,7 +12,10 @@
 		</div>
 		<div class="span10" id="user_content_div">
 			<h2><g:message code="org.synote.resource.compound.multimediaResource.createlocal.title" /></h2>
-			Coming Soon...
+			<hr/>
+			<div >
+				<iframe style="border:0; min-height:300px;width:100%" src="${uploadMultimediaURL}"></iframe>
+			</div>
 		</div>
 	</div>
 </div>

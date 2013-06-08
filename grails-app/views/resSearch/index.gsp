@@ -82,10 +82,10 @@
 					</g:if>
 					<g:each in="${searchResultList?.rows}" var="row">
 						<g:if test="${row.clazz=='multimedia'}">
-							<g:render template="/common/recording" model="['row':row,'nerditEnabled':false,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>
+							<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>
 						</g:if>
 						<g:elseif test="${row.clazz=='synmark'}">
-							<g:render template="/common/synmark" model="['row':row,'nerditEnabled':false]"/>
+							<g:render template="/common/synmark" model="['row':row]"/>
 						</g:elseif>
 						<g:elseif test="${row.clazz=='webvttcue'}">
 							<g:render template="/common/subtitle_block" model="['row':row]"/>
