@@ -16,16 +16,19 @@
 	    }
 	</style>
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap-responsive.min.css')}" />
+	<link rel="stylesheet" type="text/css" href="${resource(dir: 'bootstrap', file: 'css/bootstrap-tagmanager.css')}" />
 	<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'main.css')}" />
-	<link rel="stylesheet" type="text/css" href="${resource(dir: 'mediaelement', file: 'mediaelementplayer.min.css')}" />
+	<link rel="stylesheet" type="text/css" href="${resource(dir: 'smfplayer', file: 'mediaelementplayer.min.css')}" />
+	<link rel="stylesheet" type="text/css" href="${resource(dir: 'smfplayer', file: 'smfplayer.css')}"  />
 	<link rel="shortcut icon" href="${resource(dir: 'images', file: 'synote_icon.ico')}" type="image/x-icon" />
 	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery-1.7.1.min.js')}"></script>
 	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap.min.js')}"></script>
+	<script type="text/javascript" src="${resource(dir: 'bootstrap', file: 'js/bootstrap-tagmanager.js')}"></script>
 	<script type="text/javascript" src="${resource(dir: 'js', file: 'player/player.responsive.js')}"></script>
 	<script type="text/javascript" src="${resource(dir:'js',file:"Base.js")}"></script>
 	<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.form.js')}"></script>
-	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 	<!-- Other jquery libraries  -->
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.maskedinput-1.3.min.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.url.js")}"></script>
@@ -33,24 +36,18 @@
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.field_selection.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.scrollTo-1.4.2-min.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.okShortcut.min.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"mediafragments.js")}"></script>
 	<!-- Player settings -->
-	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"jquery.media.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/jquery',file:"microdataHelper.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/tiny_mce',file:"jquery.tinymce.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"webvtt.parser.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
 	<!-- For player -->
-	<script type="text/javascript" src="${resource(dir:'mediaelement',file:"mediaelement-and-player.min.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.timer.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.multimedia.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.mediafragment.controller.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'smfplayer',file:"mediaelement-and-player.min.js")}"></script>
+	<script type="text/javascript" src="${resource(dir:'smfplayer',file:"smfplayer.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.transcript.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.synmark.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.presentation.js")}"></script>
 	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.textselector.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js/player',file:"player.js")}"></script>
-	<script type="text/javascript" src="${resource(dir:'js',file:"synote-multimedia-service-client.js")}"></script>
 	<!--  -->
 	<script id="scriptInit" type="text/javascript">
 		//In case I forget to remove console.log in IE
@@ -68,70 +65,208 @@
 	</script>
 	<script type="text/javascript">
 	var recording = null;
-	var appPath = "${grailsApplication.metadata['app.name']}";
-	var mf_json = null; //pasrse the media fragment as json object
-	var ctrler = null; //multimedia controller, including play media fragment
 	var user = null;
-	var mdHelper = null //helper to help embed microdata
+	var mdHelper = new MicrodataHelper(true); //helper to help embed microdata
 	var userBaseURI = "${userBaseURI}";
 	var resourceBaseURI = "${resourceBaseURI}";
-	var mmServiceURL = "${mmServiceURL}";
-	var mmServiceClient = new SynoteMultimediaServiceClient(mmServiceURL);
+	var player;
+	var transcript,
+		synmark,
+		presentation;
+	//Check if media fragment is defined in window.location
+	var uglyURI = decodeURIComponent(window.location);
+	var prettyURI = uglyURI;
+	if(uglyURI.indexOf("#!") != -1)
+		prettyURI = uglyURI.replace("#!","#");
+	var currentURL = $.url(prettyURI);
+	var recordingURLStr = "${recording.url.url}";
+	if(currentURL.attr('fragment')) //if current url has fragment
+	{
+		if(recordingURLStr.indexOf('#') == -1)
+			recordingURLStr+='#';
+			
+		recordingURLStr +=currentURL.attr('fragment');
+		//console.log(recordingURLStr);
+	}
+	
+	recording = new Object();
+	recording.id = "${recording.id}";
+	//Removed recording.title = "{recording.title?.encodeAsHTML()}";
+	recording.url = recordingURLStr;//Yunjia: We have to think about it, if the url has fragment but the server cannot regonise it..., what should we do then
+	recording.canEdit = "${canEdit}".toLowerCase();
+	recording.canCreateSynmark = "${canCreateSynmark}".toLowerCase();
+	recording.isVideo = "${recording.isVideo}".toLowerCase();
+	recording.uuid = "${recording.uuid}";
+	recording.thumbnail = "${recording.thumbnail}";
+	recording.hasCC = "${hasCC}".toLowerCase();
+
+	user = new Object();
+	if("${user}".length>0)
+	{
+		//console.log("1");
+		user.id = "${user?.id}";
+		user.user_name = "${user?.userName}";
+	}
+	else //No user logged in
+	{
+		//console.log("2");
+		user.id = -1;
+		user.user_name = "Guest User";
+	}
+
+	var SynotePlayer = function()
+	{
+		this.options = {
+			mfURI:recording.url, 
+			autoStart:true, 
+			height: 320, 
+			width:480,
+			audioWidth:480,
+			audioHeight:320,
+			isVideo: recording.isVideo === "true"?true:false,
+			success:function(mediaElement,domObject,p){
+				mediaElement.addEventListener('timeupdate', function(e){
+		            var currentPosition = mediaElement.currentTime*1000;
+
+		            $("#time_current_position").text(milisecToString(currentPosition));
+		            if(synmark.synchronised == true)
+						synmark.sync(currentPosition);
+					if(transcript.synchronised == true)
+						transcript.sync(currentPosition);
+					if(presentation.synchronised == true)
+						presentation.sync(currentPosition);
+		        });
+			}
+		};
+		this.init=function(player_div, callback)
+		{	
+			var p = player_div.smfplayer(this.options);
+			if(p === undefined)
+			{
+				return callback("The video/audio resource cannot be played in Synote Player.",null);
+			}
+
+			//add subtitles if available, currently only support en
+			if(recording.hasCC)
+			{
+				var transcript_track = $("<track/>").attr("kind","subtitles").attr("src","../downloadTranscript?type=webvtt&multimediaId="+recording.id).attr("srclang","en");
+				transcript_track.appendTo(player_div.find("video,audio"));
+			}
+			
+			transcript = new Transcript(recording,$("transcripts_div"),$("#transcripts_content_div"));
+			transcript.initTranscript();
+			synmark = new Synmark(recording,$("#synmarks_div"),$("#synmark_list_div"));
+			synmark.initSynmark();
+			presentation = new Presentation(recording,$("#slides_div"),$("#image_container_div"));
+			presentation.initPresentation();
+			synmark.refresh();
+			transcript.refresh();
+			presentation.refresh();
+			return callback(null, p);
+		};
+	}
 	
 	$(document).ready(function(){
-		//Deal with the media fragment first
-		
-		var uglyURI = decodeURIComponent(window.location);
-		var prettyURI = uglyURI;
-		if(uglyURI.indexOf("#!") != -1)
-			prettyURI = uglyURI.replace("#!","#");
-		var currentURL = $.url(prettyURI);
-		var recordingURLStr = "${recording.url.url}";
-		if(currentURL.attr('fragment')) //if current url has fragment
-		{
-			if(recordingURLStr.indexOf('#') == -1)
-				recordingURLStr+='#';
-				
-			recordingURLStr +=currentURL.attr('fragment');
-			//console.log(recordingURLStr);
-		}
-		mf_json = MediaFragments.parseMediaFragmentsUri(recordingURLStr);
-		//console.log(mf_json);
-		
-		recording = new Object();
-		recording.id = "${recording.id}";
-		recording.title = "${recording.title?.encodeAsHTML()}";
-		recording.url = "${recording.url.url}";//Yunjia: We have to think about it, if the url has fragment but the server cannot regonise it..., what should we do then
-		recording.canEdit = "${canEdit}".toLowerCase();
-		recording.canCreateSynmark = "${canCreateSynmark}".toLowerCase();
-		recording.isVideo = "${recording.isVideo}".toLowerCase();
-		recording.uuid = "${recording.uuid}";
-		recording.thumbnail = "${recording.thumbnail}";
-		recording.hasCC = "${hasCC}".toLowerCase();
+		var synotePlayer = new SynotePlayer();
+		synotePlayer.init($("#multimedia_player_div"), function(err, p){
+			player = p;
+			if(err != null)
+			{
+				$("#multimedia_player_error_div").html('<button type="button" class="close" data-dismiss="alert alert-error">&times;</button>'+err);
+				return;
+			}
+			$("#description_show_btn").click(function(){
+				if($(this).text() == "more")
+				{
+					$("#tags_description_div").removeClass("description-brief").addClass("description-full");
+					$(this).text("less");
+				}
+				else if($(this).text() == "less")
+				{
+					$("#tags_description_div").removeClass("description-full").addClass("description-brief");
+					$(this).text("more");
+				}
+			});
 
-		user = new Object();
-		if("${user}".length>0)
-		{
-			//console.log("1");
-			user.id = "${user?.id}";
-			user.user_name = "${user?.userName}";
-		}
-		else //No user logged in
-		{
-			//console.log("2");
-			user.id = -1;
-			user.user_name = "Guest User";
-		}
-		mdHelper= new MicrodataHelper(true);
-		initSynotePlayer(recording);
-		//initShortCutKeys();
-		
-		//Start playing from media fragment is exisiting
-		if(!$.isEmptyObject(mf_json.hash) || !$.isEmptyObject(mf_json.query))
-		{
-			//ctrler.start_playback();
-		}
-		
+			if(recording.isVideo != 'true')
+				$("#mf_info_div").removeClass("mf-info-video").addClass("mf-info-audio");
+			
+			//init control buttons
+			$("#control_goto_tb").mask("99:99:99");
+			$("#control_goto").click(function()
+			{
+				var pos = stringToMilisec($("#control_goto_tb").val());
+				//console.log("pos:"+pos);
+				player.setPosition(pos);
+			});
+			
+			$("#control_goto_tb").keyup(function(event){
+			//Yunjia: here is a bug for IE (and Safari maybe). Keyup event is not captured by IE, so when you click "enter", you just open
+				//the settings dropdownmenu
+				var keycode = (event.which)?event.which:event.keyCode;
+				if(keycode == 13){
+						//console.log("13");
+						event.preventDefault();
+						$("#control_goto").click();
+				}
+			});
+
+			$("#control_play, #nav_play_btn").bind('click',{},function(){
+				player.play();
+			});
+			$("#control_pause,#nav_pause_btn").bind('click',{},function(){
+				player.pause();
+			});
+			$("#control_rewind,#nav_rewind_btn").bind('click',{},function(){
+				var currentPos = player.getPosition();
+				var pace = parseInt($("#control_pace_div :selected").val(),10);
+				var pos = currentPos-pace*1000;
+				player.setPosition(pos>0?pos:0);
+			});
+			$("#control_forward,#nav_forward_btn").bind('click',{},function(){
+				var currentPos = player.getPosition();
+				var pace = parseInt($("#control_pace_div :selected").val(),10);
+				player.setPosition(currentPos+pace*1000);
+			});
+
+			var mf_json = player.getMFJson();
+			if($.isEmptyObject(mf_json.hash) && $.isEmptyObject(mf_json.query)) //the fragment is not valid, so we will ignore it.
+			{	
+				$("#control_mf").click(function(){
+					alert("No media fragment is defined.");
+				});
+			}
+			else
+			{
+				var st = mf_json.hash.t[0].start?mf_json.hash.t[0].start:0;
+				var et = mf_json.hash.t[0].end?mf_json.hash.t[0].end:-1;
+				var old_text = $("#control_mf").text();
+				
+				if(st === 0 || st === undefined || st==="0" || st==="00.000" || st==="00:00.000" ||st === "00:00:00.000")
+				{
+					old_text+=" the beginning";
+				}
+				else
+				{
+					old_text+=" "+st;
+				}
+				
+				if(et === -1 || et === null)
+				{
+					old_text+=" to the end";
+				}
+				else
+				{
+					old_text+=" to "+et;
+				}
+				$("#control_mf").text(old_text);
+				$("#control_mf").show();
+				$("#control_mf").click(function(){
+					//Player from somewhere
+					player.playmf();
+				});
+			}
+		});
 	});
 	</script>
 </head>
@@ -178,7 +313,7 @@
 				</syn:isLoggedIn>
 				<syn:isNotLoggedIn>
 				<div class="btn-group pull-right">
-					<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" title="Login to make annotations" class="btn btn-primary">
+					<g:link controller="login" action="auth" title="Log in" elementId="main_login_a" class="btn btn-primary">
 							Login</g:link>
 					<syn:allowRegistering>
 						<g:link controller="register" action="index" title="Register" class="btn btn-success hidden-phone">
@@ -199,7 +334,6 @@
 				<div class="btn-group nav pull-right">
 					<button id="nav_play_btn" class="btn" title="play"><i class="icon-play"></i></button>
 					<button id="nav_pause_btn" class="btn" title="pause"><i class="icon-pause"></i></button>
-					<button id="nav_stop_btn" class="btn visible-desktop" title="stop"><i class="icon-stop"></i></button>
 					<button id="nav_rewind_btn" class="btn" title="rewind"><i class="icon-backward"></i></button>
 					<button id="nav_forward_btn" class="btn" title="rewind"><i class="icon-forward"></i></button>
 				</div>
@@ -244,7 +378,9 @@
 			</div>
 		</div>
 		<!-- Player and Description-->
+		
 		<div class="container">
+		
 		<div class="row">
 			<div id="col_left_div" class="player-fixed-width">
 				<div id="mf_info_div" class="mf-info-video">
@@ -252,7 +388,7 @@
 						<button class="btn btn-success" id="control_mf" title="Play this fragment" style="display:none;"><i class="icon-play-circle icon-white"></i>Play from</button>
 					</div>
 					<div id="control_time_div" class="pull-right">
-						<span id="time_current_position">00:00</span> / <span id="time_duration_span">${TimeFormat.getInstance().toString(recording.duration)}</span>
+						<span id="time_current_position">00:00:00</span> / <span id="time_duration_span">${TimeFormat.getInstance().toString(recording.duration)}</span>
 					</div>
 				</div>
 				<div id="multimedia_player_error_div">
@@ -266,24 +402,12 @@
 				</g:else>
 					<meta itemprop="contentURL" content="${recording.url.url}"/>
 					<meta itemprop="dateModified" content="${new SimpleDateFormat("dd/MM/yyyy").format(recording.lastUpdated)}"/>
-					
-					<div id="multimedia_player_div">
-						<!-- always use video -->
-							<video id="multimedia_player" width="480" height="320" preload="none">
-								<source src=""/>
-							</video>
-						<!--  
-							<audio id="multimedia_player" width="100%" height="auto" controls="controls">
-								<source src=""/>
-							</audio>
-						-->
-					</div>
+					<div id="multimedia_player_div"></div>
 				</div><!-- end player -->
 				<div id="recording_control_div" class="hidden-phone">
 					<div style="display:inline;">
 						<button id="control_play" title="Play" class="btn"><i class="icon-play"></i></button>
 						<button id="control_pause" title="Pause" class="btn"><i class="icon-pause"></i></button>
-						<button id="control_stop" title="Stop" class="btn"><i class="icon-stop"></i></button>
 						<button id="control_rewind" title="Rewind" class="btn"><i class="icon-backward"></i></button>
 						<button id="control_forward" title="Forward" class="btn"><i class="icon-forward"></i></button>
 					</div>	
@@ -310,15 +434,6 @@
 							<div class="btn-group" id="transcript_edit_enter_div">
 								<button class="btn" title="Add a new transcript block" id="edit_transcript_add_btn">
 									<img src="${resource(dir:'images/player',file:"edit_transcript_add_22.png")}"  id="edit_transcript_add_img" alt="Add new transcript block"/>
-								</button>
-								<button class="btn" title="Edit the selected transcript block" id="edit_transcript_edit_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_22.png")}"  id="edit_transcript_enter_img" alt="Edit Transcript"/>
-								</button>
-								<button class="btn" title="Delete the selected transcript block" id="edit_transcript_delete_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_clear_22.png")}"  id="edit_transcript_delete_img" alt="Remove all the transcripts"/>
-								</button>
-								<button class="btn" title="Transcript editing help" id="edit_transcript_help_btn">	
-									<img src="${resource(dir:'images/player',file:"edit_transcript_help_22.png")}"  id="edit_transcript_help_img" alt="Transcript editing help"/>
 								</button>
 							</div>
 							</g:if>
@@ -460,20 +575,6 @@
 									</div>
 								</div>
 								<div id="synmark_msg_div"></div><!-- displaying info, error messages -->
-								<div id="synmark_url_dialog" class="modal hide fade">
-									<div class='modal-header'>
-									    <button type='button' class='close' data-dismiss='modal'>×</button>
-									    <h4>Synmark URL</h4>
-									</div>
-									<div class='modal-body'>
-									    
-									</div>
-									<div class='modal-footer'>
-									    <a href='#' class='btn' data-dismiss='modal'>Close</a>
-									    <!--  
-									    <a href='#' class='btn btn-primary'>Copy to Clipboard</a>-->
-									</div>
-								</div>
 								<!-- synmark editing form -->
 								<g:if test="${canCreateSynmark}">
 								<div id="synmark_create_div" class="well" style="display:none;">
@@ -509,7 +610,7 @@
 											</div>
 											<div class="control-group">
 											    <label for="synmark_tags">Tags:</label>
-												<input type='text' autocomplete="off" name='synmark_tags' id='synmark_tags' value='' class="span11" />
+												<input type='text' autocomplete="off" placeholder="tags" class="tm-input tm-input-success" data-provide="typeahead" data-items="10" data-source="${typeaheadStr}" name='synmark_tags_visible' id='synmark_tags_visible' value='' />
 												<p class="help-block">Please separate tags by comma ','</p>
 											</div>
 											<div class="control-group">
@@ -600,6 +701,20 @@
 		</div>
 	</div>
 	<!-- container for content-->
+	<div id="share_url_dialog" class="modal hide fade">
+		<div class='modal-header'>
+		    <button type='button' class='close' data-dismiss='modal'>×</button>
+		    <h4 id="share_url_title_h4"></h4>
+		</div>
+		<div class='modal-body'>
+		    
+		</div>
+		<div class='modal-footer'>
+		    <a href='#' class='btn' data-dismiss='modal'>Close</a>
+		    <!--  
+		    <a href='#' class='btn btn-primary'>Copy to Clipboard</a>-->
+		</div>
+	</div>
 	<g:render template="/common/footer"/>
 </body>
 </html>

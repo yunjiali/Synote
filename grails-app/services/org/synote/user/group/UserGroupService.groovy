@@ -37,9 +37,9 @@ class UserGroupService {
 			eq('owner',user)
 			if(params.text?.trim()?.length()>0)
 			{
-				ilike("name","%${params.text}%")
+				ilike("name","%${params.text}%",[ignoreCase:true])
 			}
-			order(sortIndex,sortOrder).ignoreCase()
+			order(sortIndex,sortOrder)
 		}
 		def totalRows = groupList.totalCount
 		def numberOfPages = Math.ceil(totalRows/maxRows)
@@ -51,20 +51,60 @@ class UserGroupService {
 				//owner_name:r.owner.userName, Don't need owner_name, it's you!
 				name:r.name,
 				shared:r.shared,
+				description:r.description,
+				date_created: r.dateCreated,
 				member_count: UserGroupMember.countByGroup(group)+1, //At least, there will be owner itself in the group
 				recording_count:ResourcePermission.countByGroup(group),
 			]
 			results << item
 		}
-		def jqGridData = [rows:results, page:"${currentPage}", records:"${totalRows}", total:numberOfPages]
+		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
 		return jqGridData
     }
 	
-	//If user has logged in, list users' own groups and all the shared group, if nobody logs in, show only the shared group
-	//the input parameters are not "params", which has type web.servlet.mvc.GrailsParameterMap
+	/*
+	 * List the groups a user joined
+	 */
+	def getMyJoinedGroupsAsJSON(params)
+	{
+		def sortIndex = params.sidx ?: 'id'
+		def sortOrder  = params.sord ?: 'asc'
+		if(!params.rows)
+			params.rows ="10"
+			
+		def maxRows = Integer.valueOf(params.rows)
+		if(!params.page)
+			params.page ="1"
+		def currentPage = Integer.valueOf(params.page) ?: 1
+		def rowOffset = currentPage == 1 ? 0 : (currentPage - 1) * maxRows
+		def user=securityService.getLoggedUser()
+		def members = UserGroupMember.findAllByUser(user)
+			
+		def totalRows = UserGroupMember.countByUser(user)
+		def numberOfPages = Math.ceil(totalRows/maxRows)
+		def results = []
+		members?.collect{ m->
+			def group = m.group
+			def item = [
+				id:group.id,
+				//owner_name:r.owner.userName, Don't need owner_name, it's you!
+				name:group.name,
+				shared:group.shared,
+				description:group.description,
+				date_created: group.dateCreated,
+				member_count: UserGroupMember.countByGroup(group)+1, //At least, there will be owner itself in the group
+				recording_count:ResourcePermission.countByGroup(group),
+			]
+			results << item
+		}
+		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
+		return jqGridData
+	}
+	
+	//List all the groups arranged by created date
 	def getGroupsAsJSON(jqGridParams) {
 		//Yunjia: there is some redundant programme here...
-		def sortIndex = jqGridParams.sidx ?: 'id'
+		def sortIndex = jqGridParams.sidx ?: 'dateCreated'
 		def sortOrder  = jqGridParams.sord ?: 'asc'
 		if(!jqGridParams.rows)
 			jqGridParams.rows ="10"
@@ -96,11 +136,11 @@ class UserGroupService {
 				owner_name:r.owner.userName,
 				member_count: UserGroupMember.countByGroup(group)+1, //At least, there will be owner itself in the group
 				recording_count:ResourcePermission.countByGroup(group),
-				joined:user?(UserGroupMember.findByGroupAndUser(UserGroup.get(r.id),user) && r.owner.id != user.id ?true:false):false //If the user has joined the group
+				date_created: r.dateCreated,
 			]
 			results << item
 		}
-		def jqGridData = [rows:results, page:"${currentPage}", records:"${count}", total:numberOfPages]
+		def jqGridData = [rows:results, page:currentPage, records:count, total:numberOfPages]
 		return jqGridData
 	}
 	

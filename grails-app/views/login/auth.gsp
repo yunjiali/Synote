@@ -1,7 +1,7 @@
 <head>
 <title><g:message code="org.synote.user.login.title" /></title>
 <meta name="layout" content="main" />
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		document.forms['loginForm'].elements['j_username'].focus();
@@ -41,7 +41,7 @@
 		<div class="span4 offset1 well">
 			<h3>Login</h3>
 			<hr/>
-			<g:render template="/common/message" />
+			<g:render template="/common/message" model="[forceError:true]"/>
 			<form action='${postUrl}' method='POST' name='loginForm'>
 			  <fieldset>
 			    <div class="control-group">

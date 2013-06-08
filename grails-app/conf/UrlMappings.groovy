@@ -46,6 +46,7 @@ class UrlMappings {
 							//position(matches:/[0-9]+/)
 						}
 			}
+		  "400"(view:'/error/400')
 		  "500"(view:'/error')
 	}
 }

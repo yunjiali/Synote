@@ -472,6 +472,77 @@ class WebVTTService {
 			throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Saved draft file format error: The .srt file is not valid.");
 		}
 	}
+	
+	def createWebVTTResourceFromDragonIdx(MultimediaResource multimedia,String idxStr)
+	{
+		def user = securityService.getLoggedUser()
+		if(!user)
+		{
+			throw new PlayerException(APIStatusCode.AUTHENTICATION_FAILED,"User authentication failed.");
+		}
+		def owner = multimedia.owner
+		
+		def webVTTResource = new WebVTTResource(owner:owner,fileHeader:"WebVTT", title:"WebVTTResource")
+		def anno = new ResourceAnnotation(owner:owner, source:webVTTResource, target: multimedia)
+		
+		try
+		{
+			def body = new XmlSlurper().parseText(idxStr);
+			int c = 0
+			body.RECOGNITION.UTT.each{utt->
+				//st, et should be in milliseconds
+				def cueIndex = Integer.parseInt(utt.@Id.text());
+				def content = new StringBuilder();
+				utt.WRD.each{wrd->
+					content.append(wrd.@SRT.text()+" ");	
+				}
+				
+				def startTime =Math.round(Float.parseFloat(utt.@Start.text())*1000);
+				def endTime =Math.round(Float.parseFloat(utt.@End.text())*1000);
+				def cue = new WebVTTCue(
+					content: content.toString().trim(),
+					owner: owner,
+					title:"WebVTTCue",
+					cueIndex:cueIndex,
+					cueSettings:"")
+				webVTTResource.addToCues(cue)
+				
+				def sourceStart = cueIndex
+				def targetStart = startTime
+				def targetEnd = endTime
+				anno.addToSynpoints(new Synpoint(sourceStart: sourceStart,
+						targetStart: targetStart,
+						targetEnd: targetEnd))
+			}
+			
+			WebVTTResource.withTransaction {status->
+				
+				if(webVTTResource.hasErrors() || !webVTTResource.save(flush:true))
+				{
+					throw new PlayerException(APIStatusCode.TRANSCRIPT_WEBVTT_INVALID ,"Webvtt cannot be saved. Error:"+ webVTTResource.errors.toString())
+				}
+				
+				if(anno.hasErrors() || !anno.save(flush:true))
+				{
+					throw new PlayerException(APIStatusCode.RESOURCEANNOTATION_CREATEION_ERROR ,"Cannot create annotation. Error:"+ new_anno.errors.toString())
+				}
+				
+				//If multimedia is video,generate thumbnail pictures
+				if(multimedia.isVideo == true)
+				{
+					webVTTResource.refresh()
+					ThumbnailsJob.triggerNow([vtt:webVTTResource, multimedia:multimedia])
+				}
+			}
+				
+			return
+		}
+		catch(Exception e)
+		{
+			throw new PlayerException(APIStatusCode.TRANSCRIPT_DRAFT_INVALID,"Dragon index file format error: "+e.getMessage());
+		}
+	}
+	
    /*
     * Get WebVTTCue
     */

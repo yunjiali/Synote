@@ -37,7 +37,7 @@
 			<div class="span10">
 				<g:each in="${tags}" status="i" var="tag">
 					<span class="tag" style="font-size:1.2em;">
-						<g:link controller="resSearch" action="search" params='[query:"${tag.text}"]'> <!-- Search my resource only! -->
+						<g:link controller="resSearch" action="index" params='[query:"${tag.text}"]'> <!-- Search my resource only! -->
 							<i class="icon-tag tag-item icon-white"></i>${tag.text}(${tag.weight})</g:link>
 					</span>
 				</g:each>
