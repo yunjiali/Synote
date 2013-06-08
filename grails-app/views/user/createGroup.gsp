@@ -10,7 +10,6 @@
 		{
 			rules: {
 			    name: "required",
-			    shared:"required",
 			    description:"required"
 			 },
 			highlight: function(label) {
@@ -43,11 +42,11 @@
 				     	<label for="shared" class="control-label"><b><em>*</em>Access Level</b></label>
 				      	<div class="controls">
 				      		<label class="checkbox">
-					      		<g:if test="${params.share == true}">
-									<input type='checkbox' name='shared' class="required" id='shared' checked="checked"/>
+					      		<g:if test="${params.shared == true}">
+									<input type='checkbox' name='shared' id='shared' checked="checked"/>
 								</g:if>
 								<g:else>
-									<input type='checkbox' name='shared' class="required" id='shared'/>
+									<input type='checkbox' name='shared' id='shared'/>
 								</g:else>
 								This is a public group 
 							</label>
@@ -57,14 +56,12 @@
 				    <div class="control-group">
 				     	<label for="description" class="control-label"><b><em>*</em>Group Description</b></label>
 				      	<div class="controls">
-							<textarea name='description' rows="4" class="required" id='description'>
-							${params.description?.trim()}
-							</textarea>
+							<textarea name='description' rows="4" class="required" id='description'>${params.description?.trim()?params.description?.trim():""}</textarea>
 				      	</div>
 				    </div>
 				    <div class="form-actions">
-			            <input class="btn-large btn-primary" id="createGroupForm_submit" type="submit" value="Create" />
-			            <input class="btn-large" id="createGroupForm_reset" type="reset" value="Reset"/>
+			            <input class="btn btn-large btn-primary" id="createGroupForm_submit" type="submit" value="Create" />
+			            <input class="btn btn-large" id="createGroupForm_reset" type="reset" value="Reset"/>
 			        </div>
 				  </fieldset>
 				</g:form>

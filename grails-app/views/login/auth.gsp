@@ -41,7 +41,7 @@
 		<div class="span4 offset1 well">
 			<h3>Login</h3>
 			<hr/>
-			<g:render template="/common/message"/>
+			<g:render template="/common/message" model="[forceError:true]"/>
 			<form action='${postUrl}' method='POST' name='loginForm'>
 			  <fieldset>
 			    <div class="control-group">

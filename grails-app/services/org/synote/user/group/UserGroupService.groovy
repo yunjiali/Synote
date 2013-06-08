@@ -67,7 +67,38 @@ class UserGroupService {
 	 */
 	def getMyJoinedGroupsAsJSON(params)
 	{
-		
+		def sortIndex = params.sidx ?: 'id'
+		def sortOrder  = params.sord ?: 'asc'
+		if(!params.rows)
+			params.rows ="10"
+			
+		def maxRows = Integer.valueOf(params.rows)
+		if(!params.page)
+			params.page ="1"
+		def currentPage = Integer.valueOf(params.page) ?: 1
+		def rowOffset = currentPage == 1 ? 0 : (currentPage - 1) * maxRows
+		def user=securityService.getLoggedUser()
+		def members = UserGroupMember.findAllByUser(user)
+			
+		def totalRows = UserGroupMember.countByUser(user)
+		def numberOfPages = Math.ceil(totalRows/maxRows)
+		def results = []
+		members?.collect{ m->
+			def group = m.group
+			def item = [
+				id:group.id,
+				//owner_name:r.owner.userName, Don't need owner_name, it's you!
+				name:group.name,
+				shared:group.shared,
+				description:group.description,
+				date_created: group.dateCreated,
+				member_count: UserGroupMember.countByGroup(group)+1, //At least, there will be owner itself in the group
+				recording_count:ResourcePermission.countByGroup(group),
+			]
+			results << item
+		}
+		def jqGridData = [rows:results, page:currentPage, records:totalRows, total:numberOfPages]
+		return jqGridData
 	}
 	
 	//List all the groups arranged by created date
