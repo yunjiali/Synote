@@ -175,7 +175,6 @@ class RecordingController {
 			}
 			typeaheadStr.append("]")
 			
-			println typeaheadStr.toString()
 			return [recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
 				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc, 
 				typeaheadStr:typeaheadStr.toString()]
