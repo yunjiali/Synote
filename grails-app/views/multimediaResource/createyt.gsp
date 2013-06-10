@@ -12,7 +12,6 @@
 <script type="text/javascript">
 var mmServiceURL = "${mmServiceURL}";
 var client = new SynoteMultimediaServiceClient(mmServiceURL);
-
 function showMsg(msg,type)
 {
 	var msg_div = $("#error_msg_div");
