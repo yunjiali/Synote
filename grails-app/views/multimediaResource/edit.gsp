@@ -163,7 +163,7 @@
 								<label for="tags" class="control-label"><b>Tags</b></label>
 						      	<div class="controls">
 						      		<g:set var="tagStr" value=""/>
-						      		<g:each in="${multimedia.tags}" var="t">
+						      		<g:each in="${multimedia.tags?.sort()}" var="t">
 						      			<g:set var="tagStr" value="${tagStr+','+t}"/>
 						      		</g:each>
 						        	<input class="span4" name='tags' id='tags' value="${tagStr?.size() >0?tagStr.substring(1):tagStr}" />

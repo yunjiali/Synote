@@ -9,12 +9,9 @@
 <script type="text/javascript" src="${resource(dir: 'js/jquery', file: 'jquery.validate-1.9.1.min.js')}"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:"util.js")}"></script>
 <script type="text/javascript" src="${resource(dir:'js',file:"synote-multimedia-service-client.js")}"></script>
-<script type="text/javascript" src="${resource(dir:'js',file:"youtube-parser.js")}"></script>
 <script type="text/javascript">
 var mmServiceURL = "${mmServiceURL}";
 var client = new SynoteMultimediaServiceClient(mmServiceURL);
-var ytParser = new YouTubeParser();
-
 function showMsg(msg,type)
 {
 	var msg_div = $("#error_msg_div");
@@ -78,6 +75,10 @@ $(document).ready(function(){
 			beforeSend:function(event)
 			{
 				$("#form_loading_div").show();
+				$('html, body').animate({
+			         scrollTop: $("#form_loading_div").offset().top
+			     }, 100);
+			     
 				$("#multimediaCreateForm_submit").button("loading");
 				if($("#duration").val() == "" && $("#duration_span").val() != "")
 				{
@@ -140,54 +141,52 @@ $(document).ready(function(){
 				$("#ugc_div").show(200);
 				$("#metadata_div").show(200);
 				$("#controls_div").show(200);
-				ytParser.getThumbnail(data,function(thumbnail_url,errorMsg){
-					if(thumbnail_url != null)
-					{
-						$("#thumbnail_img").attr("src",thumbnail_url);
-						$("#thumbnail").val(thumbnail_url);
-					}
-					else
-					{
-						$("#thumbnail_img").closest(".control-group").addClass("error");
-						var oldHtml = $("#thumbnail_img").closest(".control-group").html();
-						$("#thumbnail_img").closest(".control-group").html(oldHtml+"Cannot get the thumbnail picture for this video.");
-					}
-				});
 
-				ytParser.getDuration(data,function(duration,errorMsg){
-					if(duration != null)
-					{
-						$("#duration_span").val(milisecToString(duration));
-						$("#duration").val(duration);
-					}
-					else
-					{
-						$("#duration_span").closest(".control-group").addClass("warning");
-						//var oldHtml = $("#duration_span").closest(".controls").html();
-						//$("#duration_span").closest(".controls").html(oldHtml+"<p class='help-block'>Please enter the duration of the recording.</p>");
-					}
-				});
+				var thumbnail_url = data.metadata.thumbnail;
+				if( thumbnail_url != null)
+				{
+					$("#thumbnail_img").attr("src",thumbnail_url);
+					$("#thumbnail").val(thumbnail_url);
+				}
+				else
+				{
+					$("#thumbnail_img").closest(".control-group").addClass("error");
+					var oldHtml = $("#thumbnail_img").closest(".control-group").html();
+					$("#thumbnail_img").closest(".control-group").html(oldHtml+"Cannot get the thumbnail picture for this video.");
+				}
 
-				ytParser.getKeywords(data,function(keywords,errorMsg){
-					if(keywords != null)
-					{
-						$("#tags").val(keywords);
-					}
-				});
+				var duration = data.metadata.duration*1000;
+				if(duration != null)
+				{
+					$("#duration_span").val(milisecToString(duration));
+					$("#duration").val(duration);
+				}
+				else
+				{
+					$("#duration_span").closest(".control-group").addClass("warning");
+					//var oldHtml = $("#duration_span").closest(".controls").html();
+					//$("#duration_span").closest(".controls").html(oldHtml+"<p class='help-block'>Please enter the duration of the recording.</p>");
+				}
 
-				ytParser.getTitle(data,function(title,errorMsg){
-					if(title != null)
-					{
-						$("#title").val(title);
-					}
-				});
+				var keywords = data.metadata.tags;
+				
+				if(keywords != null)
+				{
+					$("#tags").val(keywords);
+				}
+				
 
-				ytParser.getDescription(data,function(note,errorMsg){
-					if(note != null)
-					{
-						$("#note").val(note);
-					}
-				});
+				var title = data.metadata.title
+				if(title != null)
+				{
+					$("#title").val(title);
+				}
+
+				var note = data.metadata.description
+				if(note != null)
+				{
+					$("#note").val(note);
+				}
 			}
 			else
 			{

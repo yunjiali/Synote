@@ -3,6 +3,8 @@ package org.synote.resource.compound
 import org.synote.resource.single.text.SynmarkTag
 import org.synote.resource.single.text.SynmarkTextNote
 import org.synote.search.resource.converter.SynmarkConverter
+import org.synote.search.resource.converter.PermissionValueConverter
+
 
 class SynmarkResource extends CompoundResource{
 
@@ -46,31 +48,7 @@ class SynmarkResource extends CompoundResource{
 		}
 		return synmarkStr
 	}
-
-	public String toNIFString()
-	{
-		StringBuilder str = new StringBuilder()
-		if(title)
-		{
-			str.append("<h1>"+title+"</h1>")	
-		}
-		
-		if(tags)
-		{
-			str.append("<span>")
-			tags.each {tag ->
-				str.append(tag.content+" ")
-			}
-			str.append("</span>")
-		}
-		if(note)
-		{
-			str.append("<br/>"+"<p>"+note.content+"</p>")
-		}
-		return str.toString()
-		
-	}
-
+	
 	public String TagsToString()
 	{
 		def tagsStr = ""

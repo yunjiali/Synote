@@ -1,5 +1,7 @@
 package org.synote.permission
 
+import org.synote.search.resource.converter.PermissionValueConverter
+
 /*
  * By default, there are four values:
  * PRIVATE 0
@@ -17,7 +19,7 @@ class PermissionValue {
 		name(blank:false,maxSize: 255, unique:true)
 		val(unique:true)
     }
-	
+		
 	public String toString()
 	{
 		return name 

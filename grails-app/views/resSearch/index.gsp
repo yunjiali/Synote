@@ -81,15 +81,24 @@
 						<div class="nodata">No result is found for <strong>${params?.query?.encodeAsHTML()}</strong></div>
 					</g:if>
 					<g:each in="${searchResultList?.rows}" var="row">
-						<g:if test="${row.clazz=='multimedia'}">
-							<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>
+						<g:if test="${row.perm_val > 0 }">
+							<g:if test="${row.clazz=='multimedia'}">
+								<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>
+							</g:if>
+							<g:elseif test="${row.clazz=='synmark'}">
+								<g:render template="/common/synmark" model="['row':row]"/>
+							</g:elseif>
+							<g:elseif test="${row.clazz=='webvttcue'}">
+								<g:render template="/common/subtitle_block" model="['row':row]"/>
+							</g:elseif>
 						</g:if>
-						<g:elseif test="${row.clazz=='synmark'}">
-							<g:render template="/common/synmark" model="['row':row]"/>
-						</g:elseif>
-						<g:elseif test="${row.clazz=='webvttcue'}">
-							<g:render template="/common/subtitle_block" model="['row':row]"/>
-						</g:elseif>
+						<g:else>
+							<div class="recording-row row">
+							 	<div class="span2">
+							 		<span>Private resource.</span>
+							 	</div>
+							</div>
+						</g:else>
 					</g:each>
 				</div>
 			</div>

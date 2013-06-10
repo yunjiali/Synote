@@ -41,4 +41,5 @@ beans = {
 	multimediaConverter(MultimediaConverter)
 	synmarkConverter(SynmarkConverter)
 	webVTTCueConverter(WebVTTCueConverter)
+	permissionValueConverter(PermissionValueConverter)
 }
