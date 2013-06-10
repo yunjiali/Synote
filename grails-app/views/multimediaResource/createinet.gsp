@@ -81,6 +81,9 @@ $(document).ready(function(){
 			beforeSend:function(event)
 			{
 				$("#form_loading_div").show();
+				$('html, body').animate({
+			         scrollTop: $("#form_loading_div").offset().top
+			     }, 100);
 				$("#multimediaCreateForm_submit").button("loading");
 				if($("#duration").val() == "" && $("#duration_span").val() != "")
 				{
