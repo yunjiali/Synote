@@ -317,5 +317,17 @@
 		</sql>
 	</changeSet>
 	<!-- v0.1.6 from now -->
+	<changeSet id="v5_configuration_v0.1.6_add" author="Yunjia Li" context="v0.1.6">
+		<preConditions>
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(0) from configuration
+				where name="org.synote.resource.synmark.tags.preload";
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO configuration (version, name, val, description, date_created,last_updated)
+			Values(0,"org.synote.resource.synmark.tags.preload","watch later, review, understand","Predefined synmark tags for typeahead",now(),now());
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
