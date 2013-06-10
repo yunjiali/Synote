@@ -114,8 +114,8 @@ class RecordingController {
 			if(perm?.val <=0)
 			{
 				flash.error = "Access denied! You don't have permission to access this recording"
-				//Yunjia: should redirect to error page instead of list page
-				redirect(controller:'multimediaResource',action: 'list')
+				response.status = 403
+				render view:'/error/403'
 				return
 			}
 			
@@ -143,6 +143,7 @@ class RecordingController {
 			
 			def metrics = resourceService.getMultimediaResourceMetrics(recording)
 			
+			//prepare typeahead string
 			def typeaheadStr = new StringBuilder();
 			typeaheadStr.append("[")
 			int i=0;
@@ -152,11 +153,32 @@ class RecordingController {
 					typeaheadStr.append(",")
 				i++
 			}
+			
+			
+			def preloadTags = configurationService.getConfigValue("org.synote.resource.synmark.tags.preload")
+			if(preloadTags != null)
+			{
+				String[] tagsArray = preloadTags.split(",");
+				int j=0
+				if(tagsArray.size()>0)
+				{
+					if(i>0) //there are some tags before
+						typeaheadStr.append(",")
+					
+					tagsArray.each{tag->
+						typeaheadStr.append("&quot;"+tag?.replace("\"","").replace("'","")+"&quot;");
+						if(j<tagsArray.size()-1)
+							typeaheadStr.append(",")
+						j++
+					}
+				}
+			}
 			typeaheadStr.append("]")
 			
-			
+			println typeaheadStr.toString()
 			return [recording: recording, user:user, canCreateSynmark:canCreateSynmark,canEdit:canEdit, userBaseURI:linkedDataService.getUserBaseURI(),
-				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc, typeaheadStr:typeaheadStr.toString()]
+				resourceBaseURI:linkedDataService.getResourceBaseURI(), views:views,mmServiceURL: synoteMultimediaServiceURL,hasCC:metrics.cc, 
+				typeaheadStr:typeaheadStr.toString()]
 		}
 		else
 		{

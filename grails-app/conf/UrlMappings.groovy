@@ -47,6 +47,7 @@ class UrlMappings {
 						}
 			}
 		  "400"(view:'/error/400')
+		  "403"(view:'/error/403')
 		  "500"(view:'/error')
 	}
 }
