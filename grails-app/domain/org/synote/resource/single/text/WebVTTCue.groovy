@@ -1,12 +1,15 @@
 package org.synote.resource.single.text
 
 import org.synote.resource.compound.WebVTTResource
+import org.synote.resource.compound.MultimediaResource
 import org.synote.search.resource.converter.WebVTTCueConverter
+import org.synote.search.resource.converter.PermissionValueConverter
+import org.synote.annotation.ResourceAnnotation
 
 class WebVTTCue extends TextResource {
 
     String indexString = ""
-	
+		
 	static transients = ['indexString']
 	
 	static searchable = { 

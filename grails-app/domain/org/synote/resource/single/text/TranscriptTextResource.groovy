@@ -5,9 +5,9 @@ import org.synote.i18n.Language
 
 class TranscriptTextResource extends TextResource{
 	
-	static searchable ={
-		only:['content']
-	}
+	//static searchable ={
+	//	only:['content']
+	//}
 	static belongsTo = [transcript:TranscriptResource]
 	
 	static mapping = {

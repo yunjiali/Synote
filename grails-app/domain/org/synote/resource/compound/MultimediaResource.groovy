@@ -6,11 +6,13 @@ import org.synote.resource.single.binary.MultimediaUrl
 import java.util.UUID
 
 import org.synote.search.resource.converter.MultimediaConverter
+import org.synote.search.resource.converter.PermissionValueConverter
+
 
 class MultimediaResource extends CompoundResource {
 
 	String indexString = ""
-	
+		
 	static transients = ['indexString']
 	
 	static searchable = { 
@@ -69,29 +71,6 @@ class MultimediaResource extends CompoundResource {
 	void saveTags(String tags)
 	{
 		
-	}
-
-	public String toNIFString()
-	{
-		StringBuilder str = new StringBuilder()
-		if(title)
-		{
-			str.append("<h1>"+title+"</h1>")
-		}
-		
-		if(tags)
-		{
-			str.append("<span>")
-			tags.each {tag ->
-				str.append(tag.content+" ")
-			}
-			str.append("</span>")
-		}
-		if(note)
-		{
-			str.append("<br/>"+"<p>"+note.content+"</p>")
-		}
-		return str.toString()
 	}
 	
 	public String toString()

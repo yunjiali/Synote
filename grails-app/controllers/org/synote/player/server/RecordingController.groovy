@@ -360,6 +360,9 @@ class RecordingController {
 			render ""
 			return
 		}
+		
+		//this is required for ipad as iOS 6 caches results
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		render synmarkList as JSON//encodeAsJSON()
 		return
 	}
@@ -440,6 +443,7 @@ class RecordingController {
 			return
 		}
 		
+		//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		render(contentType:"text/json"){
 				success(stat:APIStatusCode.SUCCESS, description:"Synmark has been successfully created.")
 		}
@@ -522,6 +526,7 @@ class RecordingController {
 			return
 		}
 		
+		//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		render(contentType:"text/json"){
 				success(stat:APIStatusCode.SUCCESS, description:"Synmark has been successfully updated.")
 		}
@@ -611,6 +616,8 @@ class RecordingController {
 			render ""
 			return	
 		}
+		
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		render slidesList.encodeAsJSON()
 		return
 	}
@@ -995,6 +1002,7 @@ class RecordingController {
 			return
 		}
 
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		if(transList?.size() == 1)
 		{
 			def cuesList = transList[0].getCues()

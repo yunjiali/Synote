@@ -582,34 +582,8 @@ var Transcript = Base.extend({
 		newCue.cueText += "</v>";
 		//if the time has changed a lot, we need a new thumbnail picture
 		var oldMiddle = (cue.start+cue.end)/2;
-		//recording.thumbnail == null means the synote multimedia service cannot generate the thumbnail picture, so we give up
-		//Here is a bug, if the user change the newly created transcript's time greatly, we would not be able to generate the thumbnail picture again, because
-		//the cue.id is not available.
-		if(cue.id != null && recording.thumbnail != 'null' && recording.isVideo == 'true' && (cue.thumbnail == null || (oldMiddle<newCue.start || oldMiddle > newCue.end))) //need to regenerate the thumbnail
-		{
-			var cueId = cue.id
-			mmServiceClient.generateThumbnail(recording.url,recording.uuid, newCue.start, newCue.end, function(thumbnail_url, error){
-				//We are not going to print out any error message here
-				if(error == null)
-				{
-					var saveThumbnailURL = g.createLink({controller:'recording', action:'saveThumbnailAjax'});
-					$.ajax({
-						url:saveThumbnailURL,
-						type:"post",
-						data:{url:thumbnail_url,id:cueId},
-						dataType:"json",
-						success:function(data,textStatus,jqXHR)
-						{
-							//Do nothing
-						},
-						error:function(jqXHR,textStatus,errorThrown)
-						{
-							//Do nothing
-						}
-					});
-				}
-			});
-		}
+		
+		//TODO: update thumbnail picture if needed.
 		
 		$.ajax({
 			url:url,

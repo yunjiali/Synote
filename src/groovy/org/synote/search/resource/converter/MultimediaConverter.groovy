@@ -7,7 +7,7 @@ import org.compass.core.marshall.MarshallingContext
 
 import org.synote.resource.compound.MultimediaResource
 
-class MultimediaConverter extends AbstractBasicConverter {
+class MultimediaConverter extends AbstractBasicConverter<MultimediaResource> {
 	
 	MultimediaConverter() {
 		//do nothing
@@ -19,8 +19,8 @@ class MultimediaConverter extends AbstractBasicConverter {
 	}
  
 	@Override
-	protected String doToString(Object o, ResourcePropertyMapping resourcePropertyMapping, MarshallingContext context) {
-		def multimedia = (MultimediaResource)o
-		return multimedia.toString()
+	protected String doToString(MultimediaResource o, ResourcePropertyMapping resourcePropertyMapping, MarshallingContext context) {
+		//def multimedia = (MultimediaResource)o
+		return o.toString()
 	}
 }
