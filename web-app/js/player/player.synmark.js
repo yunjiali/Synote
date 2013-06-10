@@ -156,43 +156,20 @@ var Synmark = Base.extend({
 				else
 				{
 					var url = g.createLink({controller:"recording",action:"saveSynmarkAjax",params:{multimedia_id:recording.id}});
-					if(recording.isVideo == 'true' && recording.thumbnail != 'null')
-					{
-						mmServiceClient.generateThumbnail(recording.url,recording.uuid, synmark_st, synmark_et, function(thumbnail_url, error){
-							//We are not going to print out any error message here
-							if(error == null)
-							{
-								$("#synmark_thumbnail").val(thumbnail_url);
-							}
-							synmark.updateSynmarkAjax(url, function(msg,error){
-								if(error == null)
-								{
-									synmark.showMsg(msg,null);
-									$("#synmark_create_div").hide(400);
-									synmark.refresh();
-								}
-								else
-								{
-									synmark.showMsg(msg,"error");
-								}
-							});
-						});
-					}
-					else
-					{
-						synmark.updateSynmarkAjax(url, function(msg,error){
-							if(error == null)
-							{
-								synmark.showMsg(msg,null);
-								$("#synmark_create_div").hide(400);
-								synmark.refresh();
-							}
-							else
-							{
-								synmark.showMsg(msg,"error");
-							}
-						});
-					}
+					
+					synmark.updateSynmarkAjax(url, function(msg,error){
+						if(error == null)
+						{
+							synmark.showMsg(msg,null);
+							$("#synmark_create_div").hide(400);
+							synmark.refresh();
+						}
+						else
+						{
+							synmark.showMsg(msg,"error");
+						}
+					});
+					
 				}
 				return false;
 			});
@@ -257,7 +234,6 @@ var Synmark = Base.extend({
 				{
 					return callback(data.error.description,"error");
 				}
-				
 			},
 			error:function(jqXHR,textStatus,errorThrown)
 			{
@@ -562,8 +538,7 @@ var Synmark = Base.extend({
 						   //var synmark_tags_title_span=$("<span/>",{
 							//  text:"tags"
 						   //}).addClass("synmark_title_span").appendTo(synmark_tags_div);
-						   
-						   $.each(s.tags, function(j,tag){
+						   $.each(s.tags.sort(), function(j,tag){
 							  var synmark_tag_span = $("<span/>",{
 								  html:"<i class='icon-tag tag-item icon-white'></i>"+tag
 							  }).addClass("badge badge-tag").appendTo(synmark_tags_div);

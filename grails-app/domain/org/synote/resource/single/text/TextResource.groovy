@@ -26,12 +26,4 @@ class TextResource extends SingleResource{
 
 		return (content.size() > 16) ? "${content.substring(0, 12)} ..." : content
 	}
-	
-	/*
-	 * Used for String ontology
-	 */
-	public String toNIFString()
-	{
-		return content
-	}
 }

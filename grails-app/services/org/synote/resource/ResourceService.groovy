@@ -289,6 +289,8 @@ class ResourceService {
 			start: start !=null?TimeFormat.getInstance().toString(start):"unknown",
 			end:end !=null?TimeFormat.getInstance().toString(end):"unknown",
 			thumbnail:sr.thumbnail,
+			perm_name:mr.perm?.name,
+			perm_val:mr.perm?.val,
 			date_created:utilsService.convertSQLTimeStampToFormattedTimeString(sr.dateCreated,"dd.MM.yyyy HH:mm"),
 			last_updated:utilsService.convertSQLTimeStampToFormattedTimeString(sr.lastUpdated,"dd.MM.yyyy HH:mm")
 		]
@@ -493,6 +495,8 @@ class ResourceService {
 			settings: cue.getCueSettings(),
 			rid:multimedia.id,
 			risVideo:multimedia.isVideo,
+			perm_name:multimedia.perm?.name,
+			perm_val:multimedia.perm?.val,
 			mf: linkedDataService.getFragmentString(cue.getStart(), cue.getEnd()),//get media fragment
 			start: cue.getStart() !=null?TimeFormat.getInstance().toString(cue.getStart()):"unknown",
 			end:cue.getEnd() !=null?TimeFormat.getInstance().toString(cue.getEnd()):"unknown",

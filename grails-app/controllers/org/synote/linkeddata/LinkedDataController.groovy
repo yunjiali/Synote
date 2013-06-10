@@ -301,67 +301,6 @@ class LinkedDataController {
 	}
 	
 	/*
-	 * ResourcesString
-	 * 
-	 * returns the string represents the resource. Used only currently for NIF String Ontology
-	 */
-	def resourcesString = {
-		def resource = Resource.findById(params.id?.toString())
-		if(!resource)
-		{
-			response.sendError(404)
-			response.contentType="text/plain"
-			response.outputStream.flush()
-			return
-		}
-		
-		//Currently, no TextResource here
-		if(resource.instanceOf(MultimediaResource) || resource.instanceOf(SynmarkResource) || resource.instanceOf(WebVTTResource))
-		{
-			request.withFormat{
-				html{
-					//println "here1"
-					//println resource.toNIFString()
-					//response.status = 200
-					//response.contentType="text/html"
-					//response << resource.toNIFString()
-					//response.outputStream.flush()
-					render resource.toNIFString()
-					return
-				}
-				rdf{
-					println "rdf"
-					try
-					{
-						linkedDataService.buildStringData(response.outputStream, resource)
-						response.contentType="application/rdf+xml"
-						println "return rdf"
-					}
-					catch(RDFGenerationException rdfEx)
-					{
-						log.debug rdfEx.getMessage()
-						response.sendError(404)
-						response.contentType="text/plain"
-						response.outputStream << rdfEx.getMessage()
-					}
-					finally
-					{
-						response.outputStream.flush()
-						return
-					}
-				}
-			}
-		}
-		else
-		{
-			response.sendError(404)
-			response.contentType="text/plain"
-			response.outputStream.flush()
-			return
-		}
-	}
-	
-	/*
 	 * the sparql endpoint for Synote, implemented by Jena ARQ
 	 * 
 	 */

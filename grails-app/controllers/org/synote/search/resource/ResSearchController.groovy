@@ -18,6 +18,7 @@ import org.synote.annotation.ResourceAnnotation
 import org.synote.annotation.synpoint.Synpoint
 import org.synote.player.client.WebVTTCueData
 import org.synote.analysis.Views
+import org.synote.permission.PermissionValue
 
 import org.synote.search.resource.analysis.QueryRecord
 import org.synote.search.resource.analysis.ResultRecord
@@ -57,30 +58,33 @@ class ResSearchController {
 		searchParams.offset = rowOffset
 		searchParams.max = maxRows
 		
+		def queryBuilder = {
+			queryString(params.query)
+		}
 		def user=securityService.getLoggedUser()
-
+		
 		try
 		{
 			def searchResult
 			if(params.type == 'all')
 			{
-				searchResult = searchableService.search(params.query,searchParams)
+				searchResult = searchableService.search(queryBuilder,searchParams)
 			}
 			else if(params.type == 'multimedia')
 			{
-				searchResult = MultimediaResource.search(params.query,searchParams)
+				searchResult = MultimediaResource.search(queryBuilder,searchParams)
 			}
 			else if(params.type == 'synmark')
 			{
-				searchResult = SynmarkResource.search(params.query,searchParams)
+				searchResult = SynmarkResource.search(queryBuilder,searchParams)
 			}
 			else if(params.type == 'transcript')
 			{
-				searchResult = WebVTTCue.search(params.query,searchParams)
+				searchResult = WebVTTCue.search(queryBuilder,searchParams)
 			}
 			else
 			{
-				searchResult = searchableService.search(params.query,searchParams)
+				searchResult = searchableService.search(queryBuilder,searchParams)
 			}
 			
 			//for(int i=0;i<searchResult.results.size();i++)

@@ -47,7 +47,7 @@
 	  		<p>${row.note?.encodeAsHTML()}</p>
 	  	</div>
 	  	<div>
-	  		<g:each var="tag" in="${row.tags}">
+	  		<g:each var="tag" in="${row.tags?.sort()}">
 	  			<span class="badge badge-tag"><i class="icon-tag tag-item icon-white"></i>${tag}</span>
 	  		</g:each>
 	  	</div>

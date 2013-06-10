@@ -333,13 +333,14 @@ class MultimediaResourceController {
 		//save or generate thumbnail
 		if(!params.thumbnail || params.thumbnail == "")
 		{
-			if(multimediaResource.isVideo ==true)
-			{
+			//TODO: reconnect to synote-multimedia-service when server side thumbnail generation has finished
+			//if(multimediaResource.isVideo ==true)
+			//{
 				//println "generating"
-				def uuid = java.util.UUID.randomUUID().toString()
-				multimediaResource.uuid = uuid
-				multimediaResource.thumbnail = resourceService.generateThumbnail(url,uuid,null,null)	
-			}
+			//	def uuid = java.util.UUID.randomUUID().toString()
+			//	multimediaResource.uuid = uuid
+			//	multimediaResource.thumbnail = resourceService.generateThumbnail(url,uuid,null,null)	
+			//}
 		}
 		else
 		{
