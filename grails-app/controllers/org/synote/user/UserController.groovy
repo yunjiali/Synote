@@ -168,7 +168,6 @@ class UserController {
 	
 	@Secured(['ROLE_NORMAL'])
 	def saveGroup = {
-		println "save group"
 		def userGroup = new UserGroup(params)
 		
 		userGroup.owner = securityService.getLoggedUser()

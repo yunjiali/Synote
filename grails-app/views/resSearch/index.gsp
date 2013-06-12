@@ -81,24 +81,45 @@
 						<div class="nodata">No result is found for <strong>${params?.query?.encodeAsHTML()}</strong></div>
 					</g:if>
 					<g:each in="${searchResultList?.rows}" var="row">
-						<g:if test="${row.perm_val > 0 }">
-							<g:if test="${row.clazz=='multimedia'}">
+						<g:if test="${row.clazz=='multimedia'}">
+							<g:if test="${row.perm_val > 0 }">
 								<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>
 							</g:if>
-							<g:elseif test="${row.clazz=='synmark'}">
-								<g:render template="/common/synmark" model="['row':row]"/>
-							</g:elseif>
-							<g:elseif test="${row.clazz=='webvttcue'}">
-								<g:render template="/common/subtitle_block" model="['row':row]"/>
-							</g:elseif>
+							<g:else>
+								<div class="recording-row row">
+								 	<div class="span10">
+								 		<img src="${resource(dir: 'images/skin', file: 'video_16.png')}" alt="This is a multimedia resource" title="this is a multimedia resource"/>
+								 		<span>Private multimedia resource</span>
+								 	</div>
+								</div>
+							</g:else>
 						</g:if>
-						<g:else>
-							<div class="recording-row row">
-							 	<div class="span2">
-							 		<span>Private resource.</span>
-							 	</div>
-							</div>
-						</g:else>
+						<g:elseif test="${row.clazz=='synmark'}">
+							<g:if test="${row.perm_val > 0 }">							
+								<g:render template="/common/synmark" model="['row':row]"/>
+							</g:if>
+							<g:else>
+								<div class="recording-row row">
+								 	<div class="span10">
+								 		<img src="${resource(dir: 'images/skin', file: 'synmark_16.png')}" alt="This is a synmark resource" title="this is a synmark resource"/>
+								 		<span>Private Synmark resource</span>
+								 	</div>
+								</div>
+							</g:else>
+						</g:elseif>
+						<g:elseif test="${row.clazz=='webvttcue'}">
+							<g:if test="${row.perm_val > 0 }">
+								<g:render template="/common/subtitle_block" model="['row':row]"/>
+							</g:if>
+							<g:else>
+								<div class="recording-row row">
+								 	<div class="span10">
+								 		<img src="${resource(dir: 'images/skin', file: 'transcript_16.png')}" alt="This is a transcript resource" title="this is a transcript resource"/>
+								 		<span>Private transcript resource</span>
+								 	</div>
+								</div>
+							</g:else>
+						</g:elseif>
 					</g:each>
 				</div>
 			</div>

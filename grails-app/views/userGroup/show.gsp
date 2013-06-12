@@ -46,11 +46,17 @@
 			</g:if>
 			<br/>
 			<h3>Group Members and Recordings</h3>
+			<g:if test="${userGroup.shared == false && isMember == false }">
+				<div class="alert alert-error">
+				  <strong>Private content.</strong> You are not a group member.
+				</div>
+			</g:if>
+			<g:else>
 			<div class="accordion" id="usergroup_accordion">  
 	            <div class="accordion-group">  
 	              <div class="accordion-heading">  
 	                <a class="accordion-toggle" data-toggle="collapse" data-parent="#usergroup_accordion" href="#members_collapse">  
-	                  	Members (${members.size()+1}) 
+	                  	Members (${members?.size() > 0?members.size()+1:1}) 
 	                </a>
 	              </div>  
 	              <div id="members_collapse" class="accordion-body collapse" style="height: 0px; ">  
@@ -60,7 +66,7 @@
 	                		<table class="table table-condensed">
 	                			<g:each in="${members}" status="i" var="member">
 	                				<tr>
-	                					<td>${member.user.userName}</td>
+	                					<td>${member.user?.userName}</td>
 	                					<g:if test="${isOwnerOrAdmin}">
 	                						<td><g:link title="remove this user from group" controller='userGroup' action='deleteMember' id="${member.id}" class="btn btn-mini btn-danger" onclick="confirm('Are you sure you want to remove this user from group?')"><i class="icon-remove icon-white"></i>Remove from this group</g:link></td>
 	                					</g:if>
@@ -74,7 +80,7 @@
 	            <div class="accordion-group">  
 	              <div class="accordion-heading">  
 	                <a class="accordion-toggle" data-toggle="collapse" data-parent="#usergroup_accordion" href="#recordings_collapse">  
-	                 	Recordings (${recordings.size()})
+	                 	Recordings (${recordings?.size()>0?recordings.size():0})
 	                </a>  
 	              </div>  
 	              <div id="recordings_collapse" class="accordion-body collapse">  
@@ -92,10 +98,14 @@
 	                			</g:each> 
 	                		</table>
 	                	</g:if>
+	                	<g:else>
+	                		No recordings
+	                	</g:else>
 	                </div>  
 	              </div>  
 	            </div>   
           	</div>  <!-- /usergroup_accordion -->
+          	</g:else>
 		</div>
 	</div>
 </div><!-- /container -->
