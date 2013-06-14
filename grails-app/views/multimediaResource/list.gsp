@@ -54,7 +54,7 @@
 			<div>
 				<div id="recording_list_div">
 					<g:if test="${multimediaList.rows?.size() == 0}">
-						<div class="nodata">You have no recordings</div>
+						<div class="nodata">No recordings have been found.</div>
 					</g:if>
 					<g:each in="${multimediaList.rows}" var="row">
 						<g:render template="/common/recording" model="['row':row,'actionEnabled':true, 'viewTranscriptsEnabled':false,'viewSynmarksEnabled':false]"/>

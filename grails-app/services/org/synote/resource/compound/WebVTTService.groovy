@@ -34,7 +34,6 @@ import org.synote.annotation.synpoint.Synpoint
 import org.synote.user.profile.UserProfile
 import org.synote.user.profile.ProfileEntry
 import org.synote.permission.PermService
-import org.synote.resource.service.ThumbnailsJob
 
 import org.synote.permission.PermissionValue
 import org.synote.permission.Permission
