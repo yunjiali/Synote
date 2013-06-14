@@ -12,6 +12,7 @@
 			<span id="recording_count_span" style="padding:5px" class="pull-right label label-info">${groupList.records} groups</span>
 			<hr/>
 			<g:render template="/common/message" />
+			<g:if test="${groupList.records>0}">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -36,6 +37,10 @@
 					</tr>
 				</g:each>
 			</table>
+			</g:if>
+			<g:else>
+			<div class="nodata">No groups have been found.</div>
+			</g:else>
 		</div>
 	</div>
 	<div class="row" id="group_pagination">
