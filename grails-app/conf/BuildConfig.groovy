@@ -25,7 +25,7 @@ grails.project.dependency.resolution = {
 		 * org/apache/xerces/jaxp/SAXParserImpl, and its superclass loader (instance of <bootloader>), 
 		 * have different Class objects for the type org/xml/sax/Parser used in the signature
 		 */
-		excludes "xml-apis","xmlparserAPIs"
+		excludes "xml-apis","xmlparserAPIs","slf4j-log4j12"
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {        

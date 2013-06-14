@@ -49,7 +49,7 @@ grails.plugin.databasemigration.changelogFileName = "changelog.xml"
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://linkeddata.synote.org"
+        //Should not use grails.serverURL = "http://localhost/${appName}"
 		jena { //deprecated
 			enabled = false
 			sdb{
