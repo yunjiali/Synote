@@ -31,6 +31,9 @@
 			</span>|
 			<span>
 				Funded by: <a href="http://www.jisc.ac.uk" target="_blank"><img src="${resource(dir: 'images', file: 'jisc-small.jpg')}" alt="JISC"/></a>
+			</span>|
+			<span>
+				<g:meta name="app.version"/>-Build<g:meta name="app.build"/>
 			</span>
 			
 	</div>

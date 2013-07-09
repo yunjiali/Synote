@@ -50,7 +50,7 @@ grails.plugin.databasemigration.changelogFileName = "changelog.xml"
 environments {
     production {
         //Should not use grails.serverURL = "http://localhost/${appName}"
-        grails.serverURL="http://192.168.199.1:8080/synote" //for standalone version
+        grails.serverURL="http://192.168.224.1:8080/synote" //for standalone version
         //grails.serverURL="http://linkeddata.synote.org" //for linkeddata version
         //grails.serverURL="http://synote.org" //for official public version
 		jena { //deprecated
