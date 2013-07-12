@@ -16,9 +16,10 @@
 
 </head>
 <body>
+<g:link action="downloadPDF" ></g:link>
 <!-- Get multimedia type, audio or video -->
-<g:set var="mmType" value="${isVideo?'http://schema.org/VideoObject':'http://schema.org/AudioObject'}"/>
-<div id="recording_content_div" id="recording_content_div" itemscope="itemscope" itemtype="${mmType}" 
+<g:set var="mmType" value="${recording.isVideo?'http://schema.org/VideoObject':'http://schema.org/AudioObject'}"/>
+<div id="recording_content_div" itemscope="itemscope" itemtype="${mmType}" 
 			itemref="recording_owner_div" class="mediaObject">
 	<g:if test="${encodingFormat}">
 		<meta itemprop="encodingFormat" content="${encodingFormat}"/>
@@ -37,29 +38,28 @@
 		<meta itemprop="givenName" content="${recording.owner?.lastName}"/>
 		<meta itemprop="email" content="${recording.owner?.email}"/>		
 </div>
-<g:set var="printStartTime" value="${true}" />
 <g:each var="synpoint" in="${synpoints}">
+	<g:set var="resourceURI" value="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}"/>
 	<g:if test="${synpoint.annotation.source.instanceOf(WebVTTResource)}">
 		<g:set var="cue" value="${synpoint.annotation.source.cues?.find{it.cueIndex == synpoint.sourceStart}}" />
 		<g:set var="text" value="${cue?.content}" />
 		<div class="transcript mediaObject" 
-			itemscope="itemscope" itemtype="${mmType}" itemid="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}">
-			<g:if test="${printStartTime}">
-				<span class="firstWord"><g:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}"/></span>
-			</g:if>
+			itemscope="itemscope" itemtype="${mmType}" itemid="${resourceURI}">
+				<span class="firstWord">
+					<a href="${resourceURI}" target="_blank"><syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}"/></a>
+				</span>
 			<span itemprop="transcript">${text.encodeAsHTML()}</span>
 		</div>
-		<g:printEndTime synpoint="${synpoint}" synpoints="${synpoints}" ends="${ends}" />
-		<g:set var="printStartTime" value="${false}" />
+		<syn:printEndTime synpoint="${synpoint}" synpoints="${synpoints}" ends="${ends}" />
 	</g:if>
 	<g:elseif test="${synpoint.annotation.source.instanceOf(PresentationResource)}">
 		<g:set var="presentation" value="${synpoint.annotation.source}" />
 		<g:set var="slide" value="${presentation.slides.find {slide -> slide.index == synpoint.sourceStart}}" />
 		<div class="slide" class="mediaObject" 
-			itemscope="itemscope" itemtype="${mmType}" itemid="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}">
+			itemscope="itemscope" itemtype="${mmType}" itemid="${resourceURI}">
 			<meta itemprop="image" content="${slide?.url}"/>
 			<div class="title">
-				<g:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
+				<syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
 				<g:if test="${presentation.title}">
 					${presentation.title} -
 				</g:if> Slide ${slide.index + 1}
@@ -68,14 +68,13 @@
 				<img itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject"  src="${slide?.url}" alt="Slide ${slide.index + 1}" />
 			</div>
 		</div>
-		<g:set var="printStartTime" value="${true}" />
 	</g:elseif>
 	<g:elseif test="${synpoint.annotation.source.instanceOf(SynmarkResource)}">
 		<g:set var="synmark" value="${synpoint.annotation.source}" />
-		<div class="synmark mediaObject" itemscope="itemscope" itemtype="${mmType}" itemid="${syn.getResourceURIWithFragment([resourceId:recording.id.toString(),synpoint:synpoint])}">
+		<div class="synmark mediaObject" itemscope="itemscope" itemtype="${mmType}" itemid="${resourceURI}">
 			<div class="title">
 				<g:if test="${settings.timing}">
-					<g:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
+					<syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
 				</g:if> 
 				<g:if test="${settings.title}">
 					<g:if test="${synmark.title}">
@@ -99,7 +98,7 @@
 				</div>
 			</g:if>
 			<g:if test="${settings.owner}">
-				<div class="owner" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${g.getUserURI(synmark.owner?.id.toString())}">
+				<div class="owner" itemprop="creator" itemscope="itemscope" itemtype="http://schema.org/Person" itemid="${syn.getUserURI([userId:synmark.owner?.id.toString()])}">
 					by <g:link controller="user" action="show" id="${recording.owner?.id}" itemprop="name">
 						${synmark.owner?.userName}</g:link>
 					<meta itemprop="familyName" content="${synmark.owner?.firstName}"/>
@@ -108,7 +107,6 @@
 				</div>
 			</g:if>
 		</div>
-		<g:set var="printStartTime" value="${true}" />
 	</g:elseif>
 </g:each>
 </body>

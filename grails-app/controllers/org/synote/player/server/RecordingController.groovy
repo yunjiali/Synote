@@ -303,6 +303,7 @@ class RecordingController {
 		
 		if (!recording)
 		{
+			//400 internal error
 			flash.error = "Cannot find recording with ID ${params.id}"
 			redirect(controller:'multimediaResource',action: 'list')
 			return false
@@ -311,40 +312,44 @@ class RecordingController {
 		def perm = permService.getPerm(recording)
 		if(perm?.val <=0)
 		{
-			flash.error = "Access denied! You don't have permission to access this recording"
-			redirect(controller:'multimediaResource',action: 'list')
+			flash.error = "Bad request"
+			response.status = 403
+			render view:'/error/403'
 			return
 		}
 		
 		
 		//after get the fragment information after _escaped_fragment_ param
+		def fragStr = "t=0"
 		if(!params._escaped_fragment_ )
 		{
-			response.sendError(404)
-			response.contentType="text/plain"
-			response.outputStream.flush()
+			flash.error = "Access denied! You don't have permission to access this recording"
+			response.status = 400
+			render view:'/error/403'
 			return
 		}
 		
-		def fragStr = params._escaped_fragment_
+		fragStr = params._escaped_fragment_
 		def components = utilsService.parseTimeFragment(fragStr)
 		
 		def synpoints = printService.getAllSynpoints(recording, components.start, components.end)
 		def ends = printService.getEnds(synpoints, components.to)
 		
-		//println "ends:"+synpoints?.size()
-		boolean isVideo=true
-		if(!utilsService.isVideo(recording.url?.url))
-		{
-			isVideo = false
-		}
-		
 		String encodingFormat = utilsService.getEncodingFormat(recording.url?.url)
 		
 		def settings = [id: false, timing: true, title: params.true, note: true, tags: true, owner: true, next: false]
-		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
-			canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(),
-			isVideo:isVideo, encodingFormat:encodingFormat]
+		if(params.fmt.equals("pdf"))
+		{
+			renderPdf(template: '/common/snapshot', model: [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
+				canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(), 
+				encodingFormat:encodingFormat,fragStr:fragStr], filename: recording.id.toString())
+		}
+		else
+		{
+			return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
+				canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(), 
+				encodingFormat:encodingFormat,fragStr:fragStr]
+		}
 	}
 	
 	def getSynmarksAjax = {

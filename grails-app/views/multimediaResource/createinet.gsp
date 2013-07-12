@@ -70,9 +70,14 @@ $(document).ready(function(){
 		},
 	});
 
-	$("#duration").mask("?99:99:99");
+	$("#duration_span").mask("?99:99:99");
 	
 	$("#multimediaCreateForm").submit(function(){
+		if($("#duration").val() == "" && $("#duration_span").val() != "")
+		{
+			$("#duration").val(stringToMilisec($("#duration_span").val()));
+		}
+		
 		$("#multimediaCreateForm").ajaxSubmit({
 			url:g.createLink({controller:"multimediaResource",action:"saveAjax"}),
 			//resetForm:true,
@@ -85,10 +90,6 @@ $(document).ready(function(){
 			         scrollTop: $("#form_loading_div").offset().top
 			     }, 100);
 				$("#multimediaCreateForm_submit").button("loading");
-				if($("#duration").val() == "" && $("#duration_span").val() != "")
-				{
-					$("#duration").val(stringToMilisec$("#duration_span").val());
-				}
 			},
 			success:function(data,textStatus, jqXHR, $form)
 			{
@@ -148,21 +149,6 @@ $(document).ready(function(){
 				$("#ugc_div").show(200);
 				$("#metadata_div").show(200);
 				$("#controls_div").show(200);
-
-				/*
-				ytParser.getThumbnail(data,function(thumbnail_url,errorMsg){
-					if(thumbnail_url != null)
-					{
-						$("#thumbnail_img").attr("src",thumbnail_url);
-						$("#thumbnail").val(thumbnail_url);
-					}
-					else
-					{
-						$("#thumbnail_img").closest(".control-group").addClass("error");
-						var oldHtml = $("#thumbnail_img").closest(".control-group").html();
-						$("#thumbnail_img").closest(".control-group").html(oldHtml+"Cannot get the thumbnail picture for this video.");
-					}
-				});*/
 
 				//Get duration
 				if(data.metadata.duration != 0)
@@ -259,7 +245,7 @@ $(document).ready(function(){
 			<div id="multimediaCreateForm_div">
 				<g:form method='POST' name='multimediaCreateForm'>
 					<fieldset>
-						<input type="hidden" name="rlocation" value="youtube" />
+						<input type="hidden" name="rlocation" value="internet" />
 						<div class="control-group span9">
 							<label for="url" class="control-label"><b><em>*</em>URL</b></label>
 						    <div class="controls">
