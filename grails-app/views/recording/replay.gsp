@@ -328,16 +328,6 @@
 					</syn:allowRegistering>
 				</div>
 				</syn:isNotLoggedIn>
-				<!--  <div>
-					<ul class="nav pull-right btn-group">
-				    	<li><button id="control_play" class="btn" title="play"><i class="icon-play"></i></button></li>
-						<li><button id="control_pause" class="btn" title="pause"><i class="icon-pause"></i></button></li>
-						<li><button id="control_stop" class="btn visible-desktop" title="stop"><i class="icon-stop"></i></button></li>
-						<li><button id="control_rewind" class="btn" title="rewind"><i class="icon-backward"></i></button></li>
-						<li><button id="control_forward" class="btn" title="rewind"><i class="icon-forward"></i></button></li>
-						<li><button class="btn visible-desktop" id="control_goto" title="Go to a certain time"><i class="icon-arrow-right"></i></button></li>
-				    </ul>
-				</div>-->
 				<div class="btn-group nav pull-right">
 					<button id="nav_play_btn" class="btn" title="play"><i class="icon-play"></i></button>
 					<button id="nav_pause_btn" class="btn" title="pause"><i class="icon-pause"></i></button>
@@ -381,6 +371,9 @@
 						${recording.owner?.userName}</g:link> |</span>
 	  				<span class="datetime-info" itemprop="dateCreated">Created at <syn:printSQLTime datetime="${recording.dateCreated}"/> |</span>
 	  				<span class="datetime-info">${views} Views</span>
+	  				<span class="pull-right">
+	  					<g:link class="btn btn-warning" action="handlePrint" id="${recording.id}" target="_blank"><i class="icon-print icon-white"></i>Print Friendly</g:link>
+	  				</span>
 				</div>
 			</div>
 		</div>

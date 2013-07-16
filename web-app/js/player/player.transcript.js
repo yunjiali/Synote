@@ -57,7 +57,7 @@ var Transcript = Base.extend({
 		//console.log("sync tr");
 		if(this.transcripts != null && this.transcripts.length>0)
 		{
-			var currentTranscript = this.getTranscript(currentPosition)
+			var currentTranscript = this.getTranscript(currentPosition);
 			//console.log("selectedTranscript:"+this.selectedTranscript);
 			
 			if(currentTranscript == null)
@@ -90,7 +90,7 @@ var Transcript = Base.extend({
 		var ct = null;
 		for(var i=0;i<this.transcripts.length;i++)
 		{
-			var tt = parseInt($(this.transcripts[i]).attr("date-time-st"));
+			var tt = parseInt($(this.transcripts[i]).attr("data-time-st"));
 			if(tt>currentPosition)
 			{
 				break;
@@ -98,7 +98,7 @@ var Transcript = Base.extend({
 			else
 				ct= $(this.transcripts[i]);
 		}
-		//console.log("tr date-time-st:"+ct.attr("date-time-st"));
+		//console.log("tr data-time-st:"+ct.attr("data-time-st"));
 		return ct;
 	},
 	//get the webvtt json corresponding to the webvtt.index

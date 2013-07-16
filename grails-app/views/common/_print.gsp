@@ -9,13 +9,9 @@
 <title>${recording.title}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="${resource(dir: 'css', file: 'print.css')}" />
-<style type="text/css">
-	.mediaObject
-	{}
-</style>
 </head>
 <body>
-<g:link action="downloadPDF" ></g:link>
+
 <!-- Get multimedia type, audio or video -->
 <g:set var="mmType" value="${recording.isVideo?'http://schema.org/VideoObject':'http://schema.org/AudioObject'}"/>
 <div id="recording_content_div" class="mediaObject">
@@ -48,7 +44,7 @@
 		<g:set var="slide" value="${presentation.slides.find {slide -> slide.index == synpoint.sourceStart}}" />
 		<div class="slide" class="mediaObject">
 			<div class="title">
-				<syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
+				<a href="${resourceURI}" target="_blank"><syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" /></a>
 				<g:if test="${presentation.title}">
 					${presentation.title} -
 				</g:if> Slide ${slide.index + 1}
@@ -63,7 +59,7 @@
 		<div class="synmark mediaObject">
 			<div class="title">
 				<g:if test="${settings.timing}">
-					<syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" />
+					<a href="${resourceURI}" target="_blank"><syn:formatTime startTime="${synpoint.targetStart}" endTime="${synpoint.targetEnd}" /></a>
 				</g:if> 
 				<g:if test="${settings.title}">
 					<g:if test="${synmark.title}">

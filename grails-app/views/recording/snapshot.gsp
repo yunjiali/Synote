@@ -16,7 +16,6 @@
 
 </head>
 <body>
-<g:link action="downloadPDF" ></g:link>
 <!-- Get multimedia type, audio or video -->
 <g:set var="mmType" value="${recording.isVideo?'http://schema.org/VideoObject':'http://schema.org/AudioObject'}"/>
 <div id="recording_content_div" itemscope="itemscope" itemtype="${mmType}" 
