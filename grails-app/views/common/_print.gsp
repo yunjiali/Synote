@@ -13,8 +13,6 @@
 <body>
 
 <!-- Get multimedia type, audio or video -->
-<img src="${resource(dir:'images/skin', file:'pdf_24.png') }"/> <g:link action="handlePrint" id="${ recording.id}" params="[fmt:'pdf']" target="_blank">Download as PDF</g:link>
-
 <g:set var="mmType" value="${recording.isVideo?'http://schema.org/VideoObject':'http://schema.org/AudioObject'}"/>
 <div id="recording_content_div" class="mediaObject">
 	<g:if test="${encodingFormat}">

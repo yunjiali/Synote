@@ -65,28 +65,6 @@ class RecordingController {
 	def configurationService
 	def resourceService
 	
-	/*private auth()
-	{
-		if(!securityService.isLoggedIn())
-		{
-			if(params.isGuest?.toBoolean() == true && actionName == "replay")
-			{
-				return true	
-			}
-			session.requestedController = controllerName
-			session.requestedAction = actionName
-			session.requestedParams = params
-			
-			flash.message = "User login required to write or annotate."
-			redirect(controller: 'login', action: 'auth', params:[multimediaId:params.id])
-			
-			return false
-		}
-	}*/
-	
-	def help = {
-		//Do nothing	
-	}
 	//The replay page is only a representation of the multimedia resource, so the params.id must be a multimedia resource
 	//the media fragment must already be given in the url
 	def replay = {
@@ -187,42 +165,12 @@ class RecordingController {
 		}
 	}
 	
-	def print = {
-		//TODO: write webtest
-		def recording = MultimediaResource.get(params.id)
-		
-		if (recording)
-		{
-			User user = securityService.getLoggedUser();
-			if(permService.getPerm(recording)?.val < PermissionValue.findByName("READ")?.val)
-			{
-				flash.error = "Access denied! You don't have permission to access this multimedia"
-				redirect(controller:'multimediaResource',action: 'list')
-				return
-			}
-			
-			def owners = []
-			
-			ResourceAnnotation.findAllByTarget(recording).each {annotation ->
-				if (annotation.source instanceof SynmarkResource && !owners.contains(annotation.owner))
-				owners << annotation.owner
-			}
-			
-			return [recording: recording, owners: owners.sort {it.userName}]
-		}
-		else
-		{
-			flash.error = "Cannot find recording with ID ${params.id}"
-			redirect(controller:'multimediaResource',action: 'list')
-			return
-		}
-	}
-	
 	def handlePrint = {
-		def recording = MultimediaResource.get(params.id)
+		def recording = MultimediaResource.get(params.id?.toLong())
 		
 		if (!recording)
 		{
+			//400 internal error
 			flash.error = "Cannot find recording with ID ${params.id}"
 			redirect(controller:'multimediaResource',action: 'list')
 			return false
@@ -231,78 +179,45 @@ class RecordingController {
 		def perm = permService.getPerm(recording)
 		if(perm?.val <=0)
 		{
-			flash.error = "Access denied! You don't have permission to access this recording"
-			//Yunjia: should redirect to error page instead of list page
-			redirect(controller:'multimediaResource',action: 'list')
+			flash.error = "Bad request"
+			response.status = 400
+			render view:'/error/400'
 			return
 		}
 		
-		def from = null
-		def to = null
+		def fragStr = "t=0"
+		def components = utilsService.parseTimeFragment(fragStr) //get all the data
 		
-		if (params.part)
+		def synpoints = printService.getAllSynpoints(recording, components.start, components.end)
+		def ends = printService.getEnds(synpoints, components.to)
+		
+		String encodingFormat = utilsService.getEncodingFormat(recording.url?.url)
+		
+		def settings = [id: false, timing: true, title: params.true, note: true, tags: true, owner: true, next: false]
+		if(params.fmt.equals("pdf"))
 		{
-			try
-			{
-				from = params.from ? TimeFormat.getInstance().parse(params.from) : null
-			}
-			catch (NumberFormatException ex)
-			{
-				flash.error = "Check if From time is valid"
-				redirect(action: 'print', params: params)
-				return false
-			}
-			
-			try
-			{
-				to = params.to ? TimeFormat.getInstance().parse(params.to) + 999 : null
-			}
-			catch (NumberFormatException ex)
-			{
-				flash.error = "Check if To time is valid"
-				redirect(action: 'print', params: params)
-				return false
-			}
+			renderPdf(template: '/common/print', model: [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
+				canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(),
+				encodingFormat:encodingFormat,fragStr:fragStr], filename: recording.id.toString(), params:params, downloadable:false)
 		}
-		
-		def synmarkedUsers = null
-		if (params.synmarked)
+		else
 		{
-			synmarkedUsers = []
-			params.each {param ->
-				if (param.key.startsWith('synmarked-user-') && param.value)
-				synmarkedUsers << param.key.substring(15, param.key.size()).toLong()
-			}
+			return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
+				canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(),
+				encodingFormat:encodingFormat,fragStr:fragStr,params:params, downloadable:true]
 		}
-		
-		def synmarksUsers = []
-		if (params.synmarks)
-		{
-			params.each {param ->
-				if (param.key.startsWith('synmarks-user-') && param.value)
-				synmarksUsers << param.key.substring(14, param.key.size()).toLong()
-			}
-		}
-		
-		def synpoints = printService.getSynpoints(
-		recording, from, to, synmarkedUsers, params.transcript == 'on', params.presentation == 'on', synmarksUsers)
-
-		def ends = printService.getEnds(synpoints, to)
-		
-		def settings = [id: params.synmarkId, timing: params.synmarkTiming, title: params.synmarkTitle, note: params.synmarkNote,
-		tags: params.synmarkTags, owner: params.synmarkOwner, next: params.synmarkNext]
-		
-		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: params.slideHeight, settings: settings]
 	}
 	
 	/*
 	 *Provide snapshot page for google search. Return all the trasncripts, synmarks and images related to the time interval
 	 */
 	def snapshot = {
+		
 		def recording = MultimediaResource.get(params.id?.toLong())
 		
 		if (!recording)
 		{
+			//400 internal error
 			flash.error = "Cannot find recording with ID ${params.id}"
 			redirect(controller:'multimediaResource',action: 'list')
 			return false
@@ -312,39 +227,36 @@ class RecordingController {
 		if(perm?.val <=0)
 		{
 			flash.error = "Access denied! You don't have permission to access this recording"
-			redirect(controller:'multimediaResource',action: 'list')
+			response.status = 403
+			render view:'/error/403'
 			return
 		}
 		
 		
 		//after get the fragment information after _escaped_fragment_ param
+		def fragStr = "t=0"
 		if(!params._escaped_fragment_ )
 		{
-			response.sendError(404)
-			response.contentType="text/plain"
-			response.outputStream.flush()
+			flash.error = "Bad request"
+			response.status = 400
+			render view:'/error/400'
 			return
 		}
 		
-		def fragStr = params._escaped_fragment_
+		fragStr = params._escaped_fragment_
 		def components = utilsService.parseTimeFragment(fragStr)
 		
 		def synpoints = printService.getAllSynpoints(recording, components.start, components.end)
 		def ends = printService.getEnds(synpoints, components.to)
 		
-		//println "ends:"+synpoints?.size()
-		boolean isVideo=true
-		if(!utilsService.isVideo(recording.url?.url))
-		{
-			isVideo = false
-		}
-		
 		String encodingFormat = utilsService.getEncodingFormat(recording.url?.url)
 		
 		def settings = [id: false, timing: true, title: params.true, note: true, tags: true, owner: true, next: false]
+		
 		return [recording: recording, synpoints: synpoints, ends: ends, slideHeight: "100%", settings: settings,
-			canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(),
-			isVideo:isVideo, encodingFormat:encodingFormat]
+				canCreateSynmark:false,canEdit:false, userBaseURI:linkedDataService.getUserBaseURI(), resourceBaseURI:linkedDataService.getUserBaseURI(), 
+				encodingFormat:encodingFormat,fragStr:fragStr,params:params]
+		
 	}
 	
 	def getSynmarksAjax = {

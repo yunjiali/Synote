@@ -97,7 +97,7 @@
 	  				<li><g:link controller="transcriptResource" action="upload" id="${row.id}">Upload Transcript</g:link></li>
 	  				</g:if>
 	  				<li><g:link controller="recording" action="replay" id="${row.id}">Play it in Synote Player</g:link></li>
-	  				<li><g:link controller="recording" action="print" id="${row.id}">Print Friendly Version</g:link></li>
+	  				<li><g:link controller="recording" action="handlePrint" id="${row.id}">Print Friendly Version</g:link></li>
 	 		</ul>
 	 	</div>
 	 	</g:if>
