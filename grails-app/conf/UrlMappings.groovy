@@ -32,20 +32,13 @@ class UrlMappings {
 			controller="linkedData"
 			action="usersData"
 		}
+		"/"(view:"/index")
 		"/$controller/$action?/$id?"{
 		      constraints {
 				 // apply constraints here
 			  }
 		  }
-	      "/"(view:"/index")
-	
-	      "/recording/$action?/$id?"{
-				controller="recording"
-				constraints
-						{
-							//position(matches:/[0-9]+/)
-						}
-			}
+	      
 		  "400"(view:'/error/400')
 		  "403"(view:'/error/403')
 		  "500"(view:'/error')

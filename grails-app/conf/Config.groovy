@@ -20,6 +20,7 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       css: 'text/css',
                       csv: 'text/csv',
 					  vtt: 'text/vtt',
+					  pdf: 'application/pdf',
                       all: '*/*',
                       json: ['application/json','text/json'],
 					  rdf: ['application/rdf+xml','rdf/xml'],
@@ -50,8 +51,8 @@ grails.plugin.databasemigration.changelogFileName = "changelog.xml"
 environments {
     production {
         //Should not use grails.serverURL = "http://localhost/${appName}"
-        grails.serverURL="http://192.168.224.1:8080/synote" //for standalone version
-        //grails.serverURL="http://linkeddata.synote.org" //for linkeddata version
+        //grails.serverURL="http://192.168.224.1:8080/synote" //for standalone version
+        grails.serverURL="http://linkeddata.synote.org" //for linkeddata version
         //grails.serverURL="http://synote.org" //for official public version
 		jena { //deprecated
 			enabled = false
